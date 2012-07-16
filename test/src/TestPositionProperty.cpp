@@ -9,6 +9,8 @@ BOOST_AUTO_TEST_CASE( TestPositionProperty ) {
 	{
 		prop::Position pos;
 
+		BOOST_CHECK( prop::Position::ID == "position" );
+		BOOST_CHECK( pos.get_id() == prop::Position::ID );
 		BOOST_CHECK( pos.get_position() == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	}
 	

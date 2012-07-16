@@ -19,15 +19,17 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 	{
 		Entity ent( 1337 );
 
-		BOOST_CHECK( ent.has_property<prop::Velocity>() == false );
+		BOOST_CHECK( ent.has_property( prop::Velocity::ID ) == false );
 		BOOST_CHECK_NO_THROW( ent.create_property<prop::Velocity>() );
-		BOOST_CHECK( ent.has_property<prop::Velocity>() == true );
+		BOOST_CHECK( ent.has_property( prop::Velocity::ID ) != false );
+		BOOST_CHECK( &ent.get_property<prop::Velocity>() != nullptr );
 		BOOST_CHECK( ent.get_num_properties() == 1 );
 
-		BOOST_CHECK( ent.has_property<prop::Position>() == false );
+		BOOST_CHECK( ent.has_property( prop::Position::ID ) == false );
 		BOOST_CHECK_NO_THROW( ent.create_property<prop::Position>() );
-		BOOST_CHECK( ent.has_property<prop::Position>() == true );
-		BOOST_CHECK( ent.has_property<prop::Velocity>() == true );
+		BOOST_CHECK( ent.has_property( prop::Position::ID ) != false );
+		BOOST_CHECK( ent.has_property( prop::Velocity::ID ) != false );
+		BOOST_CHECK( &ent.get_property<prop::Position>() != nullptr );
 		BOOST_CHECK( ent.get_num_properties() == 2 );
 	}
 }

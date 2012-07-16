@@ -4,20 +4,18 @@ namespace cs {
 
 template <class PropType>
 void Entity::create_property() {
-	assert( has_property<PropType>() == false );
+	assert( has_property( PropType::ID ) == false );
 
-	// Instantiate to get the ID.
-	PropType property;
-
-	m_properties[property.get_id()] = new PropType;
+	m_properties[PropType::ID] = new PropType;
 }
 
 template <class PropType>
-bool Entity::has_property() const {
-	// Instantiate to get the ID.
-	PropType property;
+const Property& Entity::get_property() const {
+	PropertyMap::const_iterator prop_iter = m_properties.find( PropType::ID );
 
-	return m_properties.find( property.get_id() ) != m_properties.end();
+	assert( prop_iter != m_properties.end() );
+
+	return *(prop_iter->second);
 }
 
 }

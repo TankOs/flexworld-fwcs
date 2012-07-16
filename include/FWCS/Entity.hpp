@@ -1,5 +1,6 @@
 #pragma once
 
+#include <FWCS/NonCopyable.hpp>
 #include <FWCS/Types.hpp>
 
 #include <string>
@@ -14,7 +15,7 @@ class Property;
  * reflect the state and type of an object. Depending on the chosen properties
  * FWCS will perform actions on the entity and properties.
  */
-class Entity {
+class Entity : public NonCopyable {
 	public:
 		/** Ctor.
 		 * @param id ID.
@@ -23,7 +24,7 @@ class Entity {
 
 		/** Dtor.
 		 */
-		~Entity();
+		virtual ~Entity();
 
 		/** Get ID.
 		 * @return ID.
@@ -44,12 +45,19 @@ class Entity {
 		template <class PropType>
 		void create_property();
 
-		/** Check if a property exists.
-		 * @tparam PropType Property type.
+		/** Check if property exists.
+		 * @param property_id Property ID.
 		 * @return true if exists.
 		 */
+		bool has_property( const std::string& property_id ) const;
+
+		/** Get property.
+		 * Undefined behaviour if the property doesn't exist or cast fails.
+		 * @tparam PropType Property type.
+		 * @return Property.
+		 */
 		template <class PropType>
-		bool has_property() const;
+		const Property& get_property() const;
 
 	private:
 		typedef std::map<const std::string, Property*> PropertyMap;

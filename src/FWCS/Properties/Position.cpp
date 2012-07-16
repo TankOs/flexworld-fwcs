@@ -3,6 +3,8 @@
 namespace cs {
 namespace prop {
 
+const std::string Position::ID = "position";
+
 Position::Position() :
 	Property(),
 	m_position( 0.0f, 0.0f, 0.0f )
@@ -10,7 +12,6 @@ Position::Position() :
 }
 
 const std::string& Position::get_id() const {
-	static const std::string ID = "position";
 	return ID;
 }
 

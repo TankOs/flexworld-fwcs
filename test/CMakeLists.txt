@@ -13,6 +13,7 @@ set( INC_DIR "src" )
 set(
 	SOURCES
 	${SRC_DIR}/Test.cpp
+	${SRC_DIR}/TestController.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestPositionProperty.cpp
 	${SRC_DIR}/TestVelocityProperty.cpp

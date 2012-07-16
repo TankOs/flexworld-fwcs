@@ -30,13 +30,17 @@ set( INC_DIR "include" )
 set(
 	SOURCES
 	${INC_DIR}/FWCS/Config.hpp
+	${INC_DIR}/FWCS/Controller.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
+	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Properties/Position.hpp
 	${INC_DIR}/FWCS/Properties/Velocity.hpp
 	${INC_DIR}/FWCS/Property.hpp
 	${INC_DIR}/FWCS/Types.hpp
+	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
+	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Properties/Position.cpp
 	${SRC_DIR}/FWCS/Properties/Velocity.cpp
 	${SRC_DIR}/FWCS/Property.cpp

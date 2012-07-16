@@ -9,6 +9,8 @@ BOOST_AUTO_TEST_CASE( TestVelocityProperty ) {
 	{
 		prop::Velocity vel;
 
+		BOOST_CHECK( prop::Velocity::ID == "velocity" );
+		BOOST_CHECK( vel.get_id() == prop::Velocity::ID );
 		BOOST_CHECK( vel.get_velocity() == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	}
 	

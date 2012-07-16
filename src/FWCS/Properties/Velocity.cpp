@@ -3,6 +3,8 @@
 namespace cs {
 namespace prop {
 
+const std::string Velocity::ID = "velocity";
+
 Velocity::Velocity() :
 	Property(),
 	m_velocity( 0.0f, 0.0f, 0.0f )
@@ -10,7 +12,6 @@ Velocity::Velocity() :
 }
 
 const std::string& Velocity::get_id() const {
-	static const std::string ID = "velocity";
 	return ID;
 }
 

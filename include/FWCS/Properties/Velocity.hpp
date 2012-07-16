@@ -11,6 +11,8 @@ namespace prop {
  */
 class Velocity : public Property {
 	public:
+		static const std::string ID; ///< ID.
+
 		/** Ctor.
 		 */
 		Velocity();

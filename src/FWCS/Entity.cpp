@@ -25,4 +25,8 @@ std::size_t Entity::get_num_properties() const {
 	return m_properties.size();
 }
 
+bool Entity::has_property( const std::string& property_id ) const {
+	return m_properties.find( property_id ) != m_properties.end();
+}
+
 }
