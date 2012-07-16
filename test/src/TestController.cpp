@@ -3,12 +3,18 @@
 #include <FWCS/Properties/Velocity.hpp>
 #include <FWCS/Properties/Position.hpp>
 
+#include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
+#include <set>
+#include <cstdint>
+
+static const sf::Time DELTA_T = sf::milliseconds( 12345 );
 
 class ExampleController : public cs::Controller {
 	public:
 		ExampleController() :
-			cs::Controller()
+			cs::Controller(),
+			m_num_update_calls( 0 )
 		{
 			std::vector<std::string> props;
 
@@ -17,6 +23,19 @@ class ExampleController : public cs::Controller {
 
 			listen_for( props );
 		}
+
+		void update_entity( const cs::Entity& entity, const sf::Time& delta ) {
+			BOOST_CHECK( delta == DELTA_T );
+
+			if( m_entity_ids.find( entity.get_id() ) == m_entity_ids.end() ) {
+				m_entity_ids.insert( entity.get_id() );
+			}
+
+			++m_num_update_calls;
+		}
+
+		std::size_t m_num_update_calls;
+		std::set<uint32_t> m_entity_ids;
 };
 
 BOOST_AUTO_TEST_CASE( TestController ) {
@@ -105,5 +124,26 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 
 		controller.remove_entity( ent1 );
 		BOOST_CHECK( controller.get_num_linked_entities() == 0 );
+	}
+
+	// Update entities.
+	{
+		Entity ent0( 0 );
+		ent0.create_property<prop::Velocity>();
+		ent0.create_property<prop::Position>();
+
+		Entity ent1( 1 );
+		ent1.create_property<prop::Velocity>();
+		ent1.create_property<prop::Position>();
+
+		ExampleController controller;
+		controller.add_entity( ent0 );
+		controller.add_entity( ent1 );
+
+		controller.run( DELTA_T );
+
+		BOOST_CHECK( controller.m_num_update_calls == 2 );
+		BOOST_CHECK( controller.m_entity_ids.find( 0 ) != controller.m_entity_ids.end() );
+		BOOST_CHECK( controller.m_entity_ids.find( 1 ) != controller.m_entity_ids.end() );
 	}
 }

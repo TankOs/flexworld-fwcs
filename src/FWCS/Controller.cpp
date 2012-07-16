@@ -48,6 +48,9 @@ void Controller::remove_entity( const Entity& entity ) {
 }
 
 void Controller::run( const sf::Time& delta ) {
+	for( std::size_t ent_idx = 0; ent_idx < m_entities.size(); ++ent_idx ) {
+		update_entity( *m_entities[ent_idx], delta );
+	}
 }
 
 void Controller::listen_for( const std::vector<std::string>& properties ) {
@@ -56,7 +59,7 @@ void Controller::listen_for( const std::vector<std::string>& properties ) {
 	m_required_properties = properties;
 }
 
-void Controller::update_entity( const Entity& entity, const sf::Time& delta ) {
+void Controller::update_entity( const Entity& /*entity*/, const sf::Time& /*delta*/ ) {
 }
 
 }
