@@ -16,6 +16,7 @@ set(
 	${SRC_DIR}/TestController.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestPositionProperty.cpp
+	${SRC_DIR}/TestSystem.cpp
 	${SRC_DIR}/TestVelocityProperty.cpp
 )
 

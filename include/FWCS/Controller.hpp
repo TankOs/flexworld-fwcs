@@ -11,10 +11,12 @@ namespace sf {
 class Time;
 }
 
+/** FlexWorld component system.
+ */
 namespace cs {
 
 /** Controller baseclass.
- * A controller is responsible for update entities and their properties.
+ * A controller is responsible for updating entities and their properties.
  * They are the logic in the component-based system.
  *
  * FWCS does not keep track of entity links anywhere, the controllers
@@ -67,12 +69,14 @@ class Controller {
 		std::size_t get_num_linked_entities() const;
 
 	protected:
-		/** Listen for entities with specific properties.
-		 * Call this method from derived classes to setup the controller. Undefined
-		 * behaviour if called multiple times.
-		 * @param properties Properties an entity must have to be processed by this controller.
+		/** Listen for entities with specific property.
+		 * Call this method from derived classes to setup the controller. Call
+		 * multiple times to concatenate required properties by an AND clause.
+		 * Undefined behaviour if property has already been listened for or if
+		 * called after entities have been added already.
+		 * @param property Property an entity must have to be processed by this controller.
 		 */
-		void listen_for( const std::vector<std::string>& properties );
+		void listen_for( const std::string& property );
 
 		/** Update entity.
 		 * @param entity Entity.

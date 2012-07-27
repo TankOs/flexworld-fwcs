@@ -6,6 +6,7 @@ find_package( SFML 2.0 COMPONENTS SYSTEM )
 set( FWCS_BUILD_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries." )
 set( FWCS_BUILD_TEST TRUE CACHE BOOL "Build test suite." )
 set( FWCS_BUILD_EXAMPLES TRUE CACHE BOOL "Build examples." )
+set( FWCS_BUILD_DOCS FALSE CACHE BOOL "Build Doxygen API documentation." )
 set( FWCS_SKIP_INSTALL FALSE CACHE BOOL "Do not run install target (useful when including lib in projects)." )
 
 if( FWCS_BUILD_SHARED_LIBS )
@@ -70,4 +71,8 @@ endif()
 
 if( FWCS_BUILD_TEST )
 	add_subdirectory( test )
+endif()
+
+if( FWCS_BUILD_DOCS )
+	add_subdirectory( "doc/doxygen" )
 endif()

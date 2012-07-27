@@ -16,12 +16,12 @@ class ExampleController : public cs::Controller {
 			cs::Controller(),
 			m_num_update_calls( 0 )
 		{
-			std::vector<std::string> props;
+			listen_for( "position" );
+			listen_for( "velocity" );
 
-			props.push_back( "position" );
-			props.push_back( "velocity" );
-
-			listen_for( props );
+			BOOST_REQUIRE( get_required_properties().size() == 2 );
+			BOOST_CHECK( get_required_properties()[0] == "position" );
+			BOOST_CHECK( get_required_properties()[1] == "velocity" );
 		}
 
 		void update_entity( const cs::Entity& entity, const sf::Time& delta ) {

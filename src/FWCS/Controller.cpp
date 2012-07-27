@@ -1,6 +1,7 @@
 #include <FWCS/Controller.hpp>
 #include <FWCS/Entity.hpp>
 
+#include <algorithm>
 #include <cassert>
 
 namespace cs {
@@ -53,10 +54,11 @@ void Controller::run( const sf::Time& delta ) {
 	}
 }
 
-void Controller::listen_for( const std::vector<std::string>& properties ) {
-	assert( m_required_properties.size() == 0 );
+void Controller::listen_for( const std::string& property ) {
+	assert( std::find( m_required_properties.begin(), m_required_properties.end(), property ) == m_required_properties.end() );
+	assert( m_entities.size() == 0 );
 
-	m_required_properties = properties;
+	m_required_properties.push_back( property );
 }
 
 void Controller::update_entity( const Entity& /*entity*/, const sf::Time& /*delta*/ ) {
