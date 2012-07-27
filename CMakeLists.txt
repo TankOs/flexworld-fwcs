@@ -32,19 +32,24 @@ set(
 	SOURCES
 	${INC_DIR}/FWCS/Config.hpp
 	${INC_DIR}/FWCS/Controller.hpp
+	${INC_DIR}/FWCS/Controllers/Gravity.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Properties/Position.hpp
 	${INC_DIR}/FWCS/Properties/Velocity.hpp
 	${INC_DIR}/FWCS/Property.hpp
+	${INC_DIR}/FWCS/System.hpp
+	${INC_DIR}/FWCS/System.inl
 	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/Controller.cpp
+	${SRC_DIR}/FWCS/Controllers/Gravity.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Properties/Position.cpp
 	${SRC_DIR}/FWCS/Properties/Velocity.cpp
 	${SRC_DIR}/FWCS/Property.cpp
+	${SRC_DIR}/FWCS/System.cpp
 )
 
 include_directories( ${INC_DIR} )

@@ -57,7 +57,15 @@ class Entity : public NonCopyable {
 		 * @return Property.
 		 */
 		template <class PropType>
-		const Property& get_property() const;
+		const PropType& get_property() const;
+
+		/** Get property.
+		 * Undefined behaviour if the property doesn't exist or cast fails.
+		 * @tparam PropType Property type.
+		 * @return Property.
+		 */
+		template <class PropType>
+		PropType& get_property();
 
 	private:
 		typedef std::map<const std::string, Property*> PropertyMap;

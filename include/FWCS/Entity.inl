@@ -10,12 +10,25 @@ void Entity::create_property() {
 }
 
 template <class PropType>
-const Property& Entity::get_property() const {
+const PropType& Entity::get_property() const {
 	PropertyMap::const_iterator prop_iter = m_properties.find( PropType::ID );
-
 	assert( prop_iter != m_properties.end() );
 
-	return *(prop_iter->second);
+	const PropType* property = dynamic_cast<const PropType*>( prop_iter->second );
+	assert( property != nullptr );
+
+	return *property;
+}
+
+template <class PropType>
+PropType& Entity::get_property() {
+	PropertyMap::iterator prop_iter = m_properties.find( PropType::ID );
+	assert( prop_iter != m_properties.end() );
+
+	PropType* property = dynamic_cast<PropType*>( prop_iter->second );
+	assert( property != nullptr );
+
+	return *property;
 }
 
 }

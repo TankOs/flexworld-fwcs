@@ -48,6 +48,10 @@ void Controller::remove_entity( const Entity& entity ) {
 	m_entities.erase( ent_iter );
 }
 
+bool Controller::is_entity_linked( const Entity& entity ) {
+	return std::find( m_entities.begin(), m_entities.end(), &entity ) != m_entities.end();
+}
+
 void Controller::run( const sf::Time& delta ) {
 	for( std::size_t ent_idx = 0; ent_idx < m_entities.size(); ++ent_idx ) {
 		update_entity( *m_entities[ent_idx], delta );
@@ -61,7 +65,7 @@ void Controller::listen_for( const std::string& property ) {
 	m_required_properties.push_back( property );
 }
 
-void Controller::update_entity( const Entity& /*entity*/, const sf::Time& /*delta*/ ) {
+void Controller::update_entity( Entity& /*entity*/, const sf::Time& /*delta*/ ) {
 }
 
 }

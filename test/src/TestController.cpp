@@ -24,7 +24,7 @@ class ExampleController : public cs::Controller {
 			BOOST_CHECK( get_required_properties()[1] == "velocity" );
 		}
 
-		void update_entity( const cs::Entity& entity, const sf::Time& delta ) {
+		void update_entity( cs::Entity& entity, const sf::Time& delta ) {
 			BOOST_CHECK( delta == DELTA_T );
 
 			if( m_entity_ids.find( entity.get_id() ) == m_entity_ids.end() ) {
@@ -112,18 +112,30 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 		BOOST_REQUIRE( controller.is_entity_interesting( ent0 ) == true );
 		BOOST_REQUIRE( controller.is_entity_interesting( ent1 ) == true );
 
+		BOOST_CHECK( controller.get_num_linked_entities() == 0 );
+		BOOST_CHECK( controller.is_entity_linked( ent0 ) == false );
+		BOOST_CHECK( controller.is_entity_linked( ent1 ) == false );
+
 		controller.add_entity( ent0 );
 		BOOST_CHECK( controller.get_num_linked_entities() == 1 );
+		BOOST_CHECK( controller.is_entity_linked( ent0 ) == true );
+		BOOST_CHECK( controller.is_entity_linked( ent1 ) == false );
 
 		controller.add_entity( ent1 );
 		BOOST_CHECK( controller.get_num_linked_entities() == 2 );
+		BOOST_CHECK( controller.is_entity_linked( ent0 ) == true );
+		BOOST_CHECK( controller.is_entity_linked( ent1 ) == true );
 
 		// Remove again.
 		controller.remove_entity( ent0 );
 		BOOST_CHECK( controller.get_num_linked_entities() == 1 );
+		BOOST_CHECK( controller.is_entity_linked( ent0 ) == false );
+		BOOST_CHECK( controller.is_entity_linked( ent1 ) == true );
 
 		controller.remove_entity( ent1 );
 		BOOST_CHECK( controller.get_num_linked_entities() == 0 );
+		BOOST_CHECK( controller.is_entity_linked( ent0 ) == false );
+		BOOST_CHECK( controller.is_entity_linked( ent1 ) == false );
 	}
 
 	// Update entities.

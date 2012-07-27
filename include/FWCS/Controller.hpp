@@ -42,7 +42,7 @@ class Controller {
 
 		/** Add entity to update queue.
 		 * Called internally only.
-		 * @param entity Entity to add.
+		 * @param entity Entity to add (pointer is stored).
 		 */
 		void add_entity( Entity& entity );
 
@@ -51,6 +51,12 @@ class Controller {
 		 * @param entity Entity to remove.
 		 */
 		void remove_entity( const Entity& entity );
+
+		/** Check if an entity is linked.
+		 * @param entity Entity.
+		 * @return true if linked.
+		 */
+		bool is_entity_linked( const Entity& entity );
 
 		/** Run controller.
 		 * @param delta Time to simulate.
@@ -82,7 +88,7 @@ class Controller {
 		 * @param entity Entity.
 		 * @param delta Time to simulate.
 		 */
-		virtual void update_entity( const Entity& entity, const sf::Time& delta );
+		virtual void update_entity( Entity& entity, const sf::Time& delta );
 
 	private:
 		typedef std::vector<Entity*> EntityPtrArray; ///< Array of pointers to entities.
