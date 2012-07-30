@@ -1,5 +1,6 @@
 #include <FWCS/Controllers/Gravity.hpp>
 #include <FWCS/Properties/Velocity.hpp>
+#include <FWCS/Properties/Mass.hpp>
 #include <FWCS/Entity.hpp>
 
 #include <SFML/System/Time.hpp>
@@ -28,6 +29,7 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 		Entity entity( 0 );
 
 		entity.create_property<prop::Velocity>();
+		entity.create_property<prop::Mass>();
 
 		BOOST_CHECK( gravity_controller.is_entity_interesting( entity ) == true );
 	}
@@ -38,6 +40,7 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 		Entity entity( 0 );
 
 		entity.create_property<prop::Velocity>();
+		entity.create_property<prop::Mass>();
 
 		gravity_controller.add_entity( entity );
 		

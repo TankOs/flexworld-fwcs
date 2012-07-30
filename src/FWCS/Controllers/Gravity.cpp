@@ -3,7 +3,6 @@
 #include <FWCS/Entity.hpp>
 
 #include <SFML/System/Time.hpp>
-#include <iostream> // XXX 
 
 namespace cs {
 namespace ctl {
@@ -12,6 +11,7 @@ Gravity::Gravity( float gravity ) :
 	m_gravity( gravity )
 {
 	listen_for( "velocity" );
+	listen_for( "mass" );
 }
 
 float Gravity::get_gravity() const {

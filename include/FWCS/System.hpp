@@ -9,9 +9,15 @@
 #include <cstdint>
 
 namespace cs {
-
 class Controller;
 class Entity;
+}
+
+namespace sf {
+class Time;
+}
+
+namespace cs {
 
 /** System.
  * The System class is a manager and router for entities and controllers.
@@ -82,6 +88,12 @@ class System : public EntityObserver {
 		 * @param id ID (must exist).
 		 */
 		void delete_entity( EntityID id );
+
+		/** Run system.
+		 * Calls all controllers.
+		 * @param sim_time Simulation time.
+		 */
+		void run( const sf::Time& sim_time );
 
 	private:
 		typedef std::vector<Controller*> ControllerPtrArray;

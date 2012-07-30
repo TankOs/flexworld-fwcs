@@ -2,9 +2,30 @@
 #include <FWCS/Entity.hpp>
 #include <FWCS/Properties/Position.hpp>
 #include <FWCS/Properties/Velocity.hpp>
+#include <FWCS/Properties/Mass.hpp>
 #include <FWCS/Controllers/Gravity.hpp>
 
+#include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
+
+class ExampleRunController : public cs::Controller {
+	public:
+		ExampleRunController() :
+			cs::Controller(),
+			m_num_update_calls( 0 )
+		{
+			listen_for( "position" );
+		}
+
+		void update_entity( cs::Entity& entity, const sf::Time& delta ) {
+			BOOST_CHECK( entity.get_id() == 123 );
+			BOOST_CHECK( delta == sf::milliseconds( 1000 ) );
+
+			++m_num_update_calls;
+		}
+
+		std::size_t m_num_update_calls;
+};
 
 BOOST_AUTO_TEST_CASE( TestSystem ) {
 	using namespace cs;
@@ -82,7 +103,9 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			Entity& neg_entity1 = sys.create_entity( 3 );
 
 			pos_entity0.create_property<prop::Velocity>();
+			pos_entity0.create_property<prop::Mass>();
 			pos_entity1.create_property<prop::Velocity>();
+			pos_entity1.create_property<prop::Mass>();
 
 			neg_entity0.create_property<prop::Position>();
 			neg_entity1.create_property<prop::Position>();
@@ -103,7 +126,9 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			Entity& neg_entity1 = sys.create_entity( 3 );
 
 			pos_entity0.create_property<prop::Velocity>();
+			pos_entity0.create_property<prop::Mass>();
 			pos_entity1.create_property<prop::Velocity>();
+			pos_entity1.create_property<prop::Mass>();
 
 			neg_entity0.create_property<prop::Position>();
 			neg_entity1.create_property<prop::Position>();
@@ -124,6 +149,7 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			Entity& neg_entity0 = sys.create_entity( 1 );
 
 			pos_entity0.create_property<prop::Velocity>();
+			pos_entity0.create_property<prop::Mass>();
 			neg_entity0.create_property<prop::Position>();
 
 			sys.create_controller<ctl::Gravity>();
@@ -132,6 +158,7 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			Entity& neg_entity1 = sys.create_entity( 3 );
 
 			pos_entity1.create_property<prop::Velocity>();
+			pos_entity1.create_property<prop::Mass>();
 			neg_entity1.create_property<prop::Position>();
 
 			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity0 ) == true );
@@ -139,5 +166,21 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity1 ) == true );
 			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity1 ) == false );
 		}
+	}
+
+	// Run controllers.
+	{
+		System sys;
+		
+		ExampleRunController& controller = sys.create_controller<ExampleRunController>();
+		Entity& entity = sys.create_entity( 123 );
+
+		entity.create_property<prop::Position>();
+
+		sys.run( sf::milliseconds( 1000 ) );
+		BOOST_CHECK( controller.m_num_update_calls == 1 );
+
+		sys.run( sf::milliseconds( 1000 ) );
+		BOOST_CHECK( controller.m_num_update_calls == 2 );
 	}
 }

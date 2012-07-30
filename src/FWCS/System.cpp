@@ -83,4 +83,10 @@ void System::link_entity( Entity& entity ) {
 	}
 }
 
+void System::run( const sf::Time& sim_time ) {
+	for( std::size_t controller_idx = 0; controller_idx < m_controllers.size(); ++controller_idx ) {
+		m_controllers[controller_idx]->run( sim_time );
+	}
+}
+
 }
