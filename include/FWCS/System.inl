@@ -9,6 +9,16 @@ ControllerType& System::create_controller() {
 	ControllerType* controller = new ControllerType;
 	m_controllers.push_back( controller );
 
+	// Link all entities.
+	EntityMap::iterator ent_iter = m_entities.begin();
+	EntityMap::iterator ent_iter_end = m_entities.end();
+	
+	for( ; ent_iter != ent_iter_end; ++ent_iter ) {
+		if( controller->is_entity_interesting( *ent_iter->second ) ) {
+			controller->add_entity( *ent_iter->second );
+		}
+	}
+
 	return *controller;
 }
 
