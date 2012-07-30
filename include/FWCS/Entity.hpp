@@ -41,32 +41,24 @@ class Entity : public NonCopyable {
 		 * Only one property of a type is allowed to exist. Undefined behaviour if
 		 * you try to create the same property type twice.
 		 * @tparam PropType Property type to instantiate.
-		 * @see has_property to check if a property of a given type already exists.
+		 * @return New property.
+		 * @see find_property to check if a property of a given type already exists.
 		 */
 		template <class PropType>
-		void create_property();
+		PropType& create_property();
 
-		/** Check if property exists.
+		/** Find property.
+		 * @tparam PropType Property type to find.
+		 * @return Property of nullptr if not found.
+		 */
+		template <class PropType>
+		PropType* find_property() const;
+
+		/** Check if property, given by string ID, exists.
 		 * @param property_id Property ID.
 		 * @return true if exists.
 		 */
 		bool has_property( const std::string& property_id ) const;
-
-		/** Get property.
-		 * Undefined behaviour if the property doesn't exist or cast fails.
-		 * @tparam PropType Property type.
-		 * @return Property.
-		 */
-		template <class PropType>
-		const PropType& get_property() const;
-
-		/** Get property.
-		 * Undefined behaviour if the property doesn't exist or cast fails.
-		 * @tparam PropType Property type.
-		 * @return Property.
-		 */
-		template <class PropType>
-		PropType& get_property();
 
 		/** Check if entity has observer attached.
 		 * @return true if observer attached.

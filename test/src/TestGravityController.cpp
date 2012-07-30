@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 
 		gravity_controller.add_entity( entity );
 		
-		BOOST_CHECK( entity.get_property<prop::Velocity>().get_velocity() == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+		BOOST_CHECK( entity.find_property<prop::Velocity>()->get_velocity() == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 		gravity_controller.run( sf::milliseconds( 1000 ) );
-		BOOST_CHECK( entity.get_property<prop::Velocity>().get_velocity() == sf::Vector3f( 0.0f, -100.0f, 0.0f ) );
+		BOOST_CHECK( entity.find_property<prop::Velocity>()->get_velocity() == sf::Vector3f( 0.0f, -100.0f, 0.0f ) );
 	}
 }

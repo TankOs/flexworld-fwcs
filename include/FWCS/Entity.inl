@@ -3,36 +3,31 @@
 namespace cs {
 
 template <class PropType>
-void Entity::create_property() {
-	assert( has_property( PropType::ID ) == false );
+PropType& Entity::create_property() {
+	assert( find_property<PropType>() == nullptr );
 
-	m_properties[PropType::ID] = new PropType;
+	PropType* new_property = new PropType;
+	m_properties[PropType::ID] = new_property;
 
 	if( m_observer ) {
-		m_observer->on_property_create( *m_properties[PropType::ID], *this );
+		m_observer->on_property_create( *new_property, *this );
 	}
+
+	return *new_property;
 }
 
 template <class PropType>
-const PropType& Entity::get_property() const {
+PropType* Entity::find_property() const {
 	PropertyMap::const_iterator prop_iter = m_properties.find( PropType::ID );
-	assert( prop_iter != m_properties.end() );
 
-	const PropType* property = dynamic_cast<const PropType*>( prop_iter->second );
-	assert( property != nullptr );
-
-	return *property;
-}
-
-template <class PropType>
-PropType& Entity::get_property() {
-	PropertyMap::iterator prop_iter = m_properties.find( PropType::ID );
-	assert( prop_iter != m_properties.end() );
+	if( prop_iter == m_properties.end() ) {
+		return nullptr;
+	}
 
 	PropType* property = dynamic_cast<PropType*>( prop_iter->second );
 	assert( property != nullptr );
 
-	return *property;
+	return property;
 }
 
 }

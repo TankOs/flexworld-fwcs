@@ -19,7 +19,7 @@ float Gravity::get_gravity() const {
 }
 
 void Gravity::update_entity( Entity& entity, const sf::Time& delta ) {
-	prop::Velocity& velocity = entity.get_property<prop::Velocity>();
+	prop::Velocity& velocity = *entity.find_property<prop::Velocity>();
 
 	velocity.set_velocity(
 		sf::Vector3f(
