@@ -37,10 +37,15 @@ Entity& System::create_entity( EntityID id ) {
 
 	m_entities[id] = new_entity;
 
+	link_entity( *new_entity );
+
 	return *new_entity;
 }
 
-void System::on_property_create( Property& /*property*/, Entity& /*entity*/ ) {
+void System::on_property_create( Property& /*property*/, Entity& entity ) {
+	assert( find_entity( entity.get_id() ) == &entity );
+
+	link_entity( entity );
 }
 
 Entity* System::find_entity( EntityID id ) const {
@@ -56,6 +61,26 @@ void System::delete_entity( EntityID id ) {
 
 	delete ent_iter->second;
 	m_entities.erase( ent_iter );
+}
+
+void System::link_entity( Entity& entity ) {
+	assert( find_entity( entity.get_id() ) == &entity );
+
+	for( std::size_t controller_idx = 0; controller_idx < m_controllers.size(); ++controller_idx ) {
+		Controller& controller = *m_controllers[controller_idx];
+
+		// If already linked, check if the link is still valid.
+		if( controller.is_entity_linked( entity ) ) {
+			if( controller.is_entity_interesting( entity ) == false ) {
+				controller.remove_entity( entity );
+			}
+		}
+		else { // If not linked, check if a link makes sense.
+			if( controller.is_entity_interesting( entity ) == true ) {
+				controller.add_entity( entity );
+			}
+		}
+	}
 }
 
 }

@@ -1,5 +1,7 @@
 #include <FWCS/System.hpp>
 #include <FWCS/Entity.hpp>
+#include <FWCS/Properties/Position.hpp>
+#include <FWCS/Properties/Velocity.hpp>
 #include <FWCS/Controllers/Gravity.hpp>
 
 #include <boost/test/unit_test.hpp>
@@ -19,15 +21,15 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 	{
 		System sys;
 
-		sys.create_controller<ctl::Gravity>();
+		Controller& controller = sys.create_controller<ctl::Gravity>();
 
 		BOOST_CHECK( sys.get_num_controllers() == 1 );
-		BOOST_CHECK( sys.has_controller<ctl::Gravity>() == true );
+		BOOST_CHECK( sys.find_controller<ctl::Gravity>() == &controller );
 
 		sys.delete_controller<ctl::Gravity>();
 
 		BOOST_CHECK( sys.get_num_controllers() == 0 );
-		BOOST_CHECK( sys.has_controller<ctl::Gravity>() == false );
+		BOOST_CHECK( sys.find_controller<ctl::Gravity>() == nullptr );
 	}
 
 	// Create and delete entities.
@@ -61,5 +63,40 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 
 		BOOST_CHECK( sys.get_num_entities() == 0 );
 		BOOST_CHECK( sys.find_entity( 2000 ) == nullptr );
+	}
+
+	// Automatic linking of entities to controllers.
+	{
+		// Multiple cases. For every case create 2 entities that have to be linked
+		// and 2 that must not be linked.
+
+		// Case: Controller exists before entities.
+		{
+			System sys;
+
+			sys.create_controller<ctl::Gravity>();
+
+			Entity& pos_entity0 = sys.create_entity( 0 );
+			Entity& neg_entity0 = sys.create_entity( 1 );
+			Entity& pos_entity1 = sys.create_entity( 2 );
+			Entity& neg_entity1 = sys.create_entity( 3 );
+
+			pos_entity0.create_property<prop::Velocity>();
+			pos_entity1.create_property<prop::Velocity>();
+
+			neg_entity0.create_property<prop::Position>();
+			neg_entity1.create_property<prop::Position>();
+
+			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity0 ) == true );
+			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity0 ) == false );
+			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity1 ) == true );
+			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity1 ) == false );
+			/*
+			BOOST_CHECK( sys.get_controll == false );
+			BOOST_CHECK( sys.get_controll == true );
+			BOOST_CHECK( sys.get_controll == false );
+			BOOST_CHECK( sys.get_controll == true );
+			*/
+		}
 	}
 }

@@ -3,21 +3,28 @@
 namespace cs {
 
 template <class ControllerType>
-void System::create_controller( const ControllerType& tpl ) {
-	assert( has_controller<ControllerType>() == false );
+ControllerType& System::create_controller() {
+	assert( find_controller<ControllerType>() == nullptr );
 
-	m_controllers.push_back( new ControllerType( tpl ) );
+	ControllerType* controller = new ControllerType;
+	m_controllers.push_back( controller );
+
+	return *controller;
 }
 
 template <class ControllerType>
-bool System::has_controller() {
+ControllerType* System::find_controller() const {
+	ControllerType* controller = nullptr;
+
 	for( std::size_t controller_idx = 0; controller_idx < m_controllers.size(); ++controller_idx ) {
-		if( dynamic_cast<ControllerType*>( m_controllers[controller_idx] ) != nullptr ) {
-			return true;
+		controller = dynamic_cast<ControllerType*>( m_controllers[controller_idx] );
+
+		if( controller != nullptr ) {
+			return controller;
 		}
 	}
 
-	return false;
+	return nullptr;
 }
 
 template <class ControllerType>

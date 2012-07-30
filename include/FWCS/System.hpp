@@ -44,21 +44,20 @@ class System : public EntityObserver {
 		std::size_t get_num_controllers() const;
 
 		/** Create a controller.
-		 * Either specify a template controller as a parameter to directly
-		 * initialize settings or just use the template argument to use defaults.
 		 * Undefined behaviour if a controller of the same type has already been
 		 * added.
-		 * @param tpl Controller template (will be copied).
 		 * @tparam ControllerType Controller type.
+		 * @return New controller.
 		 */
 		template <class ControllerType>
-		void create_controller( const ControllerType& tpl = ControllerType() );
+		ControllerType& create_controller();
 
-		/** Check if system has a specific controller.
-		 * @tparam ControllerType Controller type to check for.
+		/** Find a controller.
+		 * @tparam ControllerType Controller type to find.
+		 * @return Controller or nullptr if not found.
 		 */
 		template <class ControllerType>
-		bool has_controller();
+		ControllerType* find_controller() const;
 
 		/** Delete controller.
 		 * Undefined behaviour if controller hasn't been created.
@@ -87,6 +86,8 @@ class System : public EntityObserver {
 	private:
 		typedef std::vector<Controller*> ControllerPtrArray;
 		typedef std::map<EntityID, Entity*> EntityMap;
+		
+		void link_entity( Entity& entity );
 
 		void on_property_create( Property& property, Entity& entity );
 
