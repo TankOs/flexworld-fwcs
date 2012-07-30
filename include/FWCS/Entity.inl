@@ -7,6 +7,10 @@ void Entity::create_property() {
 	assert( has_property( PropType::ID ) == false );
 
 	m_properties[PropType::ID] = new PropType;
+
+	if( m_observer ) {
+		m_observer->on_property_create( *m_properties[PropType::ID], *this );
+	}
 }
 
 template <class PropType>

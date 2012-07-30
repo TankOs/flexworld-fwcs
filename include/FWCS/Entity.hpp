@@ -17,6 +17,17 @@ class Property;
  */
 class Entity : public NonCopyable {
 	public:
+		/** Observer interface.
+		 */
+		class Observer {
+			public:
+				/** Called when property is created.
+				 * @param property New property.
+				 * @param entity Entity (this).
+				 */
+				virtual void on_property_create( cs::Property& property, cs::Entity& entity ) = 0;
+		};
+
 		/** Ctor.
 		 * @param id ID.
 		 */
@@ -67,10 +78,30 @@ class Entity : public NonCopyable {
 		template <class PropType>
 		PropType& get_property();
 
+		/** Check if entity has observer attached.
+		 * @return true if observer attached.
+		 */
+		bool has_observer() const;
+
+		/** Set observer.
+		 * This method is used internally. Undefined behaviour if an observer has
+		 * already been set.
+		 * @param observer Observer (pointer is stored).
+		 */
+		void set_observer( Observer& observer );
+
+		/** Get observer.
+		 * Undefined behaviour if no observer set.
+		 * @return Observer.
+		 * @see has_observer
+		 */
+		Observer& get_observer() const;
+
 	private:
 		typedef std::map<const std::string, Property*> PropertyMap;
 
 		PropertyMap m_properties;
+		Observer* m_observer;
 		EntityID m_id;
 };
 

@@ -4,6 +4,7 @@
 namespace cs {
 
 Entity::Entity( EntityID id ) :
+	m_observer( nullptr ),
 	m_id( id )
 {
 }
@@ -27,6 +28,22 @@ std::size_t Entity::get_num_properties() const {
 
 bool Entity::has_property( const std::string& property_id ) const {
 	return m_properties.find( property_id ) != m_properties.end();
+}
+
+bool Entity::has_observer() const {
+	return m_observer != nullptr;
+}
+
+void Entity::set_observer( Observer& observer ) {
+	assert( m_observer == nullptr );
+
+	m_observer = &observer;
+}
+
+Entity::Observer& Entity::get_observer() const {
+	assert( m_observer != nullptr );
+
+	return *m_observer;
 }
 
 }
