@@ -34,13 +34,13 @@ bool Entity::has_observer() const {
 	return m_observer != nullptr;
 }
 
-void Entity::set_observer( Observer& observer ) {
+void Entity::set_observer( EntityObserver& observer ) {
 	assert( m_observer == nullptr );
 
 	m_observer = &observer;
 }
 
-Entity::Observer& Entity::get_observer() const {
+EntityObserver& Entity::get_observer() const {
 	assert( m_observer != nullptr );
 
 	return *m_observer;

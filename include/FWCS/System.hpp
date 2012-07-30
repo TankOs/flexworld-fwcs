@@ -1,11 +1,17 @@
 #pragma once
 
+#include <FWCS/EntityObserver.hpp>
+#include <FWCS/Types.hpp>
+
 #include <vector>
+#include <map>
 #include <cstring>
+#include <cstdint>
 
 namespace cs {
 
 class Controller;
+class Entity;
 
 /** System.
  * The System class is a manager and router for entities and controllers.
@@ -17,7 +23,7 @@ class Controller;
  * When the system is updated it will process all controllers and therefore all
  * linked entities.
  */
-class System {
+class System : public EntityObserver {
 	public:
 		/** Ctor.
 		 */
@@ -61,8 +67,26 @@ class System {
 		template <class ControllerType>
 		void delete_controller();
 
+		/** Create new entity.
+		 * @param id ID (must be unique).
+		 * @return New entity.
+		 */
+		Entity& create_entity( EntityID id );
+
+		/** Find entity by ID.
+		 * @param id ID.
+		 * @return Found entity or nullptr if not found.
+		 */
+		Entity* find_entity( EntityID id ) const;
+
 	private:
-		std::vector<Controller*> m_controllers;
+		typedef std::vector<Controller*> ControllerPtrArray;
+		typedef std::map<EntityID, Entity*> EntityMap;
+
+		void on_property_create( Property& property, Entity& entity );
+
+		ControllerPtrArray m_controllers;
+		EntityMap m_entities;
 };
 
 }

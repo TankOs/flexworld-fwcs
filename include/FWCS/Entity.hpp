@@ -1,5 +1,6 @@
 #pragma once
 
+#include <FWCS/EntityObserver.hpp>
 #include <FWCS/NonCopyable.hpp>
 #include <FWCS/Types.hpp>
 
@@ -17,17 +18,6 @@ class Property;
  */
 class Entity : public NonCopyable {
 	public:
-		/** Observer interface.
-		 */
-		class Observer {
-			public:
-				/** Called when property is created.
-				 * @param property New property.
-				 * @param entity Entity (this).
-				 */
-				virtual void on_property_create( cs::Property& property, cs::Entity& entity ) = 0;
-		};
-
 		/** Ctor.
 		 * @param id ID.
 		 */
@@ -88,20 +78,20 @@ class Entity : public NonCopyable {
 		 * already been set.
 		 * @param observer Observer (pointer is stored).
 		 */
-		void set_observer( Observer& observer );
+		void set_observer( EntityObserver& observer );
 
 		/** Get observer.
 		 * Undefined behaviour if no observer set.
 		 * @return Observer.
 		 * @see has_observer
 		 */
-		Observer& get_observer() const;
+		EntityObserver& get_observer() const;
 
 	private:
 		typedef std::map<const std::string, Property*> PropertyMap;
 
 		PropertyMap m_properties;
-		Observer* m_observer;
+		EntityObserver* m_observer;
 		EntityID m_id;
 };
 

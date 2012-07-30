@@ -1,13 +1,14 @@
 #include <FWCS/Entity.hpp>
+#include <FWCS/EntityObserver.hpp>
 #include <FWCS/Properties/Velocity.hpp>
 #include <FWCS/Properties/Position.hpp>
 
 #include <boost/test/unit_test.hpp>
 
-class ExampleEntityObserver : public cs::Entity::Observer {
+class ExampleEntityObserver : public cs::EntityObserver {
 	public:
 		ExampleEntityObserver() :
-			cs::Entity::Observer(),
+			cs::EntityObserver(),
 			m_last_created_property_id( "" ),
 			m_num_created_properties( 0 ),
 			m_last_entity_id( 0 )

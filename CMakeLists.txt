@@ -35,6 +35,7 @@ set(
 	${INC_DIR}/FWCS/Controllers/Gravity.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
+	${INC_DIR}/FWCS/EntityObserver.hpp
 	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Properties/Position.hpp
 	${INC_DIR}/FWCS/Properties/Velocity.hpp
