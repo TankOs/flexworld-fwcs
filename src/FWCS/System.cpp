@@ -22,7 +22,7 @@ System::~System() {
 }
 
 std::size_t System::get_num_entities() const {
-	return 0;
+	return m_entities.size();
 }
 
 std::size_t System::get_num_controllers() const {
@@ -40,13 +40,22 @@ Entity& System::create_entity( EntityID id ) {
 	return *new_entity;
 }
 
-void System::on_property_create( Property& property, Entity& entity ) {
+void System::on_property_create( Property& /*property*/, Entity& /*entity*/ ) {
 }
 
 Entity* System::find_entity( EntityID id ) const {
 	EntityMap::const_iterator ent_iter = m_entities.find( id );
 
 	return (ent_iter == m_entities.end() ? nullptr : ent_iter->second);
+}
+
+void System::delete_entity( EntityID id ) {
+	assert( find_entity( id ) != nullptr );
+
+	EntityMap::iterator ent_iter = m_entities.find( id );
+
+	delete ent_iter->second;
+	m_entities.erase( ent_iter );
 }
 
 }

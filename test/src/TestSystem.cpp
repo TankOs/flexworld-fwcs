@@ -37,8 +37,29 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		Entity& entity = sys.create_entity( 1337 );
 
 		BOOST_CHECK( sys.find_entity( 1337 ) == &entity );
+		BOOST_CHECK( sys.get_num_entities() == 1 );
 		BOOST_CHECK( entity.get_id() == 1337 );
 		BOOST_REQUIRE( entity.has_observer() );
 		BOOST_CHECK( &entity.get_observer() == static_cast<EntityObserver*>( &sys ) );
+
+		Entity& second_entity = sys.create_entity( 2000 );
+
+		BOOST_CHECK( sys.find_entity( 2000 ) == &second_entity );
+		BOOST_CHECK( sys.get_num_entities() == 2 );
+		BOOST_CHECK( second_entity.get_id() == 2000 );
+		BOOST_REQUIRE( second_entity.has_observer() );
+		BOOST_CHECK( &second_entity.get_observer() == static_cast<EntityObserver*>( &sys ) );
+
+		// Delete.
+
+		sys.delete_entity( 1337 );
+
+		BOOST_CHECK( sys.get_num_entities() == 1 );
+		BOOST_CHECK( sys.find_entity( 1337 ) == nullptr );
+
+		sys.delete_entity( 2000 );
+
+		BOOST_CHECK( sys.get_num_entities() == 0 );
+		BOOST_CHECK( sys.find_entity( 2000 ) == nullptr );
 	}
 }

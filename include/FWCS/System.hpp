@@ -79,6 +79,11 @@ class System : public EntityObserver {
 		 */
 		Entity* find_entity( EntityID id ) const;
 
+		/** Delete entity.
+		 * @param id ID (must exist).
+		 */
+		void delete_entity( EntityID id );
+
 	private:
 		typedef std::vector<Controller*> ControllerPtrArray;
 		typedef std::map<EntityID, Entity*> EntityMap;
