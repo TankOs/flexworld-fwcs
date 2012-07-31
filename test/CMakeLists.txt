@@ -14,6 +14,7 @@ set(
 	SOURCES
 	${SRC_DIR}/Test.cpp
 	${SRC_DIR}/TestController.cpp
+	${SRC_DIR}/TestDragProperty.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestGravityController.cpp
 	${SRC_DIR}/TestMassProperty.cpp

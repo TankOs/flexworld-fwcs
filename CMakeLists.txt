@@ -37,6 +37,7 @@ set(
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
 	${INC_DIR}/FWCS/NonCopyable.hpp
+	${INC_DIR}/FWCS/Properties/Drag.hpp
 	${INC_DIR}/FWCS/Properties/Mass.hpp
 	${INC_DIR}/FWCS/Properties/Moveable.hpp
 	${INC_DIR}/FWCS/Properties/Object.hpp
@@ -50,6 +51,7 @@ set(
 	${SRC_DIR}/FWCS/Controllers/Gravity.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
+	${SRC_DIR}/FWCS/Properties/Drag.cpp
 	${SRC_DIR}/FWCS/Properties/Mass.cpp
 	${SRC_DIR}/FWCS/Properties/Moveable.cpp
 	${SRC_DIR}/FWCS/Properties/Object.cpp
