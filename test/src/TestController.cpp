@@ -1,7 +1,7 @@
+#include "DummyProperties.hpp"
+
 #include <FWCS/Controller.hpp>
 #include <FWCS/Entity.hpp>
-#include <FWCS/Properties/Velocity.hpp>
-#include <FWCS/Properties/Position.hpp>
 
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
@@ -16,12 +16,12 @@ class ExampleController : public cs::Controller {
 			cs::Controller(),
 			m_num_update_calls( 0 )
 		{
-			listen_for( "position" );
-			listen_for( "velocity" );
+			listen_for( "DummyProperty0" );
+			listen_for( "DummyProperty1" );
 
 			BOOST_REQUIRE( get_required_properties().size() == 2 );
-			BOOST_CHECK( get_required_properties()[0] == "position" );
-			BOOST_CHECK( get_required_properties()[1] == "velocity" );
+			BOOST_CHECK( get_required_properties()[0] == "DummyProperty0" );
+			BOOST_CHECK( get_required_properties()[1] == "DummyProperty1" );
 		}
 
 		void update_entity( cs::Entity& entity, const sf::Time& delta ) {
@@ -54,8 +54,8 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 		ExampleController controller;
 
 		BOOST_REQUIRE( controller.get_required_properties().size() == 2 );
-		BOOST_CHECK( controller.get_required_properties()[0] == "position" );
-		BOOST_CHECK( controller.get_required_properties()[1] == "velocity" );
+		BOOST_CHECK( controller.get_required_properties()[0] == "DummyProperty0" );
+		BOOST_CHECK( controller.get_required_properties()[1] == "DummyProperty1" );
 		BOOST_CHECK( controller.get_num_linked_entities() == 0 );
 	}
 
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 		// No interesting entity.
 		{
 			Entity ent( 0 );
-			ent.create_property<prop::Velocity>();
+			ent.create_property<DummyProperty1>();
 
 			ExampleController controller;
 			BOOST_CHECK( controller.is_entity_interesting( ent ) == false );
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 		// No interesting entity.
 		{
 			Entity ent( 0 );
-			ent.create_property<prop::Position>();
+			ent.create_property<DummyProperty0>();
 
 			ExampleController controller;
 			BOOST_CHECK( controller.is_entity_interesting( ent ) == false );
@@ -90,8 +90,8 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 		// Interesting entity.
 		{
 			Entity ent( 0 );
-			ent.create_property<prop::Velocity>();
-			ent.create_property<prop::Position>();
+			ent.create_property<DummyProperty1>();
+			ent.create_property<DummyProperty0>();
 
 			ExampleController controller;
 			BOOST_CHECK( controller.is_entity_interesting( ent ) == true );
@@ -101,12 +101,12 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 	// Add and remove entities.
 	{
 		Entity ent0( 0 );
-		ent0.create_property<prop::Velocity>();
-		ent0.create_property<prop::Position>();
+		ent0.create_property<DummyProperty1>();
+		ent0.create_property<DummyProperty0>();
 
 		Entity ent1( 0 );
-		ent1.create_property<prop::Velocity>();
-		ent1.create_property<prop::Position>();
+		ent1.create_property<DummyProperty1>();
+		ent1.create_property<DummyProperty0>();
 
 		ExampleController controller;
 		BOOST_REQUIRE( controller.is_entity_interesting( ent0 ) == true );
@@ -141,12 +141,12 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 	// Update entities.
 	{
 		Entity ent0( 0 );
-		ent0.create_property<prop::Velocity>();
-		ent0.create_property<prop::Position>();
+		ent0.create_property<DummyProperty1>();
+		ent0.create_property<DummyProperty0>();
 
 		Entity ent1( 1 );
-		ent1.create_property<prop::Velocity>();
-		ent1.create_property<prop::Position>();
+		ent1.create_property<DummyProperty1>();
+		ent1.create_property<DummyProperty0>();
 
 		ExampleController controller;
 		controller.add_entity( ent0 );

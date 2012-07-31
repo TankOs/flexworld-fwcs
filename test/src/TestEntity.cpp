@@ -1,7 +1,9 @@
+#include "DummyProperties.hpp"
+
 #include <FWCS/Entity.hpp>
 #include <FWCS/EntityObserver.hpp>
-#include <FWCS/Properties/Velocity.hpp>
-#include <FWCS/Properties/Position.hpp>
+#include <FWCS/Properties/Object.hpp>
+#include <FWCS/Properties/Drag.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -31,6 +33,7 @@ class ExampleEntityObserver : public cs::EntityObserver {
 		uint32_t m_last_entity_id;
 };
 
+
 BOOST_AUTO_TEST_CASE( TestEntity ) {
 	using namespace cs;
 
@@ -47,14 +50,14 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 	{
 		Entity ent( 1337 );
 
-		prop::Velocity& velocity = ent.create_property<prop::Velocity>();
+		DummyProperty0& dummy_property_0 = ent.create_property<DummyProperty0>();
 
-		BOOST_CHECK( ent.find_property<prop::Velocity>() == &velocity );
+		BOOST_CHECK( ent.find_property<DummyProperty0>() == &dummy_property_0 );
 		BOOST_CHECK( ent.get_num_properties() == 1 );
 
-		prop::Position& position = ent.create_property<prop::Position>();
+		DummyProperty1& dummy_property_1 = ent.create_property<DummyProperty1>();
 
-		BOOST_CHECK( ent.find_property<prop::Position>() == &position );
+		BOOST_CHECK( ent.find_property<DummyProperty1>() == &dummy_property_1 );
 		BOOST_CHECK( ent.get_num_properties() == 2 );
 	}
 
@@ -68,9 +71,9 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 		BOOST_REQUIRE( ent.has_observer() == true );
 		BOOST_CHECK( &ent.get_observer() == &observer );
 
-		ent.create_property<prop::Velocity>();
+		ent.create_property<DummyProperty0>();
 
-		BOOST_CHECK( observer.m_last_created_property_id == "velocity" );
+		BOOST_CHECK( observer.m_last_created_property_id == "DummyProperty0" );
 		BOOST_CHECK( observer.m_num_created_properties == 1 );
 		BOOST_CHECK( observer.m_last_entity_id == 1337 );
 	}

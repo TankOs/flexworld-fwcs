@@ -12,17 +12,16 @@ set( INC_DIR "src" )
 
 set(
 	SOURCES
+	${INC_DIR}/DummyProperties.hpp
+	${SRC_DIR}/DummyProperties.cpp
 	${SRC_DIR}/Test.cpp
 	${SRC_DIR}/TestController.cpp
 	${SRC_DIR}/TestDragProperty.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestGravityController.cpp
-	${SRC_DIR}/TestMassProperty.cpp
 	${SRC_DIR}/TestMoveableProperty.cpp
 	${SRC_DIR}/TestObjectProperty.cpp
-	${SRC_DIR}/TestPositionProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
-	${SRC_DIR}/TestVelocityProperty.cpp
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/../include )

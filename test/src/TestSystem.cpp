@@ -1,9 +1,8 @@
+#include "DummyProperties.hpp"
+
 #include <FWCS/System.hpp>
+#include <FWCS/Controller.hpp>
 #include <FWCS/Entity.hpp>
-#include <FWCS/Properties/Position.hpp>
-#include <FWCS/Properties/Velocity.hpp>
-#include <FWCS/Properties/Mass.hpp>
-#include <FWCS/Controllers/Gravity.hpp>
 
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
@@ -14,7 +13,7 @@ class ExampleRunController : public cs::Controller {
 			cs::Controller(),
 			m_num_update_calls( 0 )
 		{
-			listen_for( "position" );
+			listen_for( "DummyProperty1" );
 		}
 
 		void update_entity( cs::Entity& entity, const sf::Time& delta ) {
@@ -42,15 +41,15 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 	{
 		System sys;
 
-		Controller& controller = sys.create_controller<ctl::Gravity>();
+		Controller& controller = sys.create_controller<ExampleRunController>();
 
 		BOOST_CHECK( sys.get_num_controllers() == 1 );
-		BOOST_CHECK( sys.find_controller<ctl::Gravity>() == &controller );
+		BOOST_CHECK( sys.find_controller<ExampleRunController>() == &controller );
 
-		sys.delete_controller<ctl::Gravity>();
+		sys.delete_controller<ExampleRunController>();
 
 		BOOST_CHECK( sys.get_num_controllers() == 0 );
-		BOOST_CHECK( sys.find_controller<ctl::Gravity>() == nullptr );
+		BOOST_CHECK( sys.find_controller<ExampleRunController>() == nullptr );
 	}
 
 	// Create and delete entities.
@@ -95,25 +94,23 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		{
 			System sys;
 
-			sys.create_controller<ctl::Gravity>();
+			sys.create_controller<ExampleRunController>();
 
 			Entity& pos_entity0 = sys.create_entity( 0 );
 			Entity& neg_entity0 = sys.create_entity( 1 );
 			Entity& pos_entity1 = sys.create_entity( 2 );
 			Entity& neg_entity1 = sys.create_entity( 3 );
 
-			pos_entity0.create_property<prop::Velocity>();
-			pos_entity0.create_property<prop::Mass>();
-			pos_entity1.create_property<prop::Velocity>();
-			pos_entity1.create_property<prop::Mass>();
+			pos_entity0.create_property<DummyProperty1>();
+			pos_entity1.create_property<DummyProperty1>();
 
-			neg_entity0.create_property<prop::Position>();
-			neg_entity1.create_property<prop::Position>();
+			neg_entity0.create_property<DummyProperty0>();
+			neg_entity1.create_property<DummyProperty0>();
 
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity0 ) == true );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity0 ) == false );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity1 ) == true );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity1 ) == false );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( pos_entity0 ) == true );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( neg_entity0 ) == false );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( pos_entity1 ) == true );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( neg_entity1 ) == false );
 		}
 
 		// Case: Entities exist before controller.
@@ -125,20 +122,18 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			Entity& pos_entity1 = sys.create_entity( 2 );
 			Entity& neg_entity1 = sys.create_entity( 3 );
 
-			pos_entity0.create_property<prop::Velocity>();
-			pos_entity0.create_property<prop::Mass>();
-			pos_entity1.create_property<prop::Velocity>();
-			pos_entity1.create_property<prop::Mass>();
+			pos_entity0.create_property<DummyProperty1>();
+			pos_entity1.create_property<DummyProperty1>();
 
-			neg_entity0.create_property<prop::Position>();
-			neg_entity1.create_property<prop::Position>();
+			neg_entity0.create_property<DummyProperty0>();
+			neg_entity1.create_property<DummyProperty0>();
 
-			sys.create_controller<ctl::Gravity>();
+			sys.create_controller<ExampleRunController>();
 
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity0 ) == true );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity0 ) == false );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity1 ) == true );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity1 ) == false );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( pos_entity0 ) == true );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( neg_entity0 ) == false );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( pos_entity1 ) == true );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( neg_entity1 ) == false );
 		}
 
 		// Case: Mixed.
@@ -148,23 +143,21 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			Entity& pos_entity0 = sys.create_entity( 0 );
 			Entity& neg_entity0 = sys.create_entity( 1 );
 
-			pos_entity0.create_property<prop::Velocity>();
-			pos_entity0.create_property<prop::Mass>();
-			neg_entity0.create_property<prop::Position>();
+			pos_entity0.create_property<DummyProperty1>();
+			neg_entity0.create_property<DummyProperty0>();
 
-			sys.create_controller<ctl::Gravity>();
+			sys.create_controller<ExampleRunController>();
 
 			Entity& pos_entity1 = sys.create_entity( 2 );
 			Entity& neg_entity1 = sys.create_entity( 3 );
 
-			pos_entity1.create_property<prop::Velocity>();
-			pos_entity1.create_property<prop::Mass>();
-			neg_entity1.create_property<prop::Position>();
+			pos_entity1.create_property<DummyProperty1>();
+			neg_entity1.create_property<DummyProperty0>();
 
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity0 ) == true );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity0 ) == false );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( pos_entity1 ) == true );
-			BOOST_CHECK( sys.find_controller<ctl::Gravity>()->is_entity_linked( neg_entity1 ) == false );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( pos_entity0 ) == true );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( neg_entity0 ) == false );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( pos_entity1 ) == true );
+			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( neg_entity1 ) == false );
 		}
 	}
 
@@ -175,7 +168,7 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		ExampleRunController& controller = sys.create_controller<ExampleRunController>();
 		Entity& entity = sys.create_entity( 123 );
 
-		entity.create_property<prop::Position>();
+		entity.create_property<DummyProperty1>();
 
 		sys.run( sf::milliseconds( 1000 ) );
 		BOOST_CHECK( controller.m_num_update_calls == 1 );
