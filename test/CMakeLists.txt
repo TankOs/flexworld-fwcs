@@ -22,6 +22,7 @@ set(
 	${SRC_DIR}/TestForceResetController.cpp
 	${SRC_DIR}/TestGravityController.cpp
 	${SRC_DIR}/TestMoveableProperty.cpp
+	${SRC_DIR}/TestMovementController.cpp
 	${SRC_DIR}/TestMovementForceTransformController.cpp
 	${SRC_DIR}/TestObjectProperty.cpp
 	${SRC_DIR}/TestSystem.cpp

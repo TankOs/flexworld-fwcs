@@ -35,6 +35,7 @@ set(
 	${INC_DIR}/FWCS/Controllers/Acceleration.hpp
 	${INC_DIR}/FWCS/Controllers/ForceReset.hpp
 	${INC_DIR}/FWCS/Controllers/Gravity.hpp
+	${INC_DIR}/FWCS/Controllers/Movement.hpp
 	${INC_DIR}/FWCS/Controllers/MovementForceTransform.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
@@ -51,6 +52,7 @@ set(
 	${SRC_DIR}/FWCS/Controllers/Acceleration.cpp
 	${SRC_DIR}/FWCS/Controllers/ForceReset.cpp
 	${SRC_DIR}/FWCS/Controllers/Gravity.cpp
+	${SRC_DIR}/FWCS/Controllers/Movement.cpp
 	${SRC_DIR}/FWCS/Controllers/MovementForceTransform.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
