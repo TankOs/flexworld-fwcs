@@ -32,6 +32,7 @@ set(
 	SOURCES
 	${INC_DIR}/FWCS/Config.hpp
 	${INC_DIR}/FWCS/Controller.hpp
+	${INC_DIR}/FWCS/Controllers/ForceReset.hpp
 	${INC_DIR}/FWCS/Controllers/Gravity.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
@@ -45,6 +46,7 @@ set(
 	${INC_DIR}/FWCS/System.inl
 	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/Controller.cpp
+	${SRC_DIR}/FWCS/Controllers/ForceReset.cpp
 	${SRC_DIR}/FWCS/Controllers/Gravity.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
