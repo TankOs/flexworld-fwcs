@@ -15,7 +15,7 @@ set(
 	${INC_DIR}/DummyProperties.hpp
 	${SRC_DIR}/DummyProperties.cpp
 	${SRC_DIR}/Test.cpp
-	${SRC_DIR}/TestAcceleration.cpp
+	${SRC_DIR}/TestAccelerationController.cpp
 	${SRC_DIR}/TestController.cpp
 	${SRC_DIR}/TestDragProperty.cpp
 	${SRC_DIR}/TestEntity.cpp

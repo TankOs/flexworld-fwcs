@@ -5,7 +5,7 @@
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE( TestAcceleration ) {
+BOOST_AUTO_TEST_CASE( TestAccelerationController ) {
 	using namespace cs;
 
 	// Initial state.
