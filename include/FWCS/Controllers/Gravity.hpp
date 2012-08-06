@@ -22,6 +22,11 @@ class Gravity : public Controller {
 		 */
 		Gravity( float gravity = 9.80665f );
 
+		/** Set gravity.
+		 * @param gravity Gravity.
+		 */
+		void set_gravity( float gravity );
+
 		/** Get gravity.
 		 * @return Gravity.
 		 */
