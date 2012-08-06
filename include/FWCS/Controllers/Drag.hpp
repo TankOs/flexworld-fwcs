@@ -5,19 +5,20 @@
 namespace cs {
 namespace ctrl {
 
-/** Gravity controller.
- * The gravity controller applies gravity to an entity's velocity. The amount
- * of gravity is fetched from an Environment property.
+/** Drag controller.
+ * The drag controller adds a counter force to an entity due to fluid drag
+ * (air, water etc.).
  *
  * Properties needed:
  *   * cs::prop::Moveable
  *   * cs::prop::Environment
+ *   * cs::prop::Drag
  */
-class Gravity : public Controller {
+class Drag : public Controller {
 	public:
 		/** Ctor.
 		 */
-		Gravity();
+		Drag();
 
 	private:
 		void update_entity( Entity& entity, const sf::Time& delta );

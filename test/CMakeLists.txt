@@ -17,8 +17,10 @@ set(
 	${SRC_DIR}/Test.cpp
 	${SRC_DIR}/TestAccelerationController.cpp
 	${SRC_DIR}/TestController.cpp
+	${SRC_DIR}/TestDragController.cpp
 	${SRC_DIR}/TestDragProperty.cpp
 	${SRC_DIR}/TestEntity.cpp
+	${SRC_DIR}/TestEnvironmentProperty.cpp
 	${SRC_DIR}/TestForceResetController.cpp
 	${SRC_DIR}/TestGravityController.cpp
 	${SRC_DIR}/TestMoveableProperty.cpp

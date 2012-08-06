@@ -1,5 +1,6 @@
 #include <FWCS/Controllers/Gravity.hpp>
 #include <FWCS/Properties/Moveable.hpp>
+#include <FWCS/Properties/Environment.hpp>
 #include <FWCS/Entity.hpp>
 
 #include <SFML/System/Time.hpp>
@@ -10,25 +11,6 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 
 	// Initial state.
 	{
-		{
-			ctrl::Gravity gravity_controller;
-
-			BOOST_CHECK( gravity_controller.get_gravity() == -9.80665f );
-		}
-		{
-			ctrl::Gravity gravity_controller( 123.45f );
-
-			BOOST_CHECK( gravity_controller.get_gravity() == 123.45f );
-		}
-	}
-
-	// Basic properties.
-	{
-		ctrl::Gravity gravity_controller;
-
-		BOOST_CHECK( gravity_controller.get_gravity() == -9.80665f );
-		gravity_controller.set_gravity( 1.2345f );
-		BOOST_CHECK( gravity_controller.get_gravity() == 1.2345f );
 	}
 
 	// Interesting entity.
@@ -36,18 +18,25 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 		ctrl::Gravity gravity_controller;
 		Entity entity( 0 );
 
-		entity.create_property<prop::Moveable>();
+		BOOST_CHECK( gravity_controller.is_entity_interesting( entity ) == false );
 
+		entity.create_property<prop::Moveable>();
+		BOOST_CHECK( gravity_controller.is_entity_interesting( entity ) == false );
+
+		entity.create_property<prop::Environment>();
 		BOOST_CHECK( gravity_controller.is_entity_interesting( entity ) == true );
 	}
 
 	// Update with custom gravity.
 	{
-		ctrl::Gravity gravity_controller( -100.0f );
+		ctrl::Gravity gravity_controller;
 		Entity entity( 0 );
 
-		entity.create_property<prop::Moveable>();
-		entity.find_property<prop::Moveable>()->set_mass( 100.0f );
+		prop::Moveable& moveable_property = entity.create_property<prop::Moveable>();
+		prop::Environment& environment_property = entity.create_property<prop::Environment>();
+
+		moveable_property.set_mass( 100.0f );
+		environment_property.set_gravity( -100.0f );
 
 		gravity_controller.add_entity( entity );
 		

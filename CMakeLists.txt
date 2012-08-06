@@ -33,6 +33,7 @@ set(
 	${INC_DIR}/FWCS/Config.hpp
 	${INC_DIR}/FWCS/Controller.hpp
 	${INC_DIR}/FWCS/Controllers/Acceleration.hpp
+	${INC_DIR}/FWCS/Controllers/Drag.hpp
 	${INC_DIR}/FWCS/Controllers/ForceReset.hpp
 	${INC_DIR}/FWCS/Controllers/Gravity.hpp
 	${INC_DIR}/FWCS/Controllers/Movement.hpp
@@ -43,6 +44,7 @@ set(
 	${INC_DIR}/FWCS/EntityObserver.hpp
 	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Properties/Drag.hpp
+	${INC_DIR}/FWCS/Properties/Environment.hpp
 	${INC_DIR}/FWCS/Properties/Moveable.hpp
 	${INC_DIR}/FWCS/Properties/Object.hpp
 	${INC_DIR}/FWCS/Properties/PositionLimit.hpp
@@ -52,6 +54,7 @@ set(
 	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/Controllers/Acceleration.cpp
+	${SRC_DIR}/FWCS/Controllers/Drag.cpp
 	${SRC_DIR}/FWCS/Controllers/ForceReset.cpp
 	${SRC_DIR}/FWCS/Controllers/Gravity.cpp
 	${SRC_DIR}/FWCS/Controllers/Movement.cpp
@@ -60,6 +63,7 @@ set(
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Properties/Drag.cpp
+	${SRC_DIR}/FWCS/Properties/Environment.cpp
 	${SRC_DIR}/FWCS/Properties/Moveable.cpp
 	${SRC_DIR}/FWCS/Properties/Object.cpp
 	${SRC_DIR}/FWCS/Properties/PositionLimit.cpp
