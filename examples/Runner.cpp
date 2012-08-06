@@ -3,8 +3,10 @@
 #include <FWCS/Controllers/MovementForceTransform.hpp>
 #include <FWCS/Controllers/Acceleration.hpp>
 #include <FWCS/Controllers/Movement.hpp>
+#include <FWCS/Controllers/PositionLimit.hpp>
 #include <FWCS/Properties/Moveable.hpp>
 #include <FWCS/Properties/Object.hpp>
+#include <FWCS/Properties/PositionLimit.hpp>
 #include <FWCS/System.hpp>
 #include <FWCS/Entity.hpp>
 
@@ -42,11 +44,25 @@ int main() {
 	system.create_controller<cs::ctrl::MovementForceTransform>();
 	system.create_controller<cs::ctrl::Acceleration>();
 	system.create_controller<cs::ctrl::Movement>();
+	system.create_controller<cs::ctrl::PositionLimit>();
 
 	cs::Entity &entity = system.create_entity( 0 );
 
 	entity.create_property<cs::prop::Object>();
 	entity.create_property<cs::prop::Moveable>();
+
+	{
+		cs::prop::PositionLimit& limit_property = entity.create_property<cs::prop::PositionLimit>();
+
+		limit_property.set_lower_limit( sf::Vector3f( 0, 0, 0 ) );
+		limit_property.set_upper_limit(
+			sf::Vector3f(
+				static_cast<float>( render_window.getSize().x ),
+				static_cast<float>( render_window.getSize().y ),
+				0
+			)
+		);
+	}
 
 	entity.find_property<cs::prop::Moveable>()->set_mass( 20.0f );
 	entity.find_property<cs::prop::Object>()->set_position( sf::Vector3f( 50.0f, 500.0f, 0.0f ) );

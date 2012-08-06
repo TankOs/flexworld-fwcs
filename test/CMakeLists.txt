@@ -25,6 +25,8 @@ set(
 	${SRC_DIR}/TestMovementController.cpp
 	${SRC_DIR}/TestMovementForceTransformController.cpp
 	${SRC_DIR}/TestObjectProperty.cpp
+	${SRC_DIR}/TestPositionLimitController.cpp
+	${SRC_DIR}/TestPositionLimitProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
 )
 
