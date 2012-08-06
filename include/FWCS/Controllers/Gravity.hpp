@@ -3,7 +3,7 @@
 #include <FWCS/Controller.hpp>
 
 namespace cs {
-namespace ctl {
+namespace ctrl {
 
 /** Gravity controller.
  * The gravity controller applies gravity to an entity's velocity. The amount
@@ -20,7 +20,7 @@ class Gravity : public Controller {
 		/** Ctor.
 		 * @param gravity Initial gravity.
 		 */
-		Gravity( float gravity = 9.80665f );
+		Gravity( float gravity = -9.80665f );
 
 		/** Set gravity.
 		 * @param gravity Gravity.

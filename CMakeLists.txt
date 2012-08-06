@@ -81,9 +81,9 @@ if( NOT FWCS_SKIP_INSTALL )
 	)
 endif()
 
-#if( FWCS_BUILD_EXAMPLES )
-#	add_subdirectory( examples )
-#endif()
+if( FWCS_BUILD_EXAMPLES )
+	add_subdirectory( examples )
+endif()
 
 if( FWCS_BUILD_TEST )
 	add_subdirectory( test )

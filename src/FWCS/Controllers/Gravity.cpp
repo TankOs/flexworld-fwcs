@@ -5,7 +5,7 @@
 #include <SFML/System/Time.hpp>
 
 namespace cs {
-namespace ctl {
+namespace ctrl {
 
 Gravity::Gravity( float gravity ) :
 	m_gravity( gravity )

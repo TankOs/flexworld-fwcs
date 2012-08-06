@@ -11,12 +11,12 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 	// Initial state.
 	{
 		{
-			ctl::Gravity gravity_controller;
+			ctrl::Gravity gravity_controller;
 
-			BOOST_CHECK( gravity_controller.get_gravity() == 9.80665f );
+			BOOST_CHECK( gravity_controller.get_gravity() == -9.80665f );
 		}
 		{
-			ctl::Gravity gravity_controller( 123.45f );
+			ctrl::Gravity gravity_controller( 123.45f );
 
 			BOOST_CHECK( gravity_controller.get_gravity() == 123.45f );
 		}
@@ -24,16 +24,16 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 
 	// Basic properties.
 	{
-		ctl::Gravity gravity_controller;
+		ctrl::Gravity gravity_controller;
 
-		BOOST_CHECK( gravity_controller.get_gravity() == 9.80665f );
+		BOOST_CHECK( gravity_controller.get_gravity() == -9.80665f );
 		gravity_controller.set_gravity( 1.2345f );
 		BOOST_CHECK( gravity_controller.get_gravity() == 1.2345f );
 	}
 
 	// Interesting entity.
 	{
-		ctl::Gravity gravity_controller;
+		ctrl::Gravity gravity_controller;
 		Entity entity( 0 );
 
 		entity.create_property<prop::Moveable>();
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 
 	// Update with custom gravity.
 	{
-		ctl::Gravity gravity_controller( -100.0f );
+		ctrl::Gravity gravity_controller( -100.0f );
 		Entity entity( 0 );
 
 		entity.create_property<prop::Moveable>();
