@@ -13,7 +13,7 @@ namespace ctl {
  * graviation of 9.80665 m/s².
  *
  * Properties needed:
- *   * cs::prop::Velocity
+ *   * cs::prop::Moveable
  */
 class Gravity : public Controller {
 	public:

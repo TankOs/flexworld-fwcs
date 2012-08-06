@@ -34,6 +34,7 @@ set(
 	${INC_DIR}/FWCS/Controller.hpp
 	${INC_DIR}/FWCS/Controllers/ForceReset.hpp
 	${INC_DIR}/FWCS/Controllers/Gravity.hpp
+	${INC_DIR}/FWCS/Controllers/MovementForceTransform.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
@@ -48,6 +49,7 @@ set(
 	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/Controllers/ForceReset.cpp
 	${SRC_DIR}/FWCS/Controllers/Gravity.cpp
+	${SRC_DIR}/FWCS/Controllers/MovementForceTransform.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Properties/Drag.cpp
