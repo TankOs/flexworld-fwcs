@@ -30,6 +30,7 @@ set(
 	${SRC_DIR}/TestPositionLimitController.cpp
 	${SRC_DIR}/TestPositionLimitProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
+	${SRC_DIR}/TestThrustProperty.cpp
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/../include )

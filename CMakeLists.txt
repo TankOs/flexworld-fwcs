@@ -48,6 +48,7 @@ set(
 	${INC_DIR}/FWCS/Properties/Moveable.hpp
 	${INC_DIR}/FWCS/Properties/Object.hpp
 	${INC_DIR}/FWCS/Properties/PositionLimit.hpp
+	${INC_DIR}/FWCS/Properties/Thrust.hpp
 	${INC_DIR}/FWCS/Property.hpp
 	${INC_DIR}/FWCS/System.hpp
 	${INC_DIR}/FWCS/System.inl
@@ -67,6 +68,7 @@ set(
 	${SRC_DIR}/FWCS/Properties/Moveable.cpp
 	${SRC_DIR}/FWCS/Properties/Object.cpp
 	${SRC_DIR}/FWCS/Properties/PositionLimit.cpp
+	${SRC_DIR}/FWCS/Properties/Thrust.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp
 )
