@@ -13,4 +13,13 @@ BOOST_AUTO_TEST_CASE( TestThrustProperty ) {
 		BOOST_CHECK( property.get_id() == prop::Thrust::ID );
 		BOOST_CHECK( property.get_thrust() == sf::Vector3f( 0, 0, 0 ) );
 	}
+
+	// Basic properties.
+	{
+		prop::Thrust property;
+
+		property.set_thrust( sf::Vector3f( 1, 2, 3 ) );
+
+		BOOST_CHECK( property.get_thrust() == sf::Vector3f( 1, 2, 3 ) );
+	}
 }

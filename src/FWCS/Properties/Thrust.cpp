@@ -18,6 +18,9 @@ const sf::Vector3f& Thrust::get_thrust() const {
 	return m_thrust;
 }
 
+void Thrust::set_thrust( const sf::Vector3f& thrust ) {
+	m_thrust = thrust;
+}
 
 }
 }

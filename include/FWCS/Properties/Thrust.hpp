@@ -25,6 +25,11 @@ class Thrust : public Property {
 		 */
 		const sf::Vector3f& get_thrust() const;
 
+		/** Set thrust.
+		 * @param thrust Thrust (in Newton).
+		 */
+		void set_thrust( const sf::Vector3f& thrust );
+
 	private:
 		sf::Vector3f m_thrust;
 };
