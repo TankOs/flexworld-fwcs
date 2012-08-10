@@ -46,6 +46,7 @@ set(
 	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Properties/Drag.hpp
 	${INC_DIR}/FWCS/Properties/Environment.hpp
+	${INC_DIR}/FWCS/Properties/Jump.hpp
 	${INC_DIR}/FWCS/Properties/Moveable.hpp
 	${INC_DIR}/FWCS/Properties/Object.hpp
 	${INC_DIR}/FWCS/Properties/PositionLimit.hpp
@@ -67,6 +68,7 @@ set(
 	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Properties/Drag.cpp
 	${SRC_DIR}/FWCS/Properties/Environment.cpp
+	${SRC_DIR}/FWCS/Properties/Jump.cpp
 	${SRC_DIR}/FWCS/Properties/Moveable.cpp
 	${SRC_DIR}/FWCS/Properties/Object.cpp
 	${SRC_DIR}/FWCS/Properties/PositionLimit.cpp
