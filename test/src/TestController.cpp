@@ -14,7 +14,9 @@ class ExampleController : public cs::Controller {
 	public:
 		ExampleController() :
 			cs::Controller(),
-			m_num_update_calls( 0 )
+			m_num_update_calls( 0 ),
+			m_num_add_calls( 0 ),
+			m_num_remove_calls( 0 )
 		{
 			listen_for( "DummyProperty0" );
 			listen_for( "DummyProperty1" );
@@ -34,7 +36,27 @@ class ExampleController : public cs::Controller {
 			++m_num_update_calls;
 		}
 
+		void on_entity_add( cs::Entity& entity ) {
+			if( m_entity_ids.find( entity.get_id() ) == m_entity_ids.end() ) {
+				m_entity_ids.insert( entity.get_id() );
+			}
+
+			++m_num_add_calls;
+		}
+
+		void on_entity_remove( cs::Entity& entity ) {
+			std::set<uint32_t>::iterator ent_iter = m_entity_ids.find( entity.get_id() );
+
+			if( ent_iter != m_entity_ids.end() ) {
+				m_entity_ids.erase( ent_iter );
+			}
+
+			++m_num_remove_calls;
+		}
+
 		std::size_t m_num_update_calls;
+		std::size_t m_num_add_calls;
+		std::size_t m_num_remove_calls;
 		std::set<uint32_t> m_entity_ids;
 };
 
@@ -115,24 +137,36 @@ BOOST_AUTO_TEST_CASE( TestController ) {
 		BOOST_CHECK( controller.get_num_linked_entities() == 0 );
 		BOOST_CHECK( controller.is_entity_linked( ent0 ) == false );
 		BOOST_CHECK( controller.is_entity_linked( ent1 ) == false );
+		BOOST_CHECK( controller.m_num_add_calls == 0 );
 
 		controller.add_entity( ent0 );
+		BOOST_CHECK( controller.m_num_add_calls == 1 );
+		BOOST_CHECK( controller.m_entity_ids.find( ent0.get_id() ) != controller.m_entity_ids.end() );
 		BOOST_CHECK( controller.get_num_linked_entities() == 1 );
 		BOOST_CHECK( controller.is_entity_linked( ent0 ) == true );
 		BOOST_CHECK( controller.is_entity_linked( ent1 ) == false );
 
 		controller.add_entity( ent1 );
+		BOOST_CHECK( controller.m_num_add_calls == 2 );
+		BOOST_CHECK( controller.m_entity_ids.find( ent1.get_id() ) != controller.m_entity_ids.end() );
 		BOOST_CHECK( controller.get_num_linked_entities() == 2 );
 		BOOST_CHECK( controller.is_entity_linked( ent0 ) == true );
 		BOOST_CHECK( controller.is_entity_linked( ent1 ) == true );
 
 		// Remove again.
+		BOOST_CHECK( controller.m_num_remove_calls == 0 );
+
 		controller.remove_entity( ent0 );
+		BOOST_CHECK( controller.m_num_remove_calls == 1 );
+		BOOST_CHECK( controller.m_entity_ids.find( ent0.get_id() ) == controller.m_entity_ids.end() );
 		BOOST_CHECK( controller.get_num_linked_entities() == 1 );
 		BOOST_CHECK( controller.is_entity_linked( ent0 ) == false );
 		BOOST_CHECK( controller.is_entity_linked( ent1 ) == true );
 
 		controller.remove_entity( ent1 );
+		BOOST_CHECK( controller.m_num_remove_calls == 2 );
+		BOOST_CHECK( controller.m_entity_ids.size() == 0 );
+		BOOST_CHECK( controller.m_entity_ids.find( ent1.get_id() ) == controller.m_entity_ids.end() );
 		BOOST_CHECK( controller.get_num_linked_entities() == 0 );
 		BOOST_CHECK( controller.is_entity_linked( ent0 ) == false );
 		BOOST_CHECK( controller.is_entity_linked( ent1 ) == false );

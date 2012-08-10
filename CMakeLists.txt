@@ -36,6 +36,7 @@ set(
 	${INC_DIR}/FWCS/Controllers/Drag.hpp
 	${INC_DIR}/FWCS/Controllers/ForceReset.hpp
 	${INC_DIR}/FWCS/Controllers/Gravity.hpp
+	${INC_DIR}/FWCS/Controllers/Jump.hpp
 	${INC_DIR}/FWCS/Controllers/Movement.hpp
 	${INC_DIR}/FWCS/Controllers/MovementForceTransform.hpp
 	${INC_DIR}/FWCS/Controllers/PositionLimit.hpp
@@ -60,6 +61,7 @@ set(
 	${SRC_DIR}/FWCS/Controllers/Drag.cpp
 	${SRC_DIR}/FWCS/Controllers/ForceReset.cpp
 	${SRC_DIR}/FWCS/Controllers/Gravity.cpp
+	${SRC_DIR}/FWCS/Controllers/Jump.cpp
 	${SRC_DIR}/FWCS/Controllers/Movement.cpp
 	${SRC_DIR}/FWCS/Controllers/MovementForceTransform.cpp
 	${SRC_DIR}/FWCS/Controllers/PositionLimit.cpp

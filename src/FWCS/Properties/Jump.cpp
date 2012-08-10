@@ -6,6 +6,7 @@ namespace prop {
 const std::string Jump::ID = "Jump";
 
 Jump::Jump() :
+	Property(),
 	m_up_vector( 0, 1, 0 ),
 	m_force( 100 )
 {

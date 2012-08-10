@@ -50,7 +50,7 @@ class Controller {
 		 * Called internally only.
 		 * @param entity Entity to remove.
 		 */
-		void remove_entity( const Entity& entity );
+		void remove_entity( Entity& entity );
 
 		/** Check if an entity is linked.
 		 * @param entity Entity.
@@ -89,6 +89,16 @@ class Controller {
 		 * @param delta Time to simulate.
 		 */
 		virtual void update_entity( Entity& entity, const sf::Time& delta );
+
+		/** Called when entity is added.
+		 * @param entity Added entity.
+		 */
+		virtual void on_entity_add( Entity& entity );
+
+		/** Called when entity is removed.
+		 * @param entity Added entity.
+		 */
+		virtual void on_entity_remove( Entity& entity );
 
 	private:
 		typedef std::vector<Entity*> EntityPtrArray; ///< Array of pointers to entities.

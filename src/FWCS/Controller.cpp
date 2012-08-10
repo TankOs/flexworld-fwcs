@@ -39,13 +39,17 @@ void Controller::add_entity( Entity& entity ) {
 	assert( ent_iter == m_entities.end() || *ent_iter != &entity );
 
 	m_entities.insert( ent_iter, &entity );
+
+	on_entity_add( entity );
 }
 
-void Controller::remove_entity( const Entity& entity ) {
+void Controller::remove_entity( Entity& entity ) {
 	EntityPtrArray::iterator ent_iter = std::lower_bound( m_entities.begin(), m_entities.end(), &entity );
 	assert( ent_iter != m_entities.end() && *ent_iter == &entity );
 
 	m_entities.erase( ent_iter );
+
+	on_entity_remove( entity );
 }
 
 bool Controller::is_entity_linked( const Entity& entity ) {
@@ -66,6 +70,12 @@ void Controller::listen_for( const std::string& property ) {
 }
 
 void Controller::update_entity( Entity& /*entity*/, const sf::Time& /*delta*/ ) {
+}
+
+void Controller::on_entity_add( Entity& /*entity*/ ) {
+}
+
+void Controller::on_entity_remove( Entity& /*entity*/ ) {
 }
 
 }
