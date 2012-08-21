@@ -32,7 +32,7 @@ int main() {
 	sf::Font font;
 	font.loadFromFile( "data/DejaVuSans.ttf" );
 
-	sf::Text hud_text( "", font, 16 );
+	sf::Text hud_text( "", font, 18 );
 
 	// Setup FWCS.
 	cs::System system;
@@ -164,7 +164,7 @@ int main() {
 			hud_text.setString( sstr.str() );
 		}
 
-		render_window.clear();
+		render_window.clear( sf::Color( 12, 34, 56 ) );
 		render_window.draw( earth_shape );
 		render_window.draw( mars_shape );
 		render_window.draw( hud_text );

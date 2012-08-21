@@ -42,15 +42,16 @@ set(
 	${INC_DIR}/FWCS/Controllers/MovementForceTransform.hpp
 	${INC_DIR}/FWCS/Controllers/PositionLimit.hpp
 	${INC_DIR}/FWCS/Controllers/ThrustReset.hpp
+	${INC_DIR}/FWCS/Controllers/Walk.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
+	${INC_DIR}/FWCS/Math.hpp
 	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Property.hpp
 	${INC_DIR}/FWCS/Property.inl
 	${INC_DIR}/FWCS/System.hpp
 	${INC_DIR}/FWCS/System.inl
-	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/Controllers/Acceleration.cpp
 	${SRC_DIR}/FWCS/Controllers/Drag.cpp
@@ -61,6 +62,7 @@ set(
 	${SRC_DIR}/FWCS/Controllers/MovementForceTransform.cpp
 	${SRC_DIR}/FWCS/Controllers/PositionLimit.cpp
 	${SRC_DIR}/FWCS/Controllers/ThrustReset.cpp
+	${SRC_DIR}/FWCS/Controllers/Walk.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Property.cpp
