@@ -1,8 +1,7 @@
 #include <FWCS/Controllers/Gravity.hpp>
-#include <FWCS/Properties/Moveable.hpp>
-#include <FWCS/Properties/Environment.hpp>
 #include <FWCS/Entity.hpp>
 
+#include <SFML/System/Vector3.hpp>
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -16,32 +15,31 @@ BOOST_AUTO_TEST_CASE( TestGravityController ) {
 	// Interesting entity.
 	{
 		ctrl::Gravity gravity_controller;
-		Entity entity( 0 );
+		Entity entity;
 
-		BOOST_CHECK( gravity_controller.is_entity_interesting( entity ) == false );
+		entity.create_property<sf::Vector3f>( "force" );
+		entity.create_property<float>( "gravity" );
+		entity.create_property<float>( "mass" );
 
-		entity.create_property<prop::Moveable>();
-		BOOST_CHECK( gravity_controller.is_entity_interesting( entity ) == false );
-
-		entity.create_property<prop::Environment>();
 		BOOST_CHECK( gravity_controller.is_entity_interesting( entity ) == true );
 	}
 
 	// Update with custom gravity.
 	{
 		ctrl::Gravity gravity_controller;
-		Entity entity( 0 );
+		Entity entity;
 
-		prop::Moveable& moveable_property = entity.create_property<prop::Moveable>();
-		prop::Environment& environment_property = entity.create_property<prop::Environment>();
+		ConcreteProperty<sf::Vector3f>& force = entity.create_property<sf::Vector3f>( "force" );
+		ConcreteProperty<float>& gravity = entity.create_property<float>( "gravity" );
+		ConcreteProperty<float>& mass = entity.create_property<float>( "mass" );
 
-		moveable_property.set_mass( 100.0f );
-		environment_property.set_gravity( -100.0f );
+		mass.set_value( 100.0f );
+		gravity.set_value( -100.0f );
 
 		gravity_controller.add_entity( entity );
 		
-		BOOST_CHECK( entity.find_property<prop::Moveable>()->get_force() == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+		BOOST_CHECK( force.get_value() == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 		gravity_controller.run( sf::milliseconds( 1000 ) );
-		BOOST_CHECK( entity.find_property<prop::Moveable>()->get_force() == sf::Vector3f( 0.0f, -10000.0f, 0.0f ) );
+		BOOST_CHECK( force.get_value() == sf::Vector3f( 0.0f, -10000.0f, 0.0f ) );
 	}
 }

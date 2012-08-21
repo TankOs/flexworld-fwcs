@@ -1,19 +1,22 @@
 #pragma once
 
+#include <string>
+
 namespace cs {
 
 class Entity;
 class Property;
 
 /** Entity observer interface.
+ * Used internally.
  */
 class EntityObserver {
 	public:
 		/** Called when property is created.
-		 * @param property New property.
+		 * @param id Property ID.
 		 * @param entity Entity (this).
 		 */
-		virtual void on_property_create( cs::Property& property, cs::Entity& entity ) = 0;
+		virtual void on_property_create( const std::string& id, cs::Entity& entity ) = 0;
 };
 
 

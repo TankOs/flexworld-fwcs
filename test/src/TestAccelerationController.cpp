@@ -1,7 +1,7 @@
 #include <FWCS/Controllers/Acceleration.hpp>
-#include <FWCS/Properties/Moveable.hpp>
 #include <FWCS/Entity.hpp>
 
+#include <SFML/System/Vector3.hpp>
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -14,25 +14,28 @@ BOOST_AUTO_TEST_CASE( TestAccelerationController ) {
 
 	// Interesting entity.
 	{
-		Entity entity( 0 );
+		Entity entity;
 		ctrl::Acceleration controller;
 
-		BOOST_CHECK( controller.is_entity_interesting( entity ) == false );
-		entity.create_property<prop::Moveable>();
+		entity.create_property<sf::Vector3f>( "acceleration" );
+		entity.create_property<sf::Vector3f>( "velocity" );
 		BOOST_CHECK( controller.is_entity_interesting( entity ) == true );
 	}
 
 	// Run.
 	{
-		Entity entity( 0 );
-		entity.create_property<prop::Moveable>();
-		entity.find_property<prop::Moveable>()->set_acceleration( sf::Vector3f( 10, 20, 30 ) );
+		Entity entity;
+
+		ConcreteProperty<sf::Vector3f>& acceleration = entity.create_property<sf::Vector3f>( "acceleration" );
+		ConcreteProperty<sf::Vector3f>& velocity = entity.create_property<sf::Vector3f>( "velocity" );
+
+		acceleration.set_value( sf::Vector3f( 10, 20, 30 ) );
 
 		ctrl::Acceleration controller;
 		controller.add_entity( entity );
 
-		BOOST_CHECK( entity.find_property<prop::Moveable>()->get_velocity() == sf::Vector3f( 0, 0, 0 ) );
+		BOOST_CHECK( velocity.get_value() == sf::Vector3f( 0, 0, 0 ) );
 		controller.run( sf::milliseconds( 1000 ) );
-		BOOST_CHECK( entity.find_property<prop::Moveable>()->get_velocity() == sf::Vector3f( 10, 20, 30 ) );
+		BOOST_CHECK( velocity.get_value() == sf::Vector3f( 10, 20, 30 ) );
 	}
 }

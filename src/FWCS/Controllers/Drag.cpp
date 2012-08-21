@@ -1,8 +1,7 @@
 #include <FWCS/Controllers/Drag.hpp>
-#include <FWCS/Properties/Moveable.hpp>
-#include <FWCS/Properties/Drag.hpp>
-#include <FWCS/Properties/Environment.hpp>
 #include <FWCS/Entity.hpp>
+
+#include <SFML/System/Vector3.hpp>
 
 namespace cs {
 namespace ctrl {
@@ -10,41 +9,45 @@ namespace ctrl {
 Drag::Drag() :
 	Controller()
 {
-	listen_for( "Moveable" );
-	listen_for( "Environment" );
-	listen_for( "Drag" );
+	listen_for<float>( "air_density" );
+	listen_for<float>( "resistance_coeff" );
+	listen_for<float>( "drag_area" );
+	listen_for<sf::Vector3f>( "velocity" );
+	listen_for<sf::Vector3f>( "force" );
 }
 
 void Drag::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
-	prop::Moveable& moveable_property = *entity.find_property<prop::Moveable>();
-	prop::Drag& drag_property = *entity.find_property<prop::Drag>();
-	prop::Environment& env_property = *entity.find_property<prop::Environment>();
+	ConcreteProperty<float>& air_density = *entity.find_property<float>( "air_density" );
+	ConcreteProperty<float>& resistance_coeff = *entity.find_property<float>( "resistance_coeff" );
+	ConcreteProperty<float>& drag_area = *entity.find_property<float>( "drag_area" );
+	ConcreteProperty<sf::Vector3f>& velocity = *entity.find_property<sf::Vector3f>( "velocity" );
+	ConcreteProperty<sf::Vector3f>& force = *entity.find_property<sf::Vector3f>( "force" );
 
 	sf::Vector3f drag_force(
 		(
 			0.5f *
-			env_property.get_air_density() *
-			(moveable_property.get_velocity().x * moveable_property.get_velocity().x) *
-			drag_property.get_resistance_coeff() *
-			drag_property.get_area()
+			air_density.get_value() *
+			(velocity.get_value().x * velocity.get_value().x) *
+			resistance_coeff.get_value() *
+			drag_area.get_value()
 		),
 		(
 			0.5f *
-			env_property.get_air_density() *
-			(moveable_property.get_velocity().y * moveable_property.get_velocity().y) *
-			drag_property.get_resistance_coeff() *
-			drag_property.get_area()
+			air_density.get_value() *
+			(velocity.get_value().y * velocity.get_value().y) *
+			resistance_coeff.get_value() *
+			drag_area.get_value()
 		),
 		(
 			0.5f *
-			env_property.get_air_density() *
-			(moveable_property.get_velocity().z * moveable_property.get_velocity().z) *
-			drag_property.get_resistance_coeff() *
-			drag_property.get_area()
+			air_density.get_value() *
+			(velocity.get_value().z * velocity.get_value().z) *
+			resistance_coeff.get_value() *
+			drag_area.get_value()
 		)
 	);
 
-	sf::Vector3f new_force = moveable_property.get_force();
+	sf::Vector3f new_force = force.get_value();
 
 	if( new_force.x < 0.0f ) {
 		new_force.x = std::min( 0.0f, new_force.x + drag_force.x );
@@ -67,7 +70,7 @@ void Drag::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
 		new_force.z = std::max( 0.0f, new_force.z - drag_force.z );
 	}
 
-	moveable_property.set_force( new_force );
+	force.set_value( new_force );
 }
 
 }

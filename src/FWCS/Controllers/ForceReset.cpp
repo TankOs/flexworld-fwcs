@@ -1,6 +1,7 @@
 #include <FWCS/Controllers/ForceReset.hpp>
-#include <FWCS/Properties/Moveable.hpp>
 #include <FWCS/Entity.hpp>
+
+#include <SFML/System/Vector3.hpp>
 
 namespace cs {
 namespace ctrl {
@@ -8,13 +9,13 @@ namespace ctrl {
 ForceReset::ForceReset() :
 	Controller()
 {
-	listen_for( "Moveable" );
+	listen_for<sf::Vector3f>( "force" );
 }
 
 void ForceReset::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
-	prop::Moveable& moveable_property = *entity.find_property<prop::Moveable>();
+	ConcreteProperty<sf::Vector3f>& force = *entity.find_property<sf::Vector3f>( "force" );
 
-	moveable_property.set_force( sf::Vector3f( 0, 0, 0 ) );
+	force.set_value( sf::Vector3f( 0, 0, 0 ) );
 }
 
 }

@@ -12,7 +12,7 @@ Controller::Controller() {
 Controller::~Controller() {
 }
 
-const std::vector<std::string>& Controller::get_required_properties() const {
+const Controller::RequiredPropertyArray& Controller::get_required_properties() const {
 	return m_required_properties;
 }
 
@@ -23,8 +23,14 @@ std::size_t Controller::get_num_linked_entities() const {
 bool Controller::is_entity_interesting( const Entity& entity ) const {
 	assert( m_required_properties.size() != 0 );
 
+	const Property* base_property = nullptr;
+	const IdTypePair* pair = nullptr;
+
 	for( std::size_t prop_idx = 0; prop_idx < m_required_properties.size(); ++prop_idx ) {
-		if( entity.has_property( m_required_properties[prop_idx] ) == false ) {
+		pair = &m_required_properties[prop_idx];
+		base_property = entity.find_base_property( pair->first );
+
+		if( base_property == nullptr || base_property->get_type_id() != pair->second ) {
 			return false;
 		}
 	}
@@ -60,13 +66,6 @@ void Controller::run( const sf::Time& delta ) {
 	for( std::size_t ent_idx = 0; ent_idx < m_entities.size(); ++ent_idx ) {
 		update_entity( *m_entities[ent_idx], delta );
 	}
-}
-
-void Controller::listen_for( const std::string& property ) {
-	assert( std::find( m_required_properties.begin(), m_required_properties.end(), property ) == m_required_properties.end() );
-	assert( m_entities.size() == 0 );
-
-	m_required_properties.push_back( property );
 }
 
 void Controller::update_entity( Entity& /*entity*/, const sf::Time& /*delta*/ ) {

@@ -10,9 +10,11 @@ namespace ctrl {
  * (air, water etc.).
  *
  * Properties needed:
- *   * cs::prop::Moveable
- *   * cs::prop::Environment
- *   * cs::prop::Drag
+ *   * air_density (float, in kg/cm³): Air density
+ *   * resistance_coeff (float): Resistance coefficient
+ *   * drag_area (float, m²): Drag-receiving area
+ *   * velocity (sf::Vector3f, in m/s): Current velocity
+ *   * force (sf::Vector3f, in Newton): Force; drag force will be added.
  */
 class Drag : public Controller {
 	public:

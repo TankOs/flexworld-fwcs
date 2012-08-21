@@ -1,8 +1,7 @@
 #include <FWCS/Controllers/PositionLimit.hpp>
-#include <FWCS/Properties/PositionLimit.hpp>
-#include <FWCS/Properties/Moveable.hpp>
-#include <FWCS/Properties/Object.hpp>
 #include <FWCS/Entity.hpp>
+
+#include <SFML/System/Vector3.hpp>
 
 namespace cs {
 namespace ctrl {
@@ -10,60 +9,62 @@ namespace ctrl {
 PositionLimit::PositionLimit() :
 	Controller()
 {
-	listen_for( "Moveable" );
-	listen_for( "Object" );
-	listen_for( "PositionLimit" );
+	listen_for<sf::Vector3f>( "position" );
+	listen_for<sf::Vector3f>( "velocity" );
+	listen_for<sf::Vector3f>( "lower_position_limit" );
+	listen_for<sf::Vector3f>( "upper_position_limit" );
 }
 
 void PositionLimit::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
-	prop::PositionLimit& limit_property = *entity.find_property<prop::PositionLimit>();
-	prop::Object& object_property = *entity.find_property<prop::Object>();
-	prop::Moveable& moveable_property = *entity.find_property<prop::Moveable>();
+	ConcreteProperty<sf::Vector3f>& velocity = *entity.find_property<sf::Vector3f>( "velocity" );
+	ConcreteProperty<sf::Vector3f>& position = *entity.find_property<sf::Vector3f>( "position" );
+	ConcreteProperty<sf::Vector3f>& lower_limit = *entity.find_property<sf::Vector3f>( "lower_position_limit" );
+	ConcreteProperty<sf::Vector3f>& upper_limit = *entity.find_property<sf::Vector3f>( "upper_position_limit" );
 
-	sf::Vector3f new_position = object_property.get_position();
-	sf::Vector3f new_velocity = moveable_property.get_velocity();
+	sf::Vector3f new_position = position.get_value();
+	sf::Vector3f new_velocity = velocity.get_value();
 	bool do_set_position = false;
 
-	if( object_property.get_position().x < limit_property.get_lower_limit().x ) {
-		new_position.x = limit_property.get_lower_limit().x;
+	if( position.get_value().x < lower_limit.get_value().x ) {
+		new_position.x = lower_limit.get_value().x;
 		new_velocity.x = 0;
 		do_set_position = true;
 	}
 
-	if( object_property.get_position().y < limit_property.get_lower_limit().y ) {
-		new_position.y = limit_property.get_lower_limit().y;
+	if( position.get_value().y < lower_limit.get_value().y ) {
+		new_position.y = lower_limit.get_value().y;
 		new_velocity.y = 0;
 		do_set_position = true;
 	}
 
-	if( object_property.get_position().z < limit_property.get_lower_limit().z ) {
-		new_position.z = limit_property.get_lower_limit().z;
+	if( position.get_value().z < lower_limit.get_value().z ) {
+		new_position.z = lower_limit.get_value().z;
 		new_velocity.z = 0;
 		do_set_position = true;
 	}
 
 	// Upper limit.
-	if( object_property.get_position().x > limit_property.get_upper_limit().x ) {
-		new_position.x = limit_property.get_upper_limit().x;
+	if( position.get_value().x > upper_limit.get_value().x ) {
+		new_position.x = upper_limit.get_value().x;
 		new_velocity.x = 0;
 		do_set_position = true;
 	}
 
-	if( object_property.get_position().y > limit_property.get_upper_limit().y ) {
-		new_position.y = limit_property.get_upper_limit().y;
+	if( position.get_value().y > upper_limit.get_value().y ) {
+		new_position.y = upper_limit.get_value().y;
 		new_velocity.y = 0;
 		do_set_position = true;
 	}
 
-	if( object_property.get_position().z > limit_property.get_upper_limit().z ) {
-		new_position.z = limit_property.get_upper_limit().z;
+	if( position.get_value().z > upper_limit.get_value().z ) {
+		new_position.z = upper_limit.get_value().z;
 		new_velocity.z = 0;
 		do_set_position = true;
 	}
 
 	if( do_set_position ) {
-		object_property.set_position( new_position );
-		moveable_property.set_velocity( new_velocity );
+		position.set_value( new_position );
+		velocity.set_value( new_velocity );
 	}
 }
 

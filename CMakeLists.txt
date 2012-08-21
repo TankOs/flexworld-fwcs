@@ -32,6 +32,7 @@ set(
 	SOURCES
 	${INC_DIR}/FWCS/Config.hpp
 	${INC_DIR}/FWCS/Controller.hpp
+	${INC_DIR}/FWCS/Controller.inl
 	${INC_DIR}/FWCS/Controllers/Acceleration.hpp
 	${INC_DIR}/FWCS/Controllers/Drag.hpp
 	${INC_DIR}/FWCS/Controllers/ForceReset.hpp
@@ -45,14 +46,8 @@ set(
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
 	${INC_DIR}/FWCS/NonCopyable.hpp
-	${INC_DIR}/FWCS/Properties/Drag.hpp
-	${INC_DIR}/FWCS/Properties/Environment.hpp
-	${INC_DIR}/FWCS/Properties/Jump.hpp
-	${INC_DIR}/FWCS/Properties/Moveable.hpp
-	${INC_DIR}/FWCS/Properties/Object.hpp
-	${INC_DIR}/FWCS/Properties/PositionLimit.hpp
-	${INC_DIR}/FWCS/Properties/Thrust.hpp
 	${INC_DIR}/FWCS/Property.hpp
+	${INC_DIR}/FWCS/Property.inl
 	${INC_DIR}/FWCS/System.hpp
 	${INC_DIR}/FWCS/System.inl
 	${INC_DIR}/FWCS/Types.hpp
@@ -68,13 +63,6 @@ set(
 	${SRC_DIR}/FWCS/Controllers/ThrustReset.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
-	${SRC_DIR}/FWCS/Properties/Drag.cpp
-	${SRC_DIR}/FWCS/Properties/Environment.cpp
-	${SRC_DIR}/FWCS/Properties/Jump.cpp
-	${SRC_DIR}/FWCS/Properties/Moveable.cpp
-	${SRC_DIR}/FWCS/Properties/Object.cpp
-	${SRC_DIR}/FWCS/Properties/PositionLimit.cpp
-	${SRC_DIR}/FWCS/Properties/Thrust.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp
 )
@@ -97,12 +85,12 @@ if( NOT FWCS_SKIP_INSTALL )
 	)
 endif()
 
-if( FWCS_BUILD_EXAMPLES )
-	add_subdirectory( examples )
-endif()
-
 if( FWCS_BUILD_TEST )
 	add_subdirectory( test )
+endif()
+
+if( FWCS_BUILD_EXAMPLES )
+	add_subdirectory( examples )
 endif()
 
 if( FWCS_BUILD_DOCS )

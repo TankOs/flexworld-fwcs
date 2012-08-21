@@ -26,6 +26,9 @@ namespace cs {
  */
 class Controller {
 	public:
+		typedef std::pair<std::string, std::string> IdTypePair; ///< Pair of property ID/property type ID.
+		typedef std::vector<IdTypePair> RequiredPropertyArray; ///< Array of property pairs.
+
 		/** Ctor.
 		 */
 		Controller();
@@ -67,7 +70,7 @@ class Controller {
 		 * @return Required properties.
 		 * @see listen_for
 		 */
-		const std::vector<std::string>& get_required_properties() const;
+		const RequiredPropertyArray& get_required_properties() const;
 
 		/** Get number of currently linked entities.
 		 * @return Number of linked entities.
@@ -75,13 +78,15 @@ class Controller {
 		std::size_t get_num_linked_entities() const;
 
 	protected:
-		/** Listen for entities with specific property.
+		/** Listen for entities with a specific property of a specific type.
 		 * Call this method from derived classes to setup the controller. Call
 		 * multiple times to concatenate required properties by an AND clause.
 		 * Undefined behaviour if property has already been listened for or if
 		 * called after entities have been added already.
+		 * @tparam PT Type of the property the entity has to have.
 		 * @param property Property an entity must have to be processed by this controller.
 		 */
+		template <class PT>
 		void listen_for( const std::string& property );
 
 		/** Update entity.
@@ -101,10 +106,12 @@ class Controller {
 		virtual void on_entity_remove( Entity& entity );
 
 	private:
-		typedef std::vector<Entity*> EntityPtrArray; ///< Array of pointers to entities.
+		typedef std::vector<Entity*> EntityPtrArray;
 
-		std::vector<std::string> m_required_properties;
+		RequiredPropertyArray m_required_properties;
 		EntityPtrArray m_entities;
 };
 
 }
+
+#include "Controller.inl"

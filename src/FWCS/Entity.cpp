@@ -1,11 +1,12 @@
 #include <FWCS/Entity.hpp>
 #include <FWCS/Property.hpp>
 
+#include <SFML/System/Vector3.hpp>
+
 namespace cs {
 
-Entity::Entity( EntityID id ) :
-	m_observer( nullptr ),
-	m_id( id )
+Entity::Entity() :
+	m_observer( nullptr )
 {
 }
 
@@ -16,10 +17,6 @@ Entity::~Entity() {
 	for( ; prop_iter != prop_iter_end; ++prop_iter ) {
 		delete prop_iter->second;
 	}
-}
-
-EntityID Entity::get_id() const {
-	return m_id;
 }
 
 std::size_t Entity::get_num_properties() const {
@@ -42,8 +39,14 @@ EntityObserver& Entity::get_observer() const {
 	return *m_observer;
 }
 
-bool Entity::has_property( const std::string& property_id ) const {
-	return m_properties.find( property_id ) != m_properties.end();
+Property* Entity::find_base_property( const std::string& id ) {
+	PropertyMap::iterator prop_iter = m_properties.find( id );
+	return prop_iter == m_properties.end() ? nullptr : prop_iter->second;
+}
+
+const Property* Entity::find_base_property( const std::string& id ) const {
+	PropertyMap::const_iterator prop_iter = m_properties.find( id );
+	return prop_iter == m_properties.end() ? nullptr : prop_iter->second;
 }
 
 }

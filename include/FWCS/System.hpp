@@ -1,10 +1,9 @@
 #pragma once
 
 #include <FWCS/EntityObserver.hpp>
-#include <FWCS/Types.hpp>
 
 #include <vector>
-#include <map>
+#include <set>
 #include <cstring>
 #include <cstdint>
 
@@ -73,21 +72,14 @@ class System : public EntityObserver {
 		void delete_controller();
 
 		/** Create new entity.
-		 * @param id ID (must be unique).
 		 * @return New entity.
 		 */
-		Entity& create_entity( EntityID id );
-
-		/** Find entity by ID.
-		 * @param id ID.
-		 * @return Found entity or nullptr if not found.
-		 */
-		Entity* find_entity( EntityID id ) const;
+		Entity& create_entity();
 
 		/** Delete entity.
-		 * @param id ID (must exist).
+		 * @param entity Entity.
 		 */
-		void delete_entity( EntityID id );
+		void delete_entity( Entity& entity );
 
 		/** Run system.
 		 * Calls all controllers.
@@ -97,14 +89,14 @@ class System : public EntityObserver {
 
 	private:
 		typedef std::vector<Controller*> ControllerPtrArray;
-		typedef std::map<EntityID, Entity*> EntityMap;
+		typedef std::set<Entity*> EntitySet;
 		
 		void link_entity( Entity& entity );
 
-		void on_property_create( Property& property, Entity& entity );
+		void on_property_create( const std::string& id, Entity& entity );
 
 		ControllerPtrArray m_controllers;
-		EntityMap m_entities;
+		EntitySet m_entities;
 };
 
 }

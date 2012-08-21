@@ -10,8 +10,9 @@ namespace ctrl {
  * of gravity is fetched from an Environment property.
  *
  * Properties needed:
- *   * cs::prop::Moveable
- *   * cs::prop::Environment
+ *   * force (sf::Vector3f, in Newton): Force to which gravity gets added
+ *   * gravity (float, in m/s²): Gravity (acceleration)
+ *   * mass (float, in kg): Mass
  */
 class Gravity : public Controller {
 	public:

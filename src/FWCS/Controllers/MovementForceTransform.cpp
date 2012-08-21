@@ -1,6 +1,7 @@
 #include <FWCS/Controllers/MovementForceTransform.hpp>
-#include <FWCS/Properties/Moveable.hpp>
 #include <FWCS/Entity.hpp>
+
+#include <SFML/System/Vector3.hpp>
 
 namespace cs {
 namespace ctrl {
@@ -8,17 +9,21 @@ namespace ctrl {
 MovementForceTransform::MovementForceTransform() :
 	Controller()
 {
-	listen_for( "Moveable" );
+	listen_for<sf::Vector3f>( "force" );
+	listen_for<sf::Vector3f>( "acceleration" );
+	listen_for<float>( "mass" );
 }
 
 void MovementForceTransform::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
-	prop::Moveable& moveable_property = *entity.find_property<prop::Moveable>();
+	ConcreteProperty<sf::Vector3f>& force = *entity.find_property<sf::Vector3f>( "force" );
+	ConcreteProperty<sf::Vector3f>& acceleration = *entity.find_property<sf::Vector3f>( "acceleration" );
+	ConcreteProperty<float>& mass = *entity.find_property<float>( "mass" );
 
-	moveable_property.set_acceleration(
+	acceleration.set_value(
 		sf::Vector3f(
-			moveable_property.get_force().x / moveable_property.get_mass(),
-			moveable_property.get_force().y / moveable_property.get_mass(),
-			moveable_property.get_force().z / moveable_property.get_mass()
+			force.get_value().x / mass.get_value(),
+			force.get_value().y / mass.get_value(),
+			force.get_value().z / mass.get_value()
 		)
 	);
 }

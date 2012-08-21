@@ -9,7 +9,9 @@ namespace ctrl {
  * A force is being transformed to acceleration.
  *
  * Properties needed:
- *   * cs::prop::Moveable
+ *   * force (sf::Vector3f, in Newton): Force to transform
+ *   * acceleration (sf::Vector3f, in m/s²): Resulting acceleration
+ *   * mass (float, in kg): Mass
  */
 class MovementForceTransform : public Controller {
 	public:

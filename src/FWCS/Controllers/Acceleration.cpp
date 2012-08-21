@@ -1,7 +1,7 @@
 #include <FWCS/Controllers/Acceleration.hpp>
-#include <FWCS/Properties/Moveable.hpp>
 #include <FWCS/Entity.hpp>
 
+#include <SFML/System/Vector3.hpp>
 #include <SFML/System/Time.hpp>
 
 namespace cs {
@@ -10,17 +10,19 @@ namespace ctrl {
 Acceleration::Acceleration() :
 	Controller()
 {
-	listen_for( "Moveable" );
+	listen_for<sf::Vector3f>( "acceleration" );
+	listen_for<sf::Vector3f>( "velocity" );
 }
 
 void Acceleration::update_entity( Entity& entity, const sf::Time& delta ) {
-	prop::Moveable& moveable_property = *entity.find_property<prop::Moveable>();
+	ConcreteProperty<sf::Vector3f>& acceleration = *entity.find_property<sf::Vector3f>( "acceleration" );
+	ConcreteProperty<sf::Vector3f>& velocity = *entity.find_property<sf::Vector3f>( "velocity" );
 
-	moveable_property.set_velocity(
+	velocity.set_value(
 		sf::Vector3f(
-			moveable_property.get_velocity().x + (moveable_property.get_acceleration().x * delta.asSeconds()),
-			moveable_property.get_velocity().y + (moveable_property.get_acceleration().y * delta.asSeconds()),
-			moveable_property.get_velocity().z + (moveable_property.get_acceleration().z * delta.asSeconds())
+			velocity.get_value().x + (acceleration.get_value().x * delta.asSeconds()),
+			velocity.get_value().y + (acceleration.get_value().y * delta.asSeconds()),
+			velocity.get_value().z + (acceleration.get_value().z * delta.asSeconds())
 		)
 	);
 }

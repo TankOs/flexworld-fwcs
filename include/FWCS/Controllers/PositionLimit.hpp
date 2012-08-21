@@ -12,9 +12,10 @@ namespace ctrl {
  * reset.
  *
  * Properties needed:
- *   * Object
- *   * PositionLimit
- *   * Moveable
+ *   * position (sf::Vector3f): Current position
+ *   * velocity (sf::Vector3f): Velocity
+ *   * lower_position_limit (sf::Vector3f): Lower position limit
+ *   * upper_position_limit (sf::Vector3f): Upper position limit
  */
 class PositionLimit : public Controller {
 	public:

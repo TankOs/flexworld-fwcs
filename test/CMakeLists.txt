@@ -12,27 +12,19 @@ set( INC_DIR "src" )
 
 set(
 	SOURCES
-	${INC_DIR}/DummyProperties.hpp
-	${SRC_DIR}/DummyProperties.cpp
 	${SRC_DIR}/Test.cpp
 	${SRC_DIR}/TestAccelerationController.cpp
 	${SRC_DIR}/TestController.cpp
 	${SRC_DIR}/TestDragController.cpp
-	${SRC_DIR}/TestDragProperty.cpp
 	${SRC_DIR}/TestEntity.cpp
-	${SRC_DIR}/TestEnvironmentProperty.cpp
 	${SRC_DIR}/TestForceResetController.cpp
 	${SRC_DIR}/TestGravityController.cpp
 	${SRC_DIR}/TestJumpController.cpp
-	${SRC_DIR}/TestJumpProperty.cpp
-	${SRC_DIR}/TestMoveableProperty.cpp
 	${SRC_DIR}/TestMovementController.cpp
 	${SRC_DIR}/TestMovementForceTransformController.cpp
-	${SRC_DIR}/TestObjectProperty.cpp
 	${SRC_DIR}/TestPositionLimitController.cpp
-	${SRC_DIR}/TestPositionLimitProperty.cpp
+	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
-	${SRC_DIR}/TestThrustProperty.cpp
 	${SRC_DIR}/TestThrustResetController.cpp
 )
 

@@ -9,7 +9,8 @@ namespace ctrl {
  * Applies acceleration to velocity, dependent on time.
  *
  * Properties needed:
- *   * cs::prop::Moveable
+ *   * acceleration (sf::Vector3f): Current acceleration
+ *   * velocity (sf::Vector3f): Velocity to be changed
  */
 class Acceleration : public Controller {
 	public:

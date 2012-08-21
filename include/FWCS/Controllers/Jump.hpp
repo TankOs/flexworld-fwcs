@@ -2,9 +2,6 @@
 
 #include <FWCS/Controller.hpp>
 
-#include <SFML/System/Time.hpp>
-#include <map>
-
 namespace cs {
 namespace ctrl {
 
@@ -18,8 +15,10 @@ namespace ctrl {
  * deactivate the jump property again.
  *
  * Required properties:
- *   * Moveable
- *   * Jump
+ *   * force (sf::Vector3f, in Newton): Force to which jump force gets added to
+ *   * jump_vector (sf::Vector3f): Jump direction
+ *   * jump_force (float, in Newton): Generated force along jump_vector
+ *   * jump_active (bool): Set to true to jump
  */
 class Jump : public Controller {
 	public:
@@ -27,18 +26,8 @@ class Jump : public Controller {
 		 */
 		Jump();
 
-		/** Get number of cached entities.
-		 * @return Number of cached entities.
-		 */
-		std::size_t get_num_cached_entities() const;
-
 	private:
-		typedef std::map<Entity*, sf::Time> EntityRuntimeMap;
-
-		void on_entity_remove( Entity& entity );
 		void update_entity( Entity& entity, const sf::Time& delta );
-
-		EntityRuntimeMap m_runtimes;
 };
 
 }

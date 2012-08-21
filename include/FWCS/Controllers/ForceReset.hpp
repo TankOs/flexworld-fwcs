@@ -9,7 +9,7 @@ namespace ctrl {
  * Resets an entity's force to zero.
  *
  * Properties needed:
- *   * Moveable
+ *   * force (sf::Vector3f, in Newton): Force to reset
  */
 class ForceReset : public Controller {
 	public:

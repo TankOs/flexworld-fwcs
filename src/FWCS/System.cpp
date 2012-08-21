@@ -13,11 +13,11 @@ System::~System() {
 		delete m_controllers[controller_idx];
 	}
 
-	EntityMap::iterator ent_iter = m_entities.begin();
-	EntityMap::iterator ent_iter_end = m_entities.end();
+	EntitySet::iterator ent_iter = m_entities.begin();
+	EntitySet::iterator ent_iter_end = m_entities.end();
 	
 	for( ; ent_iter != ent_iter_end; ++ent_iter ) {
-		delete ent_iter->second;
+		delete *ent_iter;
 	}
 }
 
@@ -29,42 +29,32 @@ std::size_t System::get_num_controllers() const {
 	return m_controllers.size();
 }
 
-Entity& System::create_entity( EntityID id ) {
-	assert( m_entities.find( id ) == m_entities.end() );
-
-	Entity* new_entity = new Entity( id );
+Entity& System::create_entity() {
+	Entity* new_entity = new Entity;
 	new_entity->set_observer( *this );
 
-	m_entities[id] = new_entity;
-
+	m_entities.insert( new_entity );
 	link_entity( *new_entity );
 
 	return *new_entity;
 }
 
-void System::on_property_create( Property& /*property*/, Entity& entity ) {
-	assert( find_entity( entity.get_id() ) == &entity );
+void System::on_property_create( const std::string& /*id*/, Entity& entity ) {
+	assert( m_entities.find( &entity ) != m_entities.end() );
 
 	link_entity( entity );
 }
 
-Entity* System::find_entity( EntityID id ) const {
-	EntityMap::const_iterator ent_iter = m_entities.find( id );
+void System::delete_entity( Entity& entity ) {
+	EntitySet::iterator ent_iter = m_entities.find( &entity );
+	assert( ent_iter != m_entities.end() );
 
-	return (ent_iter == m_entities.end() ? nullptr : ent_iter->second);
-}
-
-void System::delete_entity( EntityID id ) {
-	assert( find_entity( id ) != nullptr );
-
-	EntityMap::iterator ent_iter = m_entities.find( id );
-
-	delete ent_iter->second;
+	delete *ent_iter;
 	m_entities.erase( ent_iter );
 }
 
 void System::link_entity( Entity& entity ) {
-	assert( find_entity( entity.get_id() ) == &entity );
+	assert( m_entities.find( &entity ) != m_entities.end() );
 
 	for( std::size_t controller_idx = 0; controller_idx < m_controllers.size(); ++controller_idx ) {
 		Controller& controller = *m_controllers[controller_idx];

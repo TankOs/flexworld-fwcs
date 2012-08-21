@@ -9,8 +9,8 @@ namespace ctrl {
  * Applies velocity to position, dependent on time.
  *
  * Properties needed:
- *   * cs::prop::Moveable
- *   * cs::prop::Object
+ *   * position (sf::Vector3f): Position that's being changed
+ *   * velocity (sf::Vector3f, in m/s): Velocity
  */
 class Movement : public Controller {
 	public:

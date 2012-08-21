@@ -1,8 +1,7 @@
 #include <FWCS/Controllers/Jump.hpp>
-#include <FWCS/Properties/Jump.hpp>
-#include <FWCS/Properties/Moveable.hpp>
 #include <FWCS/Entity.hpp>
 
+#include <SFML/System/Vector3.hpp>
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -16,71 +15,36 @@ BOOST_AUTO_TEST_CASE( TestJumpController ) {
 	// Interesting entity.
 	{
 		ctrl::Jump controller;
-		Entity entity( 0 );
+		Entity entity;
 
-		BOOST_CHECK( controller.is_entity_interesting( entity ) == false );
+		entity.create_property<sf::Vector3f>( "force" );
+		entity.create_property<sf::Vector3f>( "jump_vector" );
+		entity.create_property<float>( "jump_force" );
+		entity.create_property<bool>( "jump_active" );
 
-		entity.create_property<prop::Jump>();
-		BOOST_CHECK( controller.is_entity_interesting( entity ) == false );
-
-		entity.create_property<prop::Moveable>();
 		BOOST_CHECK( controller.is_entity_interesting( entity ) == true );
-	}
-
-	// Runtime cache.
-	{
-		Entity entity( 0 );
-
-		entity.create_property<prop::Moveable>();
-		entity.create_property<prop::Jump>().set_active( true );
-
-		ctrl::Jump controller;
-
-		controller.add_entity( entity );
-		BOOST_CHECK( controller.get_num_cached_entities() == 0 );
-
-		controller.run( sf::milliseconds( 1 ) );
-		BOOST_CHECK( controller.get_num_cached_entities() == 1 );
-
-		controller.run( sf::milliseconds( 1 ) );
-		BOOST_CHECK( controller.get_num_cached_entities() == 1 );
-
-		controller.run( sf::milliseconds( 8 ) );
-		BOOST_CHECK( controller.get_num_cached_entities() == 0 );
-
-		controller.remove_entity( entity );
-
-		// Manually remove.
-		entity.find_property<prop::Jump>()->set_active( true );
-
-		controller.add_entity( entity );
-		BOOST_CHECK( controller.get_num_cached_entities() == 0 );
-
-		controller.run( sf::milliseconds( 1 ) );
-		BOOST_CHECK( controller.get_num_cached_entities() == 1 );
-
-		controller.remove_entity( entity );
-		BOOST_CHECK( controller.get_num_cached_entities() == 0 );
 	}
 
 	// Run.
 	{
-		Entity entity( 0 );
+		Entity entity;
 
-		prop::Moveable& moveable_property = entity.create_property<prop::Moveable>();
-		prop::Jump& jump_property = entity.create_property<prop::Jump>();
+		ConcreteProperty<sf::Vector3f>& force = entity.create_property<sf::Vector3f>( "force" );
+		ConcreteProperty<sf::Vector3f>& jump_vector = entity.create_property<sf::Vector3f>( "jump_vector" );
+		ConcreteProperty<float>& jump_force = entity.create_property<float>( "jump_force" );
+		ConcreteProperty<bool>& jump_active = entity.create_property<bool>( "jump_active" );
 
-		moveable_property.set_force( sf::Vector3f( 0, 0, 0 ) );
-		jump_property.set_up_vector( sf::Vector3f( 0, 1, 0 ) );
-		jump_property.set_force( 100 );
+		force.set_value( sf::Vector3f( 0, 0, 0 ) );
+		jump_vector.set_value( sf::Vector3f( 0, 1, 0 ) );
+		jump_force.set_value( 100 );
+		jump_active.set_value( true );
 
 		ctrl::Jump controller;
 
 		controller.add_entity( entity );
-		controller.run( sf::milliseconds( 10 ) );
+		controller.run( sf::milliseconds( 50 ) );
 
-		BOOST_CHECK( moveable_property.get_force() == sf::Vector3f( 0, 100, 0 ) );
-		BOOST_CHECK( controller.get_num_cached_entities() == 0 );
-		BOOST_CHECK( jump_property.is_active() == false );
+		BOOST_CHECK( force.get_value() == sf::Vector3f( 0, 100, 0 ) );
+		BOOST_CHECK( jump_active.get_value() == false );
 	}
 }

@@ -9,7 +9,7 @@ namespace ctrl {
  * Resets an entity's thrust to zero.
  *
  * Properties needed:
- *   * Thrust
+ *   * thrust (sf::Vector3f, in Newton): Thrust to reset
  */
 class ThrustReset : public Controller {
 	public:

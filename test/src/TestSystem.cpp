@@ -1,5 +1,3 @@
-#include "DummyProperties.hpp"
-
 #include <FWCS/System.hpp>
 #include <FWCS/Controller.hpp>
 #include <FWCS/Entity.hpp>
@@ -11,19 +9,21 @@ class ExampleRunController : public cs::Controller {
 	public:
 		ExampleRunController() :
 			cs::Controller(),
-			m_num_update_calls( 0 )
+			m_num_update_calls( 0 ),
+			m_last_updated_entity( nullptr )
 		{
-			listen_for( "DummyProperty1" );
+			listen_for<float>( "dummy_0" );
 		}
 
 		void update_entity( cs::Entity& entity, const sf::Time& delta ) {
-			BOOST_CHECK( entity.get_id() == 123 );
 			BOOST_CHECK( delta == sf::milliseconds( 1000 ) );
 
+			m_last_updated_entity = &entity;
 			++m_num_update_calls;
 		}
 
 		std::size_t m_num_update_calls;
+		const cs::Entity* m_last_updated_entity;
 };
 
 BOOST_AUTO_TEST_CASE( TestSystem ) {
@@ -56,33 +56,27 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 	{
 		System sys;
 
-		Entity& entity = sys.create_entity( 1337 );
+		Entity& entity = sys.create_entity();
 
-		BOOST_CHECK( sys.find_entity( 1337 ) == &entity );
 		BOOST_CHECK( sys.get_num_entities() == 1 );
-		BOOST_CHECK( entity.get_id() == 1337 );
 		BOOST_REQUIRE( entity.has_observer() );
 		BOOST_CHECK( &entity.get_observer() == static_cast<EntityObserver*>( &sys ) );
 
-		Entity& second_entity = sys.create_entity( 2000 );
+		Entity& second_entity = sys.create_entity();
 
-		BOOST_CHECK( sys.find_entity( 2000 ) == &second_entity );
 		BOOST_CHECK( sys.get_num_entities() == 2 );
-		BOOST_CHECK( second_entity.get_id() == 2000 );
 		BOOST_REQUIRE( second_entity.has_observer() );
 		BOOST_CHECK( &second_entity.get_observer() == static_cast<EntityObserver*>( &sys ) );
 
 		// Delete.
 
-		sys.delete_entity( 1337 );
+		sys.delete_entity( entity );
 
 		BOOST_CHECK( sys.get_num_entities() == 1 );
-		BOOST_CHECK( sys.find_entity( 1337 ) == nullptr );
 
-		sys.delete_entity( 2000 );
+		sys.delete_entity( second_entity );
 
 		BOOST_CHECK( sys.get_num_entities() == 0 );
-		BOOST_CHECK( sys.find_entity( 2000 ) == nullptr );
 	}
 
 	// Automatic linking of entities to controllers.
@@ -96,16 +90,16 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 
 			sys.create_controller<ExampleRunController>();
 
-			Entity& pos_entity0 = sys.create_entity( 0 );
-			Entity& neg_entity0 = sys.create_entity( 1 );
-			Entity& pos_entity1 = sys.create_entity( 2 );
-			Entity& neg_entity1 = sys.create_entity( 3 );
+			Entity& pos_entity0 = sys.create_entity();
+			Entity& neg_entity0 = sys.create_entity();
+			Entity& pos_entity1 = sys.create_entity();
+			Entity& neg_entity1 = sys.create_entity();
 
-			pos_entity0.create_property<DummyProperty1>();
-			pos_entity1.create_property<DummyProperty1>();
+			pos_entity0.create_property<float>( "dummy_0" );
+			pos_entity1.create_property<float>( "dummy_0" );
 
-			neg_entity0.create_property<DummyProperty0>();
-			neg_entity1.create_property<DummyProperty0>();
+			neg_entity0.create_property<int32_t>( "dummy_1" );
+			neg_entity1.create_property<int32_t>( "dummy_1" );
 
 			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( pos_entity0 ) == true );
 			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( neg_entity0 ) == false );
@@ -117,16 +111,16 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		{
 			System sys;
 
-			Entity& pos_entity0 = sys.create_entity( 0 );
-			Entity& neg_entity0 = sys.create_entity( 1 );
-			Entity& pos_entity1 = sys.create_entity( 2 );
-			Entity& neg_entity1 = sys.create_entity( 3 );
+			Entity& pos_entity0 = sys.create_entity();
+			Entity& neg_entity0 = sys.create_entity();
+			Entity& pos_entity1 = sys.create_entity();
+			Entity& neg_entity1 = sys.create_entity();
 
-			pos_entity0.create_property<DummyProperty1>();
-			pos_entity1.create_property<DummyProperty1>();
+			pos_entity0.create_property<float>( "dummy_0" );
+			pos_entity1.create_property<float>( "dummy_0" );
 
-			neg_entity0.create_property<DummyProperty0>();
-			neg_entity1.create_property<DummyProperty0>();
+			neg_entity0.create_property<int32_t>( "dummy_1" );
+			neg_entity1.create_property<int32_t>( "dummy_1" );
 
 			sys.create_controller<ExampleRunController>();
 
@@ -140,19 +134,19 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		{
 			System sys;
 
-			Entity& pos_entity0 = sys.create_entity( 0 );
-			Entity& neg_entity0 = sys.create_entity( 1 );
+			Entity& pos_entity0 = sys.create_entity();
+			Entity& neg_entity0 = sys.create_entity();
 
-			pos_entity0.create_property<DummyProperty1>();
-			neg_entity0.create_property<DummyProperty0>();
+			pos_entity0.create_property<float>( "dummy_0" );
+			neg_entity0.create_property<int32_t>( "dummy_1" );
 
 			sys.create_controller<ExampleRunController>();
 
-			Entity& pos_entity1 = sys.create_entity( 2 );
-			Entity& neg_entity1 = sys.create_entity( 3 );
+			Entity& pos_entity1 = sys.create_entity();
+			Entity& neg_entity1 = sys.create_entity();
 
-			pos_entity1.create_property<DummyProperty1>();
-			neg_entity1.create_property<DummyProperty0>();
+			pos_entity1.create_property<float>( "dummy_0" );
+			neg_entity1.create_property<int32_t>( "dummy_1" );
 
 			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( pos_entity0 ) == true );
 			BOOST_CHECK( sys.find_controller<ExampleRunController>()->is_entity_linked( neg_entity0 ) == false );
@@ -166,14 +160,16 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		System sys;
 		
 		ExampleRunController& controller = sys.create_controller<ExampleRunController>();
-		Entity& entity = sys.create_entity( 123 );
+		Entity& entity = sys.create_entity();
 
-		entity.create_property<DummyProperty1>();
+		entity.create_property<float>( "dummy_0" );
 
 		sys.run( sf::milliseconds( 1000 ) );
 		BOOST_CHECK( controller.m_num_update_calls == 1 );
+		BOOST_CHECK( controller.m_last_updated_entity = &entity );
 
 		sys.run( sf::milliseconds( 1000 ) );
 		BOOST_CHECK( controller.m_num_update_calls == 2 );
+		BOOST_CHECK( controller.m_last_updated_entity = &entity );
 	}
 }
