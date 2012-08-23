@@ -16,14 +16,14 @@ Walk::Walk() :
 {
 	listen_for<sf::Vector3f>( "forward_vector" );
 	listen_for<sf::Vector3f>( "force" );
-	listen_for<sf::Vector2f>( "control_vector" );
+	listen_for<sf::Vector2f>( "walk_control_vector" );
 	listen_for<float>( "walk_force" );
 }
 
 void Walk::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
 	ConcreteProperty<sf::Vector3f>& forward_vector = *entity.find_property<sf::Vector3f>( "forward_vector" );
 	ConcreteProperty<sf::Vector3f>& force = *entity.find_property<sf::Vector3f>( "force" );
-	ConcreteProperty<sf::Vector2f>& control_vector = *entity.find_property<sf::Vector2f>( "control_vector" );
+	ConcreteProperty<sf::Vector2f>& control_vector = *entity.find_property<sf::Vector2f>( "walk_control_vector" );
 	ConcreteProperty<float>& walk_force = *entity.find_property<float>( "walk_force" );
 
 	sf::Vector3f new_force( force.get_value() );

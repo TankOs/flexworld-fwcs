@@ -49,25 +49,25 @@ void Drag::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
 
 	sf::Vector3f new_force = force.get_value();
 
-	if( new_force.x < 0.0f ) {
-		new_force.x = std::min( 0.0f, new_force.x + drag_force.x );
+	if( velocity.get_value().x < 0.0f ) {
+		new_force.x += drag_force.x;
 	}
-	else if( new_force.x > 0.0f ) {
-		new_force.x = std::max( 0.0f, new_force.x - drag_force.x );
-	}
-
-	if( new_force.y < 0.0f ) {
-		new_force.y = std::min( 0.0f, new_force.y + drag_force.y );
-	}
-	else if( new_force.y > 0.0f ) {
-		new_force.y = std::max( 0.0f, new_force.y - drag_force.y );
+	else if( velocity.get_value().x > 0.0f ) {
+		new_force.x -= drag_force.x;
 	}
 
-	if( new_force.z < 0.0f ) {
-		new_force.z = std::min( 0.0f, new_force.z + drag_force.z );
+	if( velocity.get_value().y < 0.0f ) {
+		new_force.y += drag_force.y;
 	}
-	else if( new_force.z > 0.0f ) {
-		new_force.z = std::max( 0.0f, new_force.z - drag_force.z );
+	else if( velocity.get_value().y > 0.0f ) {
+		new_force.y -= drag_force.y;
+	}
+
+	if( velocity.get_value().z < 0.0f ) {
+		new_force.z += drag_force.z;
+	}
+	else if( velocity.get_value().z > 0.0f ) {
+		new_force.z -= drag_force.z;
 	}
 
 	force.set_value( new_force );

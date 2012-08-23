@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 		Entity entity;
 		entity.create_property<sf::Vector3f>( "forward_vector" );
 		entity.create_property<sf::Vector3f>( "force" );
-		entity.create_property<sf::Vector2f>( "control_vector" );
+		entity.create_property<sf::Vector2f>( "walk_control_vector" );
 		entity.create_property<float>( "walk_force" );
 
 		ctrl::Walk controller;
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 
 		entity.create_property<sf::Vector3f>( "forward_vector", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 		ConcreteProperty<sf::Vector3f>& force = entity.create_property<sf::Vector3f>( "force" );
-		ConcreteProperty<sf::Vector2f>& control_vector = entity.create_property<sf::Vector2f>( "control_vector" );
+		ConcreteProperty<sf::Vector2f>& control_vector = entity.create_property<sf::Vector2f>( "walk_control_vector" );
 		entity.create_property<float>( "walk_force", 100.0f );
 
 		ctrl::Walk controller;
