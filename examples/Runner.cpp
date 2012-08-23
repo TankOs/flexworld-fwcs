@@ -61,7 +61,8 @@ int main() {
 	earth_entity.create_property<sf::Vector3f>( "forward_vector", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 	earth_entity.create_property<sf::Vector2f>( "walk_control_vector", sf::Vector2f( 0.0f, 0.0f ) );
 	earth_entity.create_property<float>( "jump_force", 3200.0f );
-	earth_entity.create_property<float>( "walk_force", 20.0f );
+	earth_entity.create_property<float>( "walk_force", 200.0f );
+	earth_entity.create_property<float>( "max_walk_velocity", 1.0f );
 	earth_entity.create_property<float>( "drag_area", 1.75f * 0.5f );
 	earth_entity.create_property<float>( "air_density", 1.275f );
 	earth_entity.create_property<float>( "resistance_coeff", 0.78f );
@@ -114,8 +115,8 @@ int main() {
 
 		// Update walk control vector.
 		walk_control_vector.y =
-			(sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) ? 1.0f : 0.0f) +
-			(sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) ? -1.0f : 0.0f)
+			(sf::Keyboard::isKeyPressed( sf::Keyboard::D ) ? 1.0f : 0.0f) +
+			(sf::Keyboard::isKeyPressed( sf::Keyboard::A ) ? -1.0f : 0.0f)
 		;
 
 		earth_entity.find_property<sf::Vector2f>( "walk_control_vector" )->set_value( walk_control_vector );

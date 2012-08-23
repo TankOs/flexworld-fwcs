@@ -20,8 +20,10 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 		Entity entity;
 		entity.create_property<sf::Vector3f>( "forward_vector" );
 		entity.create_property<sf::Vector3f>( "force" );
+		entity.create_property<sf::Vector3f>( "velocity" );
 		entity.create_property<sf::Vector2f>( "walk_control_vector" );
 		entity.create_property<float>( "walk_force" );
+		entity.create_property<float>( "max_walk_velocity" );
 
 		ctrl::Walk controller;
 		BOOST_CHECK( controller.is_entity_interesting( entity ) == true );
@@ -33,8 +35,10 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 
 		entity.create_property<sf::Vector3f>( "forward_vector", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 		ConcreteProperty<sf::Vector3f>& force = entity.create_property<sf::Vector3f>( "force" );
-		ConcreteProperty<sf::Vector2f>& control_vector = entity.create_property<sf::Vector2f>( "walk_control_vector" );
+		entity.create_property<sf::Vector3f>( "velocity" );
+		entity.create_property<sf::Vector2f>( "walk_control_vector" );
 		entity.create_property<float>( "walk_force", 100.0f );
+		entity.create_property<float>( "max_walk_velocity", 10.0f );
 
 		ctrl::Walk controller;
 		controller.add_entity( entity );
@@ -42,21 +46,6 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 		controller.run( sf::milliseconds( 1000 ) );
 		BOOST_CHECK( force.get_value() == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 
-		force.set_value( sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-		control_vector.set_value( sf::Vector2f( 0.0f, 1.0f ) );
-		controller.run( sf::milliseconds( 1000 ) );
-		BOOST_CHECK( force.get_value() == sf::Vector3f( 100.0f, 0.0f, 0.0f ) );
-
-		force.set_value( sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-		control_vector.set_value( sf::Vector2f( 0.0f, 0.5f ) );
-		controller.run( sf::milliseconds( 1000 ) );
-		BOOST_CHECK( force.get_value() == sf::Vector3f( 50.0f, 0.0f, 0.0f ) );
-
-		force.set_value( sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-		control_vector.set_value( sf::Vector2f( 1.0f, 0.0f ) );
-		controller.run( sf::milliseconds( 1000 ) );
-		BOOST_CHECK( force.get_value().x >= -0.001f && force.get_value().x <= 0.001f );
-		BOOST_CHECK( force.get_value().y == 0.0f );
-		BOOST_CHECK( force.get_value().z >= 99.999f && force.get_value().z <= 100.001f );
+		// WALKING TESTED BY ACCEPTANCE TEST.
 	}
 }

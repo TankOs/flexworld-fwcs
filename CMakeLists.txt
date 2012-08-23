@@ -64,6 +64,7 @@ set(
 	${SRC_DIR}/FWCS/Controllers/ThrustReset.cpp
 	${SRC_DIR}/FWCS/Controllers/Walk.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
+	${SRC_DIR}/FWCS/Math.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp
