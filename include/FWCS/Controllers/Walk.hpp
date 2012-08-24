@@ -22,11 +22,11 @@ namespace ctrl {
  *
  * Required properties:
  *   * forward_vector (sf::Vector3f): Walk direction.
- *   * control_vector (sf::Vector2f): Control vector (see class description).
+ *   * velocity (sf::Vector3f, in m/s): Current velocity
  *   * force (sf::Vector3f, in Newton): Force to which walk force is added to.
+ *   * walk_control_vector (sf::Vector2f): Control vector (see class description).
  *   * walk_force (float, in Newton): Walk force.
  *   * max_walk_velocity (float, in m/s): Maximum velocity this controller can generate.
- *   * velocity (sf::Vector3f, in m/s): Current velocity
  */
 class Walk : public Controller {
 	public:
