@@ -48,6 +48,7 @@ set(
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
 	${INC_DIR}/FWCS/Math.hpp
+	${INC_DIR}/FWCS/Math.inl
 	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Property.hpp
 	${INC_DIR}/FWCS/Property.inl

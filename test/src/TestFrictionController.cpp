@@ -40,12 +40,27 @@ BOOST_AUTO_TEST_CASE( TestFrictionController ) {
 		entity.create_property<sf::Vector3f>( "up_vector", sf::Vector3f( 0.0f, 1.0f, 0.0f ) );
 		entity.create_property<float>( "static_friction_coeff", STATIC_FRICTION_COEFF );
 		entity.create_property<float>( "sliding_friction_coeff", SLIDING_FRICTION_COEFF );
-		ConcreteProperty<bool>& on_ground = entity.create_property<bool>( "on_ground", true );
+		ConcreteProperty<bool>& on_ground = entity.create_property<bool>( "on_ground", false );
 
 		ctrl::Friction controller;
 		controller.add_entity( entity );
 
+		// Ignore everything when not on ground.
+		velocity.set_value( sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+		force.set_value( sf::Vector3f( 9999.0f, 9999.0f, 9999.0f ) );
+
+		controller.run( sf::milliseconds( 45348 ) );
+		BOOST_CHECK( force.get_value() == sf::Vector3f( 9999.0f, 9999.0f, 9999.0f ) );
+
+		velocity.set_value( sf::Vector3f( 9999.0f, 9999.0f, 9999.0f ) );
+		force.set_value( sf::Vector3f( 9999.0f, 9999.0f, 9999.0f ) );
+
+		controller.run( sf::milliseconds( 45348 ) );
+		BOOST_CHECK( force.get_value() == sf::Vector3f( 9999.0f, 9999.0f, 9999.0f ) );
+
 		// Static friction.
+		on_ground.set_value( true );
+		velocity.set_value( sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 
 		// Below maximum static friction force.
 		for( float next_force = 0.0f; next_force <= STATIC_FRICTION_COEFF * NORMAL_FORCE; next_force += 0.1f ) {
@@ -64,7 +79,7 @@ BOOST_AUTO_TEST_CASE( TestFrictionController ) {
 		// Sliding friction.
 		velocity.set_value( sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 
-		for( float next_force = 0.0f; next_force <= SLIDING_FRICTION_COEFF * NORMAL_FORCE * 10.0f; next_force += 0.1f ) {
+		for( float next_force = 0.1f; next_force <= SLIDING_FRICTION_COEFF * NORMAL_FORCE * 10.0f; next_force += 0.1f ) {
 			force.set_value( sf::Vector3f( next_force, -NORMAL_FORCE, 0.0f ) );
 
 			controller.run( sf::milliseconds( 12345 ) );
@@ -77,5 +92,17 @@ BOOST_AUTO_TEST_CASE( TestFrictionController ) {
 				)
 			);
 		}
+
+		// Stop movement (enter rest state).
+		force.set_value( sf::Vector3f( 0.0f, -NORMAL_FORCE, 0.0f ) );
+		velocity.set_value( sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
+		controller.run( sf::milliseconds( 12345 ) );
+
+		force.set_value( sf::Vector3f( 0.0f, -NORMAL_FORCE, 0.0f ) );
+		velocity.set_value( sf::Vector3f( -1.0f, 0.0f, 0.0f ) );
+		controller.run( sf::milliseconds( 12345 ) );
+
+		BOOST_CHECK( velocity.get_value() == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+		BOOST_CHECK( force.get_value() == sf::Vector3f( 0.0f, -NORMAL_FORCE, 0.0f ) );
 	}
 }

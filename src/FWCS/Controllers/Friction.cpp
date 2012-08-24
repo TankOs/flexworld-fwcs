@@ -60,31 +60,39 @@ void Friction::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
 		new_force -= (normalized_movement_force * static_friction_force);
 	}
 	else { // Sliding friction.
-		// Calculate normalized velocity vector.
-		sf::Vector3f normalized_velocity( velocity.get_value() );
-		normalize( normalized_velocity );
+		// If there are no forces applied in movement direction, check if can go
+		// into rest state.
+		sf::Vector3f movement_force( new_force - (negative_up_vector * normal_force_value ) );
 
-		float sliding_friction_force = sliding_friction_coeff.get_value() * normal_force_value;
+		ConcreteProperty<sf::Vector3f>* last_velocity = entity.find_property<sf::Vector3f>( "friction_last_velocity" );
 
-		/*
-		std::cout << "Before: "
-			<< new_force.x << ", "
-			<< new_force.y << ", "
-			<< new_force.z << ", "
-			<< std::endl
-		;
-		*/
+		if( last_velocity == nullptr ) {
+			last_velocity = &entity.create_property<sf::Vector3f>( "friction_last_velocity", velocity.get_value() );
+		}
 
-		new_force -= (normalized_velocity * sliding_friction_force );
+		if(
+			movement_force.x == 0.0f &&
+			movement_force.y == 0.0f &&
+			movement_force.z == 0.0f &&
+			(
+				calc_signum( last_velocity->get_value().x ) != calc_signum( velocity.get_value().x ) ||
+				calc_signum( last_velocity->get_value().y ) != calc_signum( velocity.get_value().y ) ||
+				calc_signum( last_velocity->get_value().z ) != calc_signum( velocity.get_value().z )
+			)
+		) {
+			velocity.set_value( sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+		}
+		else {
+			// Calculate normalized velocity vector.
+			sf::Vector3f normalized_velocity( velocity.get_value() );
+			normalize( normalized_velocity );
 
-		/*
-		std::cout << "After: "
-			<< new_force.x << ", "
-			<< new_force.y << ", "
-			<< new_force.z << ", "
-			<< std::endl
-		;
-		*/
+			float sliding_friction_force = sliding_friction_coeff.get_value() * normal_force_value;
+
+			new_force -= (normalized_velocity * sliding_friction_force );
+		}
+
+		last_velocity->set_value( velocity.get_value() );
 	}
 
 	force.set_value( new_force );

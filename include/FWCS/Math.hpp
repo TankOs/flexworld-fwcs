@@ -24,4 +24,14 @@ void normalize( sf::Vector3f& v );
  */
 float calc_scalar_product( const sf::Vector3f& v0, const sf::Vector3f& v1 );
 
+/** Calculate signum.
+ * @param value Value.
+ * @tparam T Value type.
+ * @return -1 if negative, 0 if zero, 1 if positive.
+ */
+template <class T>
+int calc_signum( T value );
+
 }
+
+#include "Math.inl"
