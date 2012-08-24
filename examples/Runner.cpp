@@ -7,6 +7,7 @@
 #include <FWCS/Controllers/Drag.hpp>
 #include <FWCS/Controllers/Jump.hpp>
 #include <FWCS/Controllers/Walk.hpp>
+#include <FWCS/Controllers/Friction.hpp>
 #include <FWCS/System.hpp>
 #include <FWCS/Entity.hpp>
 
@@ -28,11 +29,11 @@ int main() {
 	mars_shape.setFillColor( sf::Color::Yellow );
 
 	// Framerate limit.
-	render_window.setFramerateLimit( 60 );
+	render_window.setFramerateLimit( 10 );
 
 	// HUD.
 	sf::Font font;
-	font.loadFromFile( "data/DejaVuSans.ttf" );
+	font.loadFromFile( "data/DejaVuSansMono.ttf" );
 
 	sf::Text hud_text( "", font, 18 );
 
@@ -43,6 +44,7 @@ int main() {
 	system.create_controller<cs::ctrl::Gravity>();
 	system.create_controller<cs::ctrl::Jump>();
 	system.create_controller<cs::ctrl::Walk>();
+	system.create_controller<cs::ctrl::Friction>();
 	system.create_controller<cs::ctrl::Drag>();
 	system.create_controller<cs::ctrl::MovementForceTransform>();
 	system.create_controller<cs::ctrl::Acceleration>();
@@ -59,16 +61,20 @@ int main() {
 	earth_entity.create_property<sf::Vector3f>( "upper_position_limit", sf::Vector3f( static_cast<float>( render_window.getSize().x ), 999999.0f, 0.0f ) );
 	earth_entity.create_property<sf::Vector3f>( "jump_vector", sf::Vector3f( 0.0f, 1.0f, 0.0f ) );
 	earth_entity.create_property<sf::Vector3f>( "forward_vector", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
+	earth_entity.create_property<sf::Vector3f>( "up_vector", sf::Vector3f( 0.0f, 1.0f, 0.0f ) );
 	earth_entity.create_property<sf::Vector2f>( "walk_control_vector", sf::Vector2f( 0.0f, 0.0f ) );
 	earth_entity.create_property<float>( "jump_force", 3200.0f );
-	earth_entity.create_property<float>( "walk_force", 200.0f );
+	earth_entity.create_property<float>( "walk_force", 800.0f );
 	earth_entity.create_property<float>( "max_walk_velocity", 1.0f );
 	earth_entity.create_property<float>( "drag_area", 1.75f * 0.5f );
 	earth_entity.create_property<float>( "air_density", 1.275f );
 	earth_entity.create_property<float>( "resistance_coeff", 0.78f );
 	earth_entity.create_property<float>( "mass", 50.0f );
 	earth_entity.create_property<float>( "gravity", -9.80665f );
+	earth_entity.create_property<float>( "static_friction_coeff", 0.47f );
+	earth_entity.create_property<float>( "sliding_friction_coeff", 0.27f );
 	earth_entity.create_property<bool>( "jump_active", false );
+	earth_entity.create_property<bool>( "on_ground", true );
 
 	cs::Entity& mars_entity = system.create_entity();
 
@@ -157,18 +163,24 @@ int main() {
 				<< "Left: Earth | Right: Mars\n"
 				<< "Press <Space> to jump.\n\n"
 				<< std::fixed
-				<< "Acceleration:"
+				<< std::showpos
+				<< "Force:          "
+				<< " " << earth_entity.find_property<sf::Vector3f>( "force" )->get_value().x
+				<< ", " << earth_entity.find_property<sf::Vector3f>( "force" )->get_value().y
+				<< ", " << earth_entity.find_property<sf::Vector3f>( "force" )->get_value().z
+				<< " N\n"
+				<< "Acceleration:   "
 				<< " " << earth_entity.find_property<sf::Vector3f>( "acceleration" )->get_value().x
 				<< ", " << earth_entity.find_property<sf::Vector3f>( "acceleration" )->get_value().y
 				<< " m/s^2\n"
-				<< "Velocity:"
+				<< "Velocity:       "
 				<< " " << earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().x
 				<< ", " << earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().y
 				<< " m/s"
 				<< " (" << earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().x / 1000.0f * 60.0f * 60.0f
 				<< ", " << earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().y / 1000.0f * 60.0f * 60.0f
 				<< " km/h)\n"
-				<< "Position:"
+				<< "Position:       "
 				<< " " << earth_entity.find_property<sf::Vector3f>( "position" )->get_value().x
 				<< ", " << earth_entity.find_property<sf::Vector3f>( "position" )->get_value().y
 				<< " m\n"

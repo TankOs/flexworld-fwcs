@@ -36,25 +36,23 @@ void Friction::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
 	ConcreteProperty<float>& sliding_friction_coeff = *entity.find_property<float>( "sliding_friction_coeff" );
 
 	sf::Vector3f new_force( force.get_value() );
-	float force_value = calc_length( new_force );
 
 	// Calculate normal force.
 	sf::Vector3f negative_up_vector( up_vector.get_value().x, -up_vector.get_value().y, up_vector.get_value().z );
 	float normal_force_value = calc_scalar_product( new_force, negative_up_vector );
 
-	// Calculate movement force (force without normal force).
-	sf::Vector3f normalized_movement_force( new_force - (negative_up_vector * normal_force_value ) );
-	float movement_force_value = calc_length( normalized_movement_force );
-
-	// If there's no movement, then there's no friction. Easy, eh?
-	if( movement_force_value == 0.0f ) {
-		return;
-	}
-
-	normalize( normalized_movement_force );
-
 	// Static friction.
 	if( velocity.get_value().x == 0.0f && velocity.get_value().y == 0.0f && velocity.get_value().z == 0.0f ) {
+		// Calculate movement force (force without normal force).
+		sf::Vector3f normalized_movement_force( new_force - (negative_up_vector * normal_force_value ) );
+		float movement_force_value = calc_length( normalized_movement_force );
+
+		if( movement_force_value == 0.0f ) {
+			return;
+		}
+
+		normalize( normalized_movement_force );
+
 		float max_static_friction_force = static_friction_coeff.get_value() * normal_force_value;
 		float static_friction_force = std::min( max_static_friction_force, movement_force_value );
 
@@ -62,9 +60,31 @@ void Friction::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
 		new_force -= (normalized_movement_force * static_friction_force);
 	}
 	else { // Sliding friction.
+		// Calculate normalized velocity vector.
+		sf::Vector3f normalized_velocity( velocity.get_value() );
+		normalize( normalized_velocity );
+
 		float sliding_friction_force = sliding_friction_coeff.get_value() * normal_force_value;
 
-		new_force -= (normalized_movement_force * sliding_friction_force );
+		/*
+		std::cout << "Before: "
+			<< new_force.x << ", "
+			<< new_force.y << ", "
+			<< new_force.z << ", "
+			<< std::endl
+		;
+		*/
+
+		new_force -= (normalized_velocity * sliding_friction_force );
+
+		/*
+		std::cout << "After: "
+			<< new_force.x << ", "
+			<< new_force.y << ", "
+			<< new_force.z << ", "
+			<< std::endl
+		;
+		*/
 	}
 
 	force.set_value( new_force );

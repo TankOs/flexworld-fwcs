@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE( TestFrictionController ) {
 		BOOST_CHECK( force.get_value().x == 100.0f );
 
 		// Sliding friction.
-		velocity.set_value( sf::Vector3f( 1.0f, 2.0f, 3.0f ) );
+		velocity.set_value( sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 
 		for( float next_force = 0.0f; next_force <= SLIDING_FRICTION_COEFF * NORMAL_FORCE * 10.0f; next_force += 0.1f ) {
 			force.set_value( sf::Vector3f( next_force, -NORMAL_FORCE, 0.0f ) );
@@ -71,11 +71,7 @@ BOOST_AUTO_TEST_CASE( TestFrictionController ) {
 
 			BOOST_CHECK(
 				force.get_value() == sf::Vector3f(
-					(
-						next_force == 0.0f ?
-						0.0f :
-						next_force - (SLIDING_FRICTION_COEFF * NORMAL_FORCE)
-					),
+					next_force - (SLIDING_FRICTION_COEFF * NORMAL_FORCE),
 					-NORMAL_FORCE,
 					0.0f
 				)
