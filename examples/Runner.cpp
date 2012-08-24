@@ -29,7 +29,7 @@ int main() {
 	mars_shape.setFillColor( sf::Color::Yellow );
 
 	// Framerate limit.
-	render_window.setFramerateLimit( 10 );
+	render_window.setFramerateLimit( 60 );
 
 	// HUD.
 	sf::Font font;
@@ -64,8 +64,8 @@ int main() {
 	earth_entity.create_property<sf::Vector3f>( "up_vector", sf::Vector3f( 0.0f, 1.0f, 0.0f ) );
 	earth_entity.create_property<sf::Vector2f>( "walk_control_vector", sf::Vector2f( 0.0f, 0.0f ) );
 	earth_entity.create_property<float>( "jump_force", 3200.0f );
-	earth_entity.create_property<float>( "walk_force", 800.0f );
-	earth_entity.create_property<float>( "max_walk_velocity", 1.0f );
+	earth_entity.create_property<float>( "walk_force", 500.0f );
+	earth_entity.create_property<float>( "max_walk_velocity", 2.0f );
 	earth_entity.create_property<float>( "drag_area", 1.75f * 0.5f );
 	earth_entity.create_property<float>( "air_density", 1.275f );
 	earth_entity.create_property<float>( "resistance_coeff", 0.78f );
@@ -110,6 +110,7 @@ int main() {
 					// Jump only when standing.
 					if( earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().y == 0.0f ) {
 						earth_entity.find_property<bool>( "jump_active" )->set_value( true );
+						earth_entity.find_property<bool>( "on_ground" )->set_value( false );
 					}
 
 					if( mars_entity.find_property<sf::Vector3f>( "velocity" )->get_value().y == 0.0f ) {
@@ -131,6 +132,14 @@ int main() {
 
 		sim_time += timeslice;
 		system.run( timeslice );
+
+		// Check if entity is on ground and update property accordingly.
+		if( earth_entity.find_property<sf::Vector3f>( "position" )->get_value().y == 0.0f ) {
+			earth_entity.find_property<bool>( "on_ground" )->set_value( true );
+		}
+		else {
+			earth_entity.find_property<bool>( "on_ground" )->set_value( false );
+		}
 
 		// Apply FWCS's entity positions to SFML shapes. Apply a factor for scaling.
 		earth_shape.setPosition(
@@ -161,7 +170,7 @@ int main() {
 
 			sstr
 				<< "Left: Earth | Right: Mars\n"
-				<< "Press <Space> to jump.\n\n"
+				<< "Press SPACE to jump, A/D to move.\n\n"
 				<< std::fixed
 				<< std::showpos
 				<< "Force:          "
