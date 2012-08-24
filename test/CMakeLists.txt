@@ -18,6 +18,7 @@ set(
 	${SRC_DIR}/TestDragController.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestForceResetController.cpp
+	${SRC_DIR}/TestFrictionController.cpp
 	${SRC_DIR}/TestGravityController.cpp
 	${SRC_DIR}/TestJumpController.cpp
 	${SRC_DIR}/TestMath.cpp

@@ -36,6 +36,7 @@ set(
 	${INC_DIR}/FWCS/Controllers/Acceleration.hpp
 	${INC_DIR}/FWCS/Controllers/Drag.hpp
 	${INC_DIR}/FWCS/Controllers/ForceReset.hpp
+	${INC_DIR}/FWCS/Controllers/Friction.hpp
 	${INC_DIR}/FWCS/Controllers/Gravity.hpp
 	${INC_DIR}/FWCS/Controllers/Jump.hpp
 	${INC_DIR}/FWCS/Controllers/Movement.hpp
@@ -56,6 +57,7 @@ set(
 	${SRC_DIR}/FWCS/Controllers/Acceleration.cpp
 	${SRC_DIR}/FWCS/Controllers/Drag.cpp
 	${SRC_DIR}/FWCS/Controllers/ForceReset.cpp
+	${SRC_DIR}/FWCS/Controllers/Friction.cpp
 	${SRC_DIR}/FWCS/Controllers/Gravity.cpp
 	${SRC_DIR}/FWCS/Controllers/Jump.cpp
 	${SRC_DIR}/FWCS/Controllers/Movement.cpp
