@@ -53,6 +53,16 @@ class Entity : public NonCopyable {
 		template <class T>
 		ConcreteProperty<T>* find_property( const std::string& id );
 
+		/** Find property (const).
+		 * In debug mode, the type will be checked (via a dynamic cast). In release
+		 * mode malformed type requests leads to undefined behaviour.
+		 * @tparam Value type.
+		 * @param id ID.
+		 * @return Property, or nullptr if not found.
+		 */
+		template <class T>
+		const ConcreteProperty<T>* find_property( const std::string& id ) const;
+
 		/** Find base property.
 		 * Used internally only.
 		 * @param id ID.

@@ -26,12 +26,29 @@ template <class T>
 ConcreteProperty<T>* Entity::find_property( const std::string& id ) {
 	typename PropertyMap::iterator prop_iter = m_properties.find( id );
 
-
 	if( prop_iter != m_properties.end() ) {
 #ifdef NDEBUG
 		ConcreteProperty<T>* ptr = reinterpret_cast<ConcreteProperty<T>*>( prop_iter->second );
 #else
 		ConcreteProperty<T>* ptr = dynamic_cast<ConcreteProperty<T>*>( prop_iter->second );
+#endif
+
+		return ptr;
+	}
+	else {
+		return nullptr;
+	}
+}
+
+template <class T>
+const ConcreteProperty<T>* Entity::find_property( const std::string& id ) const {
+	typename PropertyMap::const_iterator prop_iter = m_properties.find( id );
+
+	if( prop_iter != m_properties.end() ) {
+#ifdef NDEBUG
+		const ConcreteProperty<T>* ptr = reinterpret_cast<const ConcreteProperty<T>*>( prop_iter->second );
+#else
+		const ConcreteProperty<T>* ptr = dynamic_cast<const ConcreteProperty<T>*>( prop_iter->second );
 #endif
 
 		return ptr;
