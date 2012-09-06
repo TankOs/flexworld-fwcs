@@ -39,7 +39,7 @@ void Walk::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
 
 	sf::Vector3f new_force( force.get_value() );
 
-	// Calculate normalize walk vector (intended walk direction).
+	// Calculate normalized walk vector (intended walk direction).
 	sf::Vector3f forward_walk_vector(
 		forward_vector.get_value().x * control_vector.get_value().y,
 		forward_vector.get_value().y * control_vector.get_value().y,
@@ -47,9 +47,9 @@ void Walk::update_entity( Entity& entity, const sf::Time& /*delta*/ ) {
 	);
 
 	sf::Vector3f sideward_walk_vector(
-		(forward_vector.get_value().x * COS_90 + forward_vector.get_value().z * SIN_90) * control_vector.get_value().x,
+		(forward_vector.get_value().x * COS_90 + forward_vector.get_value().z * SIN_90) * -control_vector.get_value().x,
 		(forward_vector.get_value().y) * control_vector.get_value().x,
-		(forward_vector.get_value().x * -SIN_90 + forward_vector.get_value().z * COS_90) * control_vector.get_value().x
+		(forward_vector.get_value().x * -SIN_90 + forward_vector.get_value().z * COS_90) * -control_vector.get_value().x
 	);
 
 	sf::Vector3f walk_vector( forward_walk_vector + sideward_walk_vector );
