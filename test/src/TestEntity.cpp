@@ -40,17 +40,17 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 	{
 		Entity ent;
 
-		ConcreteProperty<int32_t>& init_int_property = ent.create_property<int32_t>( "int", 1 );
-		ConcreteProperty<float>& init_float_property = ent.create_property<float>( "float", 2.0f );
-		ConcreteProperty<std::string>& init_string_property = ent.create_property<std::string>( "string", "3" );
-		ConcreteProperty<sf::Vector3f>& init_vec3_property = ent.create_property<sf::Vector3f>( "vec3", sf::Vector3f( 4, 5, 6 ) );
+		int32_t& init_int_property = ent.create_property<int32_t>( "int", 1 );
+		float& init_float_property = ent.create_property<float>( "float", 2.0f );
+		std::string& init_string_property = ent.create_property<std::string>( "string", "3" );
+		sf::Vector3f& init_vec3_property = ent.create_property<sf::Vector3f>( "vec3", sf::Vector3f( 4, 5, 6 ) );
 
 		BOOST_CHECK( ent.get_num_properties() == 4 );
 
-		ConcreteProperty<int32_t>* int_property = ent.find_property<int32_t>( "int" );
-		ConcreteProperty<float>* float_property = ent.find_property<float>( "float" );
-		ConcreteProperty<std::string>* string_property = ent.find_property<std::string>( "string" );
-		ConcreteProperty<sf::Vector3f>* vec3_property = ent.find_property<sf::Vector3f>( "vec3" );
+		int32_t* int_property = ent.find_property<int32_t>( "int" );
+		float* float_property = ent.find_property<float>( "float" );
+		std::string* string_property = ent.find_property<std::string>( "string" );
+		sf::Vector3f* vec3_property = ent.find_property<sf::Vector3f>( "vec3" );
 
 		BOOST_CHECK( int_property != nullptr );
 		BOOST_CHECK( float_property != nullptr );
@@ -62,22 +62,17 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 		BOOST_CHECK( &init_string_property == string_property );
 		BOOST_CHECK( &init_vec3_property == vec3_property );
 
-		BOOST_CHECK( &init_int_property == ent.find_base_property( "int" ) );
-		BOOST_CHECK( &init_float_property == ent.find_base_property( "float" ) );
-		BOOST_CHECK( &init_string_property == ent.find_base_property( "string" ) );
-		BOOST_CHECK( &init_vec3_property == ent.find_base_property( "vec3" ) );
-
 		if( int_property != nullptr ) {
-			BOOST_CHECK( int_property->get_value() == 1 );
+			BOOST_CHECK( *int_property == 1 );
 		}
 		if( float_property != nullptr ) {
-			BOOST_CHECK( float_property->get_value() == 2.0f );
+			BOOST_CHECK( *float_property == 2.0f );
 		}
 		if( string_property != nullptr ) {
-			BOOST_CHECK( string_property->get_value() == "3" );
+			BOOST_CHECK( *string_property == "3" );
 		}
 		if( vec3_property != nullptr ) {
-			BOOST_CHECK( vec3_property->get_value() == sf::Vector3f( 4, 5, 6 ) );
+			BOOST_CHECK( *vec3_property == sf::Vector3f( 4, 5, 6 ) );
 		}
 	}
 

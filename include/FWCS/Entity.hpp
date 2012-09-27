@@ -4,6 +4,7 @@
 #include <FWCS/NonCopyable.hpp>
 #include <FWCS/Property.hpp>
 
+#include <memory>
 #include <string>
 #include <map>
 
@@ -41,41 +42,27 @@ class Entity : public NonCopyable {
 		 * @see find_property to check if a property of a given type already exists.
 		 */
 		template <class T>
-		ConcreteProperty<T>& create_property( const std::string& id, const T& initial_value = T() );
+		T& create_property( const std::string& id, const T& initial_value = T() );
 
 		/** Find property.
 		 * In debug mode, the type will be checked (via a dynamic cast). In release
-		 * mode malformed type requests leads to undefined behaviour.
+		 * mode malformed type requests lead to undefined behaviour.
 		 * @tparam Value type.
 		 * @param id ID.
 		 * @return Property, or nullptr if not found.
 		 */
 		template <class T>
-		ConcreteProperty<T>* find_property( const std::string& id );
+		T* find_property( const std::string& id );
 
 		/** Find property (const).
 		 * In debug mode, the type will be checked (via a dynamic cast). In release
-		 * mode malformed type requests leads to undefined behaviour.
+		 * mode malformed type requests lead to undefined behaviour.
 		 * @tparam Value type.
 		 * @param id ID.
 		 * @return Property, or nullptr if not found.
 		 */
 		template <class T>
-		const ConcreteProperty<T>* find_property( const std::string& id ) const;
-
-		/** Find base property.
-		 * Used internally only.
-		 * @param id ID.
-		 * @return Property, or nullptr if not found.
-		 */
-		Property* find_base_property( const std::string& id );
-
-		/** Find base property.
-		 * Used internally only.
-		 * @param id ID.
-		 * @return Property, or nullptr if not found.
-		 */
-		const Property* find_base_property( const std::string& id ) const;
+		const T* find_property( const std::string& id ) const;
 
 		/** Check if entity has observer attached.
 		 * @return true if observer attached.
@@ -97,7 +84,7 @@ class Entity : public NonCopyable {
 		EntityObserver& get_observer() const;
 
 	private:
-		typedef std::map<const std::string, Property*> PropertyMap;
+		typedef std::map<const std::string, std::unique_ptr<Property>> PropertyMap;
 
 		PropertyMap m_properties;
 		EntityObserver* m_observer;

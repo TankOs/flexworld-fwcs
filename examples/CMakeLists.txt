@@ -19,7 +19,7 @@ macro( build_example target sources )
 	)
 endmacro()
 
-build_example( runner Runner.cpp )
+#build_example( runner Runner.cpp )
 
 install(
 	DIRECTORY data

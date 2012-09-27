@@ -31,20 +31,11 @@ class ConcreteProperty : public Property {
 		 */
 		ConcreteProperty( const T& initial_value = T() );
 
-		/** Set value.
-		 * @param value Value.
-		 */
-		void set_value( const T& value );
-
-		/** Get value.
-		 * @return Value.
-		 */
-		const T& get_value() const;
-
 		const std::string& get_type_id() const;
 
+		T data; ///< Data.
+
 	private:
-		T m_data;
 };
 
 }

@@ -3,15 +3,15 @@
 namespace cs {
 
 template <class T>
-ConcreteProperty<T>& Entity::create_property( const std::string& id, const T& initial_value ) {
+T& Entity::create_property( const std::string& id, const T& initial_value ) {
 	assert( m_properties.find( id ) == m_properties.end() );
 
-	ConcreteProperty<T>* property = new ConcreteProperty<T>( initial_value );
+	std::unique_ptr<ConcreteProperty<T>> property{ new ConcreteProperty<T>( initial_value ) };
 
-	m_properties.insert(
-		std::pair<const std::string, Property*>(
+	auto result = m_properties.insert(
+		std::pair<const std::string, std::unique_ptr<Property>>(
 			id,
-			property
+			std::move( property )
 		)
 	);
 
@@ -19,21 +19,21 @@ ConcreteProperty<T>& Entity::create_property( const std::string& id, const T& in
 		m_observer->on_property_create( id, *this );
 	}
 
-	return *property;
+	return reinterpret_cast<ConcreteProperty<T>*>( result.first->second.get() )->data;
 }
 
 template <class T>
-ConcreteProperty<T>* Entity::find_property( const std::string& id ) {
-	typename PropertyMap::iterator prop_iter = m_properties.find( id );
+T* Entity::find_property( const std::string& id ) {
+	auto prop_iter = m_properties.find( id );
 
-	if( prop_iter != m_properties.end() ) {
+	if( prop_iter != std::end( m_properties ) ) {
 #ifdef NDEBUG
-		ConcreteProperty<T>* ptr = reinterpret_cast<ConcreteProperty<T>*>( prop_iter->second );
+		auto ptr = reinterpret_cast<ConcreteProperty<T>*>( prop_iter->second.get() );
 #else
-		ConcreteProperty<T>* ptr = dynamic_cast<ConcreteProperty<T>*>( prop_iter->second );
+		auto ptr = dynamic_cast<ConcreteProperty<T>*>( prop_iter->second.get() );
 #endif
 
-		return ptr;
+		return &ptr->data;
 	}
 	else {
 		return nullptr;
@@ -41,17 +41,17 @@ ConcreteProperty<T>* Entity::find_property( const std::string& id ) {
 }
 
 template <class T>
-const ConcreteProperty<T>* Entity::find_property( const std::string& id ) const {
-	typename PropertyMap::const_iterator prop_iter = m_properties.find( id );
+const T* Entity::find_property( const std::string& id ) const {
+	auto prop_iter = m_properties.find( id );
 
-	if( prop_iter != m_properties.end() ) {
+	if( prop_iter != std::end( m_properties ) ) {
 #ifdef NDEBUG
-		const ConcreteProperty<T>* ptr = reinterpret_cast<const ConcreteProperty<T>*>( prop_iter->second );
+		auto ptr = reinterpret_cast<const ConcreteProperty<T>*>( prop_iter->second.get() );
 #else
-		const ConcreteProperty<T>* ptr = dynamic_cast<const ConcreteProperty<T>*>( prop_iter->second );
+		auto ptr = dynamic_cast<const ConcreteProperty<T>*>( prop_iter->second.get() );
 #endif
 
-		return ptr;
+		return &ptr->data;
 	}
 	else {
 		return nullptr;

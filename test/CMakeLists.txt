@@ -12,23 +12,26 @@ set( INC_DIR "src" )
 
 set(
 	SOURCES
+	#${SRC_DIR}/TestAccelerationController.cpp
+	#${SRC_DIR}/TestController.cpp
+	#${SRC_DIR}/TestDragController.cpp
+	#${SRC_DIR}/TestForceResetController.cpp
+	#${SRC_DIR}/TestFrictionController.cpp
+	#${SRC_DIR}/TestGravityController.cpp
+	#${SRC_DIR}/TestJumpController.cpp
+	#${SRC_DIR}/TestMovementController.cpp
+	#${SRC_DIR}/TestMovementForceTransformController.cpp
+	#${SRC_DIR}/TestPositionLimitController.cpp
+	#${SRC_DIR}/TestSystem.cpp
+	#${SRC_DIR}/TestThrustResetController.cpp
+	#${SRC_DIR}/TestWalkController.cpp
+	${INC_DIR}/ExampleExecutor.hpp
+	${SRC_DIR}/ExampleExecutor.cpp
 	${SRC_DIR}/Test.cpp
-	${SRC_DIR}/TestAccelerationController.cpp
-	${SRC_DIR}/TestController.cpp
-	${SRC_DIR}/TestDragController.cpp
 	${SRC_DIR}/TestEntity.cpp
-	${SRC_DIR}/TestForceResetController.cpp
-	${SRC_DIR}/TestFrictionController.cpp
-	${SRC_DIR}/TestGravityController.cpp
-	${SRC_DIR}/TestJumpController.cpp
+	${SRC_DIR}/TestExecutorFactory.cpp
 	${SRC_DIR}/TestMath.cpp
-	${SRC_DIR}/TestMovementController.cpp
-	${SRC_DIR}/TestMovementForceTransformController.cpp
-	${SRC_DIR}/TestPositionLimitController.cpp
 	${SRC_DIR}/TestProperty.cpp
-	${SRC_DIR}/TestSystem.cpp
-	${SRC_DIR}/TestThrustResetController.cpp
-	${SRC_DIR}/TestWalkController.cpp
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/../include )
