@@ -22,7 +22,6 @@ set(
 	#${SRC_DIR}/TestMovementController.cpp
 	#${SRC_DIR}/TestMovementForceTransformController.cpp
 	#${SRC_DIR}/TestPositionLimitController.cpp
-	#${SRC_DIR}/TestSystem.cpp
 	#${SRC_DIR}/TestThrustResetController.cpp
 	#${SRC_DIR}/TestWalkController.cpp
 	${INC_DIR}/ExampleExecutor.hpp
@@ -32,6 +31,7 @@ set(
 	${SRC_DIR}/TestExecutorFactory.cpp
 	${SRC_DIR}/TestMath.cpp
 	${SRC_DIR}/TestProperty.cpp
+	${SRC_DIR}/TestSystem.cpp
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/../include )

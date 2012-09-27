@@ -1,34 +1,26 @@
 #pragma once
 
-#include <FWCS/EntityObserver.hpp>
+#include <FWCS/BaseExecutorFactory.hpp>
+#include <FWCS/ExecutorFactory.hpp>
 
+#include <memory>
 #include <vector>
-#include <set>
-#include <cstring>
 #include <cstdint>
-
-namespace cs {
-class Controller;
-class Entity;
-}
-
-namespace sf {
-class Time;
-}
+#include <cassert>
 
 namespace cs {
 
 /** System.
- * The System class is a manager and router for entities and controllers.
+ * The System class is a manager and router for entities and executors.
  *
- * Entities that get added to the system will be automatically linked to the
- * added controllers, depending on their properties. It doesn't matter in what
- * order components or entities are added.
+ * Entities being added to the system are automatically linked to all matching
+ * executors previously added to the system. Adding executor factories at any
+ * time is also possible, also modifying entity properties after they have been
+ * added.
  *
- * When the system is updated it will process all controllers and therefore all
- * linked entities.
+ * Running the system processes all executors.
  */
-class System : public EntityObserver {
+class System {
 	public:
 		/** Ctor.
 		 */
@@ -38,65 +30,21 @@ class System : public EntityObserver {
 		 */
 		~System();
 
-		/** Get number of entities.
-		 * @return Number of entities.
+		/** Get number of executor factories.
+		 * @return Number of executor factories.
 		 */
-		std::size_t get_num_entities() const;
+		std::size_t get_num_factories() const;
 
-		/** Get number of controllers.
-		 * @return Number of controllers.
+		/** Create factory.
+		 * Undefined behaviour if a factory for the same executor type has already
+		 * been created.
+		 * @tparam T Executor type.
 		 */
-		std::size_t get_num_controllers() const;
-
-		/** Create a controller.
-		 * Undefined behaviour if a controller of the same type has already been
-		 * added.
-		 * @tparam ControllerType Controller type.
-		 * @return New controller.
-		 */
-		template <class ControllerType>
-		ControllerType& create_controller();
-
-		/** Find a controller.
-		 * @tparam ControllerType Controller type to find.
-		 * @return Controller or nullptr if not found.
-		 */
-		template <class ControllerType>
-		ControllerType* find_controller() const;
-
-		/** Delete controller.
-		 * Undefined behaviour if controller hasn't been created.
-		 * @tparam ControllerType Controller type of controller to delete.
-		 */
-		template <class ControllerType>
-		void delete_controller();
-
-		/** Create new entity.
-		 * @return New entity.
-		 */
-		Entity& create_entity();
-
-		/** Delete entity.
-		 * @param entity Entity.
-		 */
-		void delete_entity( Entity& entity );
-
-		/** Run system.
-		 * Calls all controllers.
-		 * @param sim_time Simulation time.
-		 */
-		void run( const sf::Time& sim_time );
+		template <class T>
+		void create_factory();
 
 	private:
-		typedef std::vector<Controller*> ControllerPtrArray;
-		typedef std::set<Entity*> EntitySet;
-		
-		void link_entity( Entity& entity );
-
-		void on_property_create( const std::string& id, Entity& entity );
-
-		ControllerPtrArray m_controllers;
-		EntitySet m_entities;
+		std::vector<std::unique_ptr<BaseExecutorFactory>> m_factories;
 };
 
 }

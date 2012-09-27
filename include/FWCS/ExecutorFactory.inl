@@ -3,7 +3,9 @@
 namespace cs {
 
 template <class T>
-ExecutorFactory<T>::ExecutorFactory() {
+ExecutorFactory<T>::ExecutorFactory() :
+	BaseExecutorFactory()
+{
 }
 
 template <class T>
@@ -11,8 +13,8 @@ ExecutorFactory<T>::~ExecutorFactory() {
 }
 
 template <class T>
-T ExecutorFactory<T>::create_executor() const {
-	return std::move( T{} );
+std::unique_ptr<Executor> ExecutorFactory<T>::create_executor() {
+	return std::move( std::unique_ptr<Executor>( new T{} ) );
 }
 
 }

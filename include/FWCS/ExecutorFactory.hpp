@@ -1,5 +1,7 @@
 #pragma once
 
+#include <FWCS/BaseExecutorFactory.hpp>
+
 namespace cs {
 
 /** Factory for creating executors of a specific type.
@@ -8,7 +10,7 @@ namespace cs {
  * @tparam T Executor type.
  */
 template <class T>
-class ExecutorFactory {
+class ExecutorFactory : public BaseExecutorFactory {
 	public:
 		/** Ctor.
 		 */
@@ -21,7 +23,7 @@ class ExecutorFactory {
 		/** Create a new executor.
 		 * @return Executor (move).
 		 */
-		T create_executor() const;
+		std::unique_ptr<Executor> create_executor();
 
 	private:
 };

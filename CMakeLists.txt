@@ -43,8 +43,6 @@ set(
 	#${INC_DIR}/FWCS/Controllers/PositionLimit.hpp
 	#${INC_DIR}/FWCS/Controllers/ThrustReset.hpp
 	#${INC_DIR}/FWCS/Controllers/Walk.hpp
-	#${INC_DIR}/FWCS/System.hpp
-	#${INC_DIR}/FWCS/System.inl
 	#${SRC_DIR}/FWCS/Controller.cpp
 	#${SRC_DIR}/FWCS/Controllers/Acceleration.cpp
 	#${SRC_DIR}/FWCS/Controllers/Drag.cpp
@@ -57,7 +55,7 @@ set(
 	#${SRC_DIR}/FWCS/Controllers/PositionLimit.cpp
 	#${SRC_DIR}/FWCS/Controllers/ThrustReset.cpp
 	#${SRC_DIR}/FWCS/Controllers/Walk.cpp
-	#${SRC_DIR}/FWCS/System.cpp
+	${INC_DIR}/FWCS/BaseExecutorFactory.hpp
 	${INC_DIR}/FWCS/Config.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
@@ -70,11 +68,15 @@ set(
 	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Property.hpp
 	${INC_DIR}/FWCS/Property.inl
+	${INC_DIR}/FWCS/System.hpp
+	${INC_DIR}/FWCS/System.inl
+	${SRC_DIR}/FWCS/BaseExecutorFactory.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/Executor.cpp
 	${SRC_DIR}/FWCS/Math.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Property.cpp
+	${SRC_DIR}/FWCS/System.cpp
 )
 
 include_directories( ${INC_DIR} )

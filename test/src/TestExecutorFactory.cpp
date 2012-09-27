@@ -15,9 +15,12 @@ BOOST_AUTO_TEST_CASE( TestExecutorFactory ) {
 	// Create executor.
 	{
 		ExecutorFactory<ExampleExecutor> factory;
-		ExampleExecutor executor = factory.create_executor();
+		std::unique_ptr<Executor> executor = factory.create_executor();
 
-		BOOST_CHECK( executor.last_sim_time == sf::Time::Zero );
-		BOOST_CHECK( executor.num_execute_calls == 0 );
+		ExampleExecutor* example_executor = dynamic_cast<ExampleExecutor*>( executor.get() );
+		BOOST_REQUIRE( example_executor != nullptr );
+
+		BOOST_CHECK( example_executor->last_sim_time == sf::Time::Zero );
+		BOOST_CHECK( example_executor->num_execute_calls == 0 );
 	}
 }
