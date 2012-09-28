@@ -75,6 +75,7 @@ set(
 	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/BaseExecutorFactory.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
+	${SRC_DIR}/FWCS/EntityObserver.cpp
 	${SRC_DIR}/FWCS/Executor.cpp
 	${SRC_DIR}/FWCS/ExecutorRequirements.cpp
 	${SRC_DIR}/FWCS/Math.cpp

@@ -25,7 +25,7 @@ namespace cs {
  * Pointers/references to entities are valid until the proper entity is
  * destroyed.
  */
-class System {
+class System : public EntityObserver {
 	public:
 		/** Ctor.
 		 */
@@ -81,6 +81,8 @@ class System {
 		void destroy_entity( EntityID id );
 
 	private:
+		void on_property_create( const std::string& id, cs::Entity& entity );
+
 		void create_factory_executors( BaseExecutorFactory& factory );
 
 		typedef std::pair<

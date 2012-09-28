@@ -196,5 +196,20 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			BOOST_CHECK( float_entity.find_property<float>( "last_velocity" ) != nullptr );
 			BOOST_CHECK( ignored_entity.find_property<float>( "last_velocity" ) == nullptr );
 		}
+
+		// Create factory, then entities.
+		{
+			System system;
+
+			system.create_factory<FloatExecutor>();
+
+			auto& float_entity = system.create_entity();
+			auto& ignored_entity = system.create_entity();
+
+			float_entity.create_property<float>( "velocity" ) = 100.0f;
+
+			BOOST_CHECK( float_entity.find_property<float>( "last_velocity" ) != nullptr );
+			BOOST_CHECK( ignored_entity.find_property<float>( "last_velocity" ) == nullptr );
+		}
 	}
 }

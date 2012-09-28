@@ -12,6 +12,10 @@ class Property;
  */
 class EntityObserver {
 	public:
+		/** Dtor.
+		 */
+		virtual ~EntityObserver();
+
 		/** Called when property is created.
 		 * @param id Property ID.
 		 * @param entity Entity (this).
