@@ -70,6 +70,7 @@ set(
 	${INC_DIR}/FWCS/Property.inl
 	${INC_DIR}/FWCS/System.hpp
 	${INC_DIR}/FWCS/System.inl
+	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/BaseExecutorFactory.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/Executor.cpp

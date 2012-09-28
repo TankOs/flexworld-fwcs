@@ -32,8 +32,63 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 	{
 		Entity ent;
 
+		BOOST_CHECK( ent.get_id() == 0 );
 		BOOST_CHECK( ent.get_num_properties() == 0 );
 		BOOST_CHECK( ent.has_observer() == false );
+	}
+
+	// Basic properties.
+	{
+		Entity ent;
+
+		ent.set_id( 1337 );
+
+		BOOST_CHECK( ent.get_id() == 1337 );
+	}
+
+	// Move and assign entity.
+	{
+		ExampleEntityObserver observer;
+
+		Entity source;
+		source.set_id( 1337 );
+		source.set_observer( observer );
+		source.create_property<float>( "0" ) = 1.0f;
+		source.create_property<int>( "1" ) = 2;
+
+		Entity target = std::move( source );
+
+		BOOST_CHECK( source.get_num_properties() == 0 );
+		BOOST_CHECK( source.get_id() == 1337 );
+		BOOST_CHECK( &source.get_observer() == &observer );
+		BOOST_CHECK( source.find_property<float>( "0" ) == nullptr );
+		BOOST_CHECK( source.find_property<int>( "1" ) == nullptr );
+
+		BOOST_CHECK( target.get_num_properties() == 2 );
+		BOOST_CHECK( target.get_id() == 1337 );
+		BOOST_CHECK( &target.get_observer() == &observer );
+		BOOST_REQUIRE( target.find_property<float>( "0" ) != nullptr );
+		BOOST_REQUIRE( target.find_property<int>( "1" ) != nullptr );
+		BOOST_CHECK( *target.find_property<float>( "0" ) == 1.0f );
+		BOOST_CHECK( *target.find_property<int>( "1" ) == 2 );
+
+		Entity assigned;
+		assigned = std::move( target );
+
+		BOOST_CHECK( target.get_num_properties() == 0 );
+		BOOST_CHECK( target.get_id() == 1337 );
+		BOOST_CHECK( &target.get_observer() == &observer );
+		BOOST_CHECK( target.find_property<float>( "0" ) == nullptr );
+		BOOST_CHECK( target.find_property<int>( "1" ) == nullptr );
+
+		BOOST_CHECK( assigned.get_num_properties() == 2 );
+		BOOST_CHECK( assigned.get_id() == 1337 );
+		BOOST_CHECK( &assigned.get_observer() == &observer );
+		BOOST_REQUIRE( assigned.find_property<float>( "0" ) != nullptr );
+		BOOST_REQUIRE( assigned.find_property<int>( "1" ) != nullptr );
+		BOOST_CHECK( *assigned.find_property<float>( "0" ) == 1.0f );
+		BOOST_CHECK( *assigned.find_property<int>( "1" ) == 2 );
+
 	}
 
 	// Create properties (with initial values).

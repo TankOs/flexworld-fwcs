@@ -1,8 +1,8 @@
 #pragma once
 
 #include <FWCS/EntityObserver.hpp>
-#include <FWCS/NonCopyable.hpp>
 #include <FWCS/Property.hpp>
+#include <FWCS/Types.hpp>
 
 #include <memory>
 #include <string>
@@ -17,7 +17,7 @@ class Property;
  * reflect the state and type of an object. Depending on the chosen properties
  * FWCS will perform actions on the entity and properties through contollers.
  */
-class Entity : public NonCopyable {
+class Entity {
 	public:
 		/** Ctor.
 		 */
@@ -26,6 +26,34 @@ class Entity : public NonCopyable {
 		/** Dtor.
 		 */
 		virtual ~Entity();
+
+		/** Disable copying.
+		 */
+		Entity( const Entity& ) = delete;
+
+		/** Disable assignment.
+		 */
+		Entity& operator=( const Entity& ) = delete;
+
+		/** Move assignment.
+		 * @param other Other entity.
+		 */
+		Entity& operator=( Entity&& other ) noexcept;
+
+		/** Move.
+		 * @param other Other entity.
+		 */
+		Entity( Entity&& other ) noexcept;
+
+		/** Set ID.
+		 * @param id ID.
+		 */
+		void set_id( EntityID id );
+
+		/** Get ID.
+		 * @return ID.
+		 */
+		EntityID get_id() const;
 
 		/** Get number of properties.
 		 * @return Number of properties.
@@ -88,6 +116,7 @@ class Entity : public NonCopyable {
 
 		PropertyMap m_properties;
 		EntityObserver* m_observer;
+		EntityID m_id;
 };
 
 }
