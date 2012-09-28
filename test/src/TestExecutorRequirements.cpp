@@ -38,5 +38,54 @@ BOOST_AUTO_TEST_CASE( TestExecutorRequirements ) {
 			BOOST_CHECK( req.test( ent ) == true );
 		}
 
+		// Require properties, mismatching types.
+		{
+			Entity ent;
+			ent.create_property<float>( "int" );
+			ent.create_property<int>( "float" );
+
+			ExecutorRequirements req;
+			req.require_property<float>( "float", true );
+			req.require_property<int>( "int", true );
+
+			BOOST_CHECK( req.test( ent ) == false );
+		}
+
+		// Disallow properties, mismatching types.
+		{
+			Entity ent;
+			ent.create_property<float>( "int" );
+			ent.create_property<int>( "float" );
+
+			ExecutorRequirements req;
+			req.require_property<float>( "float", false );
+			req.require_property<int>( "int", false );
+
+			BOOST_CHECK( req.test( ent ) == true );
+		}
+
+		// Required and not allowed properties.
+		{
+			ExecutorRequirements req;
+			req.require_property<std::string>( "required0", true );
+			req.require_property<float>( "required1", true );
+			req.require_property<int>( "disallowed0", false );
+			req.require_property<uint32_t>( "disallowed1", false );
+
+			Entity ent;
+			BOOST_CHECK( req.test( ent ) == false );
+
+			ent.create_property<std::string>( "required0" );
+			BOOST_CHECK( req.test( ent ) == false );
+
+			ent.create_property<float>( "required1" );
+			BOOST_CHECK( req.test( ent ) == true );
+
+			ent.create_property<int>( "disallowed0" );
+			BOOST_CHECK( req.test( ent ) == false );
+
+			ent.create_property<uint32_t>( "disallowed1" );
+			BOOST_CHECK( req.test( ent ) == false );
+		}
 	}
 }
