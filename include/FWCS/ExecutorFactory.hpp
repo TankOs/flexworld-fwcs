@@ -21,9 +21,10 @@ class ExecutorFactory : public BaseExecutorFactory {
 		~ExecutorFactory();
 
 		/** Create a new executor.
+		 * @param entity Entity (referenced).
 		 * @return Executor (move).
 		 */
-		std::unique_ptr<Executor> create_executor();
+		std::unique_ptr<Executor> create_executor( Entity& entity );
 
 	private:
 };

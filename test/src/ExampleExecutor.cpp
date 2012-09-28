@@ -11,8 +11,8 @@ bool ExampleExecutor::is_entity_interesting( const cs::Entity& entity ) {
 	;
 }
 
-ExampleExecutor::ExampleExecutor() :
-	Executor(),
+ExampleExecutor::ExampleExecutor( cs::Entity& entity ) :
+	Executor( entity ),
 	last_sim_time{ sf::Time::Zero },
 	num_execute_calls{ 0 }
 {

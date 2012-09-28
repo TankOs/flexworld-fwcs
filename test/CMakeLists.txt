@@ -29,6 +29,7 @@ set(
 	${SRC_DIR}/Test.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestExecutorFactory.cpp
+	${SRC_DIR}/TestExecutorRequirements.cpp
 	${SRC_DIR}/TestMath.cpp
 	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp

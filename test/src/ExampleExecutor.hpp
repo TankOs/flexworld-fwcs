@@ -13,7 +13,7 @@ class ExampleExecutor : public cs::Executor {
 	public:
 		static bool is_entity_interesting( const cs::Entity& entity );
 
-		ExampleExecutor();
+		ExampleExecutor( cs::Entity& entity );
 		void execute( const sf::Time& sim_time );
 
 		sf::Time last_sim_time;

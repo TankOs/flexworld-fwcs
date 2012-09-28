@@ -57,4 +57,14 @@ EntityObserver& Entity::get_observer() const {
 	return *m_observer;
 }
 
+bool Entity::has_property( const std::string& id, const std::string& type ) const {
+	auto iter = m_properties.find( id );
+
+	if( iter == std::end( m_properties ) ) {
+		return false;
+	}
+
+	return iter->second->get_type_id() == type;
+}
+
 }

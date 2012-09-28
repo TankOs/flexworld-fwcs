@@ -8,8 +8,37 @@
 
 class DummyExecutor : public cs::Executor {
 	public:
+		DummyExecutor( cs::Entity& entity ) :
+			cs::Executor( entity )
+		{
+		}
+
 		void execute( const sf::Time& ) {
 		}
+};
+
+class FloatExecutor : public cs::Executor {
+	public:
+		FloatExecutor( cs::Entity& entity ) :
+			cs::Executor( entity ),
+			velocity( get_entity().find_property<float>( "velocity" ) ),
+			last_velocity( get_entity().find_property<float>( "last_velocity" ) )
+		{
+			BOOST_REQUIRE( velocity != nullptr );
+
+			if( last_velocity == nullptr ) {
+				last_velocity = &get_entity().create_property<float>( "last_velocity" );
+			}
+		}
+
+		~FloatExecutor() {
+		}
+
+		void execute( const sf::Time& sim_time ) {
+		}
+
+		float* velocity;
+		float* last_velocity;
 };
 
 BOOST_AUTO_TEST_CASE( TestSystem ) {
@@ -27,11 +56,19 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 	{
 		System system;
 
+		BOOST_CHECK( system.get_num_factories() == 0 );
+		BOOST_CHECK( system.has_factory<ExampleExecutor>() == false );
+		BOOST_CHECK( system.has_factory<DummyExecutor>() == false );
+
 		system.create_factory<ExampleExecutor>();
 		BOOST_CHECK( system.get_num_factories() == 1 );
+		BOOST_CHECK( system.has_factory<ExampleExecutor>() == true );
+		BOOST_CHECK( system.has_factory<DummyExecutor>() == false );
 
 		system.create_factory<DummyExecutor>();
 		BOOST_CHECK( system.get_num_factories() == 2 );
+		BOOST_CHECK( system.has_factory<ExampleExecutor>() == true );
+		BOOST_CHECK( system.has_factory<DummyExecutor>() == true );
 	}
 
 	// Add entities. 
@@ -129,4 +166,21 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			BOOST_CHECK( system.find_entity( 2 ) == nullptr );
 		}
 	}
+
+	/*
+	// Create executors and run simulation.
+	{
+		// Create entities, then factory.
+		{
+			System system;
+
+			auto& float_entity = system.create_entity();
+			float_entity.create_property<float>( "velocity" ) = 100.0f;
+
+			system.create_factory<FloatExecutor>();
+
+			BOOST_CHECK( float_entity.find_property<float>( "last_velocity" ) != nullptr );
+		}
+	}
+	*/
 }

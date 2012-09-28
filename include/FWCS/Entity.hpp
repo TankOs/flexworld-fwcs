@@ -92,6 +92,14 @@ class Entity {
 		template <class T>
 		const T* find_property( const std::string& id ) const;
 
+		/** Check if property with specific type exists (used internally).
+		 * Used internally only. To check for properties see find_property().
+		 * @param id ID.
+		 * @param type C++ type name (platform-specific).
+		 * @see find_property
+		 */
+		bool has_property( const std::string& id, const std::string& type ) const;
+
 		/** Check if entity has observer attached.
 		 * @return true if observer attached.
 		 */

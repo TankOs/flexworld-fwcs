@@ -5,6 +5,7 @@
 namespace cs {
 
 class Executor;
+class Entity;
 
 /** Base class for executor factories.
  */
@@ -15,8 +16,9 @@ class BaseExecutorFactory {
 		virtual ~BaseExecutorFactory();
 
 		/** Create executor.
+		 * @param entity Entity.
 		 */
-		virtual std::unique_ptr<Executor> create_executor() = 0;
+		virtual std::unique_ptr<Executor> create_executor( Entity& entity ) = 0;
 
 	protected:
 		/** Ctor.

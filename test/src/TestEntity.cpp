@@ -95,12 +95,21 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 	{
 		Entity ent;
 
+		BOOST_CHECK( ent.has_property( "int", typeid( int32_t ).name() ) == false );
+		BOOST_CHECK( ent.has_property( "float", typeid( float ).name() ) == false );
+		BOOST_CHECK( ent.has_property( "string", typeid( std::string ).name() ) == false );
+		BOOST_CHECK( ent.has_property( "vec3", typeid( sf::Vector3f ).name() ) == false );
+
 		int32_t& init_int_property = ent.create_property<int32_t>( "int", 1 );
 		float& init_float_property = ent.create_property<float>( "float", 2.0f );
 		std::string& init_string_property = ent.create_property<std::string>( "string", "3" );
 		sf::Vector3f& init_vec3_property = ent.create_property<sf::Vector3f>( "vec3", sf::Vector3f( 4, 5, 6 ) );
 
 		BOOST_CHECK( ent.get_num_properties() == 4 );
+		BOOST_CHECK( ent.has_property( "int", typeid( int32_t ).name() ) == true );
+		BOOST_CHECK( ent.has_property( "float", typeid( float ).name() ) == true );
+		BOOST_CHECK( ent.has_property( "string", typeid( std::string ).name() ) == true );
+		BOOST_CHECK( ent.has_property( "vec3", typeid( sf::Vector3f ).name() ) == true );
 
 		int32_t* int_property = ent.find_property<int32_t>( "int" );
 		float* float_property = ent.find_property<float>( "float" );

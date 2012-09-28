@@ -1,5 +1,9 @@
 #pragma once
 
+namespace cs {
+class Entity;
+}
+
 namespace sf {
 class Time;
 }
@@ -23,8 +27,9 @@ namespace cs {
 class Executor {
 	public:
 		/** Ctor.
+		 * @param entity Entity (referenced).
 		 */
-		Executor();
+		Executor( Entity& entity );
 
 		/** Dtor.
 		 */
@@ -35,7 +40,19 @@ class Executor {
 		 */
 		virtual void execute( const sf::Time& sim_time ) = 0;
 
+		/** Get entity.
+		 * @return Entity.
+		 */
+		const Entity& get_entity() const;
+
+	protected:
+		/** Get entity.
+		 * @return Entity.
+		 */
+		Entity& get_entity();
+
 	private:
+		Entity& m_entity;
 };
 
 }

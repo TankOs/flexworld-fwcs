@@ -63,6 +63,8 @@ set(
 	${INC_DIR}/FWCS/Executor.hpp
 	${INC_DIR}/FWCS/ExecutorFactory.hpp
 	${INC_DIR}/FWCS/ExecutorFactory.inl
+	${INC_DIR}/FWCS/ExecutorRequirements.hpp
+	${INC_DIR}/FWCS/ExecutorRequirements.inl
 	${INC_DIR}/FWCS/Math.hpp
 	${INC_DIR}/FWCS/Math.inl
 	${INC_DIR}/FWCS/NonCopyable.hpp
@@ -74,6 +76,7 @@ set(
 	${SRC_DIR}/FWCS/BaseExecutorFactory.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/Executor.cpp
+	${SRC_DIR}/FWCS/ExecutorRequirements.cpp
 	${SRC_DIR}/FWCS/Math.cpp
 	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Property.cpp

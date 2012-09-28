@@ -54,6 +54,13 @@ class System {
 		template <class T>
 		void create_factory();
 
+		/** Check if a specific factory exists.
+		 * @tparam T Executor type.
+		 * @return true if factory exists.
+		 */
+		template <class T>
+		bool has_factory() const;
+
 		/** Create entity.
 		 * Create a new entity with a system-wide unique ID.
 		 * @return Entity.
