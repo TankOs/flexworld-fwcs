@@ -22,9 +22,8 @@ namespace cs {
  *
  * Running the system processes all executors.
  *
- * Important: Do not store pointers to entities. Memory may be moved when
- * entities are being added/removed. Instead store the entity's ID and look it
- * up on demand.
+ * Pointers/references to entities are valid until the proper entity is
+ * destroyed.
  */
 class System {
 	public:
@@ -63,7 +62,7 @@ class System {
 
 		/** Create entity.
 		 * Create a new entity with a system-wide unique ID.
-		 * @return Entity.
+		 * @return ID of newly created entity.
 		 */
 		Entity& create_entity();
 
@@ -82,8 +81,15 @@ class System {
 		void destroy_entity( EntityID id );
 
 	private:
+		void create_factory_executors( BaseExecutorFactory& factory );
+
+		typedef std::pair<
+			std::unique_ptr<Entity>,
+			std::vector<std::unique_ptr<Executor>>
+		> EntityExecutorsPair;
+
 		std::vector<std::unique_ptr<BaseExecutorFactory>> m_factories;
-		std::vector<Entity> m_entities;
+		std::vector<EntityExecutorsPair> m_entities;
 
 		EntityID m_next_entity_id;
 };

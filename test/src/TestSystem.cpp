@@ -1,7 +1,7 @@
-#include "ExampleExecutor.hpp"
-
 #include <FWCS/System.hpp>
 #include <FWCS/Entity.hpp>
+#include <FWCS/Executor.hpp>
+#include <FWCS/ExecutorRequirements.hpp>
 
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
@@ -11,6 +11,11 @@ class DummyExecutor : public cs::Executor {
 		DummyExecutor( cs::Entity& entity ) :
 			cs::Executor( entity )
 		{
+		}
+
+		static const cs::ExecutorRequirements& get_requirements() {
+			static cs::ExecutorRequirements req;
+			return req;
 		}
 
 		void execute( const sf::Time& ) {
@@ -32,6 +37,14 @@ class FloatExecutor : public cs::Executor {
 		}
 
 		~FloatExecutor() {
+		}
+
+		static const cs::ExecutorRequirements& get_requirements() {
+			static cs::ExecutorRequirements req = cs::ExecutorRequirements().require_property<float>(
+				"velocity", true
+			);
+
+			return req;
 		}
 
 		void execute( const sf::Time& sim_time ) {
@@ -57,17 +70,17 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		System system;
 
 		BOOST_CHECK( system.get_num_factories() == 0 );
-		BOOST_CHECK( system.has_factory<ExampleExecutor>() == false );
+		BOOST_CHECK( system.has_factory<FloatExecutor>() == false );
 		BOOST_CHECK( system.has_factory<DummyExecutor>() == false );
 
-		system.create_factory<ExampleExecutor>();
+		system.create_factory<FloatExecutor>();
 		BOOST_CHECK( system.get_num_factories() == 1 );
-		BOOST_CHECK( system.has_factory<ExampleExecutor>() == true );
+		BOOST_CHECK( system.has_factory<FloatExecutor>() == true );
 		BOOST_CHECK( system.has_factory<DummyExecutor>() == false );
 
 		system.create_factory<DummyExecutor>();
 		BOOST_CHECK( system.get_num_factories() == 2 );
-		BOOST_CHECK( system.has_factory<ExampleExecutor>() == true );
+		BOOST_CHECK( system.has_factory<FloatExecutor>() == true );
 		BOOST_CHECK( system.has_factory<DummyExecutor>() == true );
 	}
 
@@ -167,7 +180,6 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		}
 	}
 
-	/*
 	// Create executors and run simulation.
 	{
 		// Create entities, then factory.
@@ -175,12 +187,14 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			System system;
 
 			auto& float_entity = system.create_entity();
+			auto& ignored_entity = system.create_entity();
+
 			float_entity.create_property<float>( "velocity" ) = 100.0f;
 
 			system.create_factory<FloatExecutor>();
 
 			BOOST_CHECK( float_entity.find_property<float>( "last_velocity" ) != nullptr );
+			BOOST_CHECK( ignored_entity.find_property<float>( "last_velocity" ) == nullptr );
 		}
 	}
-	*/
 }

@@ -16,15 +16,21 @@ Entity::~Entity() {
 
 Entity::Entity( Entity&& other ) noexcept :
 	m_properties{ std::move( other.m_properties ) },
-	m_observer{ std::move( other.m_observer ) },
-	m_id{ std::move( other.m_id ) }
+	m_observer{ other.m_observer },
+	m_id{ other.m_id }
 {
+	other.m_observer = nullptr;
+	other.m_id = 0;
 }
 
 Entity& Entity::operator=( Entity&& other ) noexcept {
 	m_properties = std::move( other.m_properties );
-	m_observer = std::move( other.m_observer );
-	m_id = std::move( other.m_id );
+	m_observer = other.m_observer;
+	m_id = other.m_id;
+
+	other.m_properties.clear();
+	other.m_observer = nullptr;
+	other.m_id = 0;
 
 	return *this;
 }
@@ -41,20 +47,14 @@ std::size_t Entity::get_num_properties() const {
 	return m_properties.size();
 }
 
-bool Entity::has_observer() const {
-	return m_observer != nullptr;
-}
-
 void Entity::set_observer( EntityObserver& observer ) {
 	assert( m_observer == nullptr );
 
 	m_observer = &observer;
 }
 
-EntityObserver& Entity::get_observer() const {
-	assert( m_observer != nullptr );
-
-	return *m_observer;
+EntityObserver* Entity::get_observer() const {
+	return m_observer;
 }
 
 bool Entity::has_property( const std::string& id, const std::string& type ) const {

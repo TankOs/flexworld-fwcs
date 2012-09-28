@@ -100,11 +100,6 @@ class Entity {
 		 */
 		bool has_property( const std::string& id, const std::string& type ) const;
 
-		/** Check if entity has observer attached.
-		 * @return true if observer attached.
-		 */
-		bool has_observer() const;
-
 		/** Set observer.
 		 * This method is used internally. Undefined behaviour if an observer has
 		 * already been set.
@@ -113,11 +108,9 @@ class Entity {
 		void set_observer( EntityObserver& observer );
 
 		/** Get observer.
-		 * Undefined behaviour if no observer set.
-		 * @return Observer.
-		 * @see has_observer
+		 * @return Observer or nullptr if none set.
 		 */
-		EntityObserver& get_observer() const;
+		EntityObserver* get_observer() const;
 
 	private:
 		typedef std::map<const std::string, std::unique_ptr<Property>> PropertyMap;

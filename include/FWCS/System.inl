@@ -6,6 +6,8 @@ void System::create_factory() {
 
 	std::unique_ptr<BaseExecutorFactory> factory{ new ExecutorFactory<T>{} };
 	m_factories.push_back( std::move( factory ) );
+
+	create_factory_executors( *m_factories.back() );
 }
 
 template <class T>

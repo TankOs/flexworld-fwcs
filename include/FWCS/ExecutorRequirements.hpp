@@ -49,9 +49,10 @@ class ExecutorRequirements {
 		 * @param name Property name.
 		 * @param require true to require, false to disallow (exclusion).
 		 * @tparam T Property data type.
+		 * @return *this
 		 */
 		template <class T>
-		void require_property( const std::string& name, bool require );
+		ExecutorRequirements& require_property( const std::string& name, bool require );
 
 		/** Get property requirement.
 		 * Undefined behaviour if index is invalid.

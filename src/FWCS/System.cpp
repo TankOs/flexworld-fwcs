@@ -1,12 +1,10 @@
 #include <FWCS/System.hpp>
 #include <FWCS/Entity.hpp>
 #include <FWCS/Controller.hpp>
+#include <FWCS/Executor.hpp>
+#include <FWCS/ExecutorRequirements.hpp>
 
 namespace cs {
-
-bool less_than( const Entity& first, const Entity& second ) {
-	return first.get_id() < second.get_id();
-}
 
 System::System() :
 	m_next_entity_id{ 0 }
@@ -26,14 +24,17 @@ std::size_t System::get_num_entities() const {
 
 Entity& System::create_entity() {
 	// Create entity and set unique ID.
-	Entity ent;
+	std::unique_ptr<Entity> ent( new Entity );
 
-	ent.set_id( m_next_entity_id );
+	ent->set_id( m_next_entity_id );
 	++m_next_entity_id;
 
-	m_entities.push_back( std::move( ent ) );
+	m_entities.emplace_back(
+		std::move( ent ),
+		std::vector<std::unique_ptr<Executor>>{}
+	);
 
-	return m_entities.back();
+	return *m_entities.back().first;
 }
 
 Entity* System::find_entity( EntityID id ) {
@@ -41,14 +42,17 @@ Entity* System::find_entity( EntityID id ) {
 		std::begin( m_entities ),
 		std::end( m_entities ),
 		id,
-		[]( const Entity& ent, const EntityID other_id ) -> bool { return ent.get_id() < other_id; }
+		[]( const EntityExecutorsPair& pair, const EntityID other_id ) -> bool {
+			return pair.first->get_id() < other_id;
+		}
 	);
 
 	return
 		(iter == std::end( m_entities )) ||
-		(iter->get_id() != id) ?
+		(iter->first->get_id() != id) ?
 		nullptr :
-		&*iter;
+		iter->first.get()
+	;
 }
 
 void System::destroy_entity( EntityID id ) {
@@ -56,13 +60,29 @@ void System::destroy_entity( EntityID id ) {
 		std::begin( m_entities ),
 		std::end( m_entities ),
 		id,
-		[]( const Entity& ent, const EntityID other_id ) -> bool { return ent.get_id() < other_id; }
+		[]( const EntityExecutorsPair& pair, const EntityID other_id ) -> bool {
+			return pair.first->get_id() < other_id;
+		}
 	);
 
 	assert( iter != std::end( m_entities ) );
-	assert( iter->get_id() == id );
+	assert( iter->first->get_id() == id );
 
 	m_entities.erase( iter );
+}
+
+void System::create_factory_executors( BaseExecutorFactory& factory ) {
+	// Iterate over all entities and check if they meet requirements. If so, just
+	// add the executor, as the factory is new and executors for it doesn't
+	// exist, yet.
+	const auto& req = factory.get_requirements();
+
+	for( auto& pair : m_entities ) {
+		if( req.test( *pair.first ) == true ) {
+			// Test passed, create executor.
+			pair.second.emplace_back( factory.create_executor( *pair.first ) );
+		}
+	}
 }
 
 }

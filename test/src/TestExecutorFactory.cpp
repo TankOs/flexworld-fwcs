@@ -1,30 +1,59 @@
-#include "ExampleExecutor.hpp"
-
 #include <FWCS/ExecutorFactory.hpp>
 #include <FWCS/Entity.hpp>
+#include <FWCS/Executor.hpp>
+#include <FWCS/ExecutorRequirements.hpp>
 
+#include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
+
+class DummyExecutor : public cs::Executor {
+	public:
+		DummyExecutor( cs::Entity& entity ) :
+			cs::Executor( entity )
+		{
+		}
+
+		static const cs::ExecutorRequirements& get_requirements() {
+			static cs::ExecutorRequirements req =
+				cs::ExecutorRequirements{}.require_property<float>(
+					"velocity", true
+				)
+			;
+
+			return req;
+		}
+
+		void execute( const sf::Time& ) {
+		}
+};
 
 BOOST_AUTO_TEST_CASE( TestExecutorFactory ) {
 	using namespace cs;
 
 	// Initial state.
 	{
-		ExecutorFactory<ExampleExecutor> factory;
+		ExecutorFactory<DummyExecutor> factory;
 	}
 
 	// Create executor.
 	{
 		Entity entity;
 
-		ExecutorFactory<ExampleExecutor> factory;
-		std::unique_ptr<Executor> executor = factory.create_executor( entity );
+		ExecutorFactory<DummyExecutor> factory;
+		std::unique_ptr<const Executor> executor = factory.create_executor( entity );
 
-		const auto* example_executor = dynamic_cast<ExampleExecutor*>( executor.get() );
+		const auto* example_executor = dynamic_cast<const DummyExecutor*>( executor.get() );
 		BOOST_REQUIRE( example_executor != nullptr );
 
-		BOOST_CHECK( &example_executor->get_entity() == &entity );
-		BOOST_CHECK( example_executor->last_sim_time == sf::Time::Zero );
-		BOOST_CHECK( example_executor->num_execute_calls == 0 );
+		BOOST_CHECK( &executor->get_entity() == &entity );
+	}
+
+	// Check requirements.
+	{
+		ExecutorFactory<DummyExecutor> factory;
+		const cs::ExecutorRequirements& req = factory.get_requirements();
+
+		BOOST_REQUIRE( req.get_num_requirements() == 1 );
+		BOOST_CHECK( req.get_property_requirement( 0 ) == ExecutorRequirements::PropertyRequirement( "velocity", typeid( float ).name(), true ) );
 	}
 }

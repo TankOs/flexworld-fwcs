@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 
 		BOOST_CHECK( ent.get_id() == 0 );
 		BOOST_CHECK( ent.get_num_properties() == 0 );
-		BOOST_CHECK( ent.has_observer() == false );
+		BOOST_CHECK( ent.get_observer() == nullptr );
 	}
 
 	// Basic properties.
@@ -59,14 +59,14 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 		Entity target = std::move( source );
 
 		BOOST_CHECK( source.get_num_properties() == 0 );
-		BOOST_CHECK( source.get_id() == 1337 );
-		BOOST_CHECK( &source.get_observer() == &observer );
+		BOOST_CHECK( source.get_id() == 0 );
+		BOOST_CHECK( source.get_observer() == nullptr );
 		BOOST_CHECK( source.find_property<float>( "0" ) == nullptr );
 		BOOST_CHECK( source.find_property<int>( "1" ) == nullptr );
 
 		BOOST_CHECK( target.get_num_properties() == 2 );
 		BOOST_CHECK( target.get_id() == 1337 );
-		BOOST_CHECK( &target.get_observer() == &observer );
+		BOOST_CHECK( target.get_observer() == &observer );
 		BOOST_REQUIRE( target.find_property<float>( "0" ) != nullptr );
 		BOOST_REQUIRE( target.find_property<int>( "1" ) != nullptr );
 		BOOST_CHECK( *target.find_property<float>( "0" ) == 1.0f );
@@ -76,14 +76,14 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 		assigned = std::move( target );
 
 		BOOST_CHECK( target.get_num_properties() == 0 );
-		BOOST_CHECK( target.get_id() == 1337 );
-		BOOST_CHECK( &target.get_observer() == &observer );
+		BOOST_CHECK( target.get_id() == 0 );
+		BOOST_CHECK( target.get_observer() == nullptr );
 		BOOST_CHECK( target.find_property<float>( "0" ) == nullptr );
 		BOOST_CHECK( target.find_property<int>( "1" ) == nullptr );
 
 		BOOST_CHECK( assigned.get_num_properties() == 2 );
 		BOOST_CHECK( assigned.get_id() == 1337 );
-		BOOST_CHECK( &assigned.get_observer() == &observer );
+		BOOST_CHECK( assigned.get_observer() == &observer );
 		BOOST_REQUIRE( assigned.find_property<float>( "0" ) != nullptr );
 		BOOST_REQUIRE( assigned.find_property<int>( "1" ) != nullptr );
 		BOOST_CHECK( *assigned.find_property<float>( "0" ) == 1.0f );
@@ -145,10 +145,9 @@ BOOST_AUTO_TEST_CASE( TestEntity ) {
 		Entity ent;
 		ExampleEntityObserver observer;
 
-		BOOST_CHECK( ent.has_observer() == false );
+		BOOST_CHECK( ent.get_observer() == nullptr );
 		ent.set_observer( observer );
-		BOOST_REQUIRE( ent.has_observer() == true );
-		BOOST_CHECK( &ent.get_observer() == &observer );
+		BOOST_CHECK( ent.get_observer() == &observer );
 
 		ent.create_property<float>( "foobar" );
 		ent.create_property<float>( "foobar2" );
