@@ -1,10 +1,9 @@
 #include <FWCS/System.hpp>
 #include <FWCS/Entity.hpp>
-#include <FWCS/Controller.hpp>
 #include <FWCS/Executor.hpp>
 #include <FWCS/ExecutorRequirements.hpp>
 
-#include <iostream> // XXX 
+#include <algorithm>
 
 namespace cs {
 

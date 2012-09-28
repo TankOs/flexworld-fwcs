@@ -30,31 +30,6 @@ set( INC_DIR "include" )
 
 set(
 	SOURCES
-	#${INC_DIR}/FWCS/Controller.hpp
-	#${INC_DIR}/FWCS/Controller.inl
-	#${INC_DIR}/FWCS/Controllers/Acceleration.hpp
-	#${INC_DIR}/FWCS/Controllers/Drag.hpp
-	#${INC_DIR}/FWCS/Controllers/ForceReset.hpp
-	#${INC_DIR}/FWCS/Controllers/Friction.hpp
-	#${INC_DIR}/FWCS/Controllers/Gravity.hpp
-	#${INC_DIR}/FWCS/Controllers/Jump.hpp
-	#${INC_DIR}/FWCS/Controllers/Movement.hpp
-	#${INC_DIR}/FWCS/Controllers/MovementForceTransform.hpp
-	#${INC_DIR}/FWCS/Controllers/PositionLimit.hpp
-	#${INC_DIR}/FWCS/Controllers/ThrustReset.hpp
-	#${INC_DIR}/FWCS/Controllers/Walk.hpp
-	#${SRC_DIR}/FWCS/Controller.cpp
-	#${SRC_DIR}/FWCS/Controllers/Acceleration.cpp
-	#${SRC_DIR}/FWCS/Controllers/Drag.cpp
-	#${SRC_DIR}/FWCS/Controllers/ForceReset.cpp
-	#${SRC_DIR}/FWCS/Controllers/Friction.cpp
-	#${SRC_DIR}/FWCS/Controllers/Gravity.cpp
-	#${SRC_DIR}/FWCS/Controllers/Jump.cpp
-	#${SRC_DIR}/FWCS/Controllers/Movement.cpp
-	#${SRC_DIR}/FWCS/Controllers/MovementForceTransform.cpp
-	#${SRC_DIR}/FWCS/Controllers/PositionLimit.cpp
-	#${SRC_DIR}/FWCS/Controllers/ThrustReset.cpp
-	#${SRC_DIR}/FWCS/Controllers/Walk.cpp
 	${INC_DIR}/FWCS/BaseExecutorFactory.hpp
 	${INC_DIR}/FWCS/Config.hpp
 	${INC_DIR}/FWCS/Entity.hpp
@@ -67,7 +42,6 @@ set(
 	${INC_DIR}/FWCS/ExecutorRequirements.inl
 	${INC_DIR}/FWCS/Math.hpp
 	${INC_DIR}/FWCS/Math.inl
-	${INC_DIR}/FWCS/NonCopyable.hpp
 	${INC_DIR}/FWCS/Property.hpp
 	${INC_DIR}/FWCS/Property.inl
 	${INC_DIR}/FWCS/System.hpp
@@ -79,7 +53,6 @@ set(
 	${SRC_DIR}/FWCS/Executor.cpp
 	${SRC_DIR}/FWCS/ExecutorRequirements.cpp
 	${SRC_DIR}/FWCS/Math.cpp
-	${SRC_DIR}/FWCS/NonCopyable.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp
 )
