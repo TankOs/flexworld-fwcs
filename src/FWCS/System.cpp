@@ -113,4 +113,20 @@ void System::on_property_create( const std::string& id, Entity& entity ) {
 	}
 }
 
+void System::run( const sf::Time& sim_time ) {
+	std::size_t num_entities = m_entities.size();
+	std::size_t num_executors = 0;
+	std::size_t executor_idx = 0;
+	std::vector<std::unique_ptr<Executor>>* executor_array = nullptr;
+
+	for( std::size_t entity_idx = 0; entity_idx < num_entities; ++entity_idx ) {
+		executor_array = &m_entities[entity_idx].second;
+		num_executors = executor_array->size();
+
+		for( executor_idx = 0; executor_idx < num_executors; ++executor_idx ) {
+			(*executor_array)[executor_idx]->execute( sim_time );
+		}
+	}
+}
+
 }

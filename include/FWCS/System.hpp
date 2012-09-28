@@ -10,6 +10,10 @@
 #include <cstdint>
 #include <cassert>
 
+namespace sf {
+class Time;
+}
+
 namespace cs {
 
 /** System.
@@ -79,6 +83,11 @@ class System : public EntityObserver {
 		 * @param id ID.
 		 */
 		void destroy_entity( EntityID id );
+
+		/** Run simulation.
+		 * @param sim_time Simulation time.
+		 */
+		void run( const sf::Time& sim_time );
 
 	private:
 		void on_property_create( const std::string& id, cs::Entity& entity );

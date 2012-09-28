@@ -26,14 +26,10 @@ class FloatExecutor : public cs::Executor {
 	public:
 		FloatExecutor( cs::Entity& entity ) :
 			cs::Executor( entity ),
-			velocity( get_entity().find_property<float>( "velocity" ) ),
-			last_velocity( get_entity().find_property<float>( "last_velocity" ) )
+			velocity( get_entity().find_property<float>( "velocity" ) )
 		{
 			BOOST_REQUIRE( velocity != nullptr );
-
-			if( last_velocity == nullptr ) {
-				last_velocity = &get_entity().create_property<float>( "last_velocity" );
-			}
+			*velocity = 0.0f;
 		}
 
 		~FloatExecutor() {
@@ -48,10 +44,38 @@ class FloatExecutor : public cs::Executor {
 		}
 
 		void execute( const sf::Time& sim_time ) {
+			(*velocity) += static_cast<float>( sim_time.asMilliseconds() );
 		}
 
 		float* velocity;
-		float* last_velocity;
+};
+
+class IntExecutor : public cs::Executor {
+	public:
+		IntExecutor( cs::Entity& entity ) :
+			cs::Executor( entity ),
+			integer( get_entity().find_property<int>( "integer" ) )
+		{
+			BOOST_REQUIRE( integer != nullptr );
+			*integer = 0;
+		}
+
+		~IntExecutor() {
+		}
+
+		static const cs::ExecutorRequirements& get_requirements() {
+			static cs::ExecutorRequirements req = cs::ExecutorRequirements().require_property<int>(
+				"integer", true
+			);
+
+			return req;
+		}
+
+		void execute( const sf::Time& sim_time ) {
+			(*integer) += sim_time.asMilliseconds();
+		}
+
+		int* integer;
 };
 
 BOOST_AUTO_TEST_CASE( TestSystem ) {
@@ -187,14 +211,16 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			System system;
 
 			auto& float_entity = system.create_entity();
-			auto& ignored_entity = system.create_entity();
+			auto& int_entity = system.create_entity();
 
 			float_entity.create_property<float>( "velocity" ) = 100.0f;
+			int_entity.create_property<int>( "integer" ) = 50;
 
 			system.create_factory<FloatExecutor>();
+			system.create_factory<IntExecutor>();
 
-			BOOST_CHECK( float_entity.find_property<float>( "last_velocity" ) != nullptr );
-			BOOST_CHECK( ignored_entity.find_property<float>( "last_velocity" ) == nullptr );
+			BOOST_CHECK( *float_entity.find_property<float>( "velocity" ) == 0.0f );
+			BOOST_CHECK( *int_entity.find_property<int>( "integer" ) == 0 );
 		}
 
 		// Create factory, then entities.
@@ -202,14 +228,37 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			System system;
 
 			system.create_factory<FloatExecutor>();
+			system.create_factory<IntExecutor>();
 
 			auto& float_entity = system.create_entity();
-			auto& ignored_entity = system.create_entity();
+			auto& int_entity = system.create_entity();
 
-			float_entity.create_property<float>( "velocity" ) = 100.0f;
+			float_entity.create_property<float>( "velocity", 100.0f );
+			int_entity.create_property<int>( "integer", 50 );
 
-			BOOST_CHECK( float_entity.find_property<float>( "last_velocity" ) != nullptr );
-			BOOST_CHECK( ignored_entity.find_property<float>( "last_velocity" ) == nullptr );
+			BOOST_CHECK( *float_entity.find_property<float>( "velocity" ) == 0.0f );
+			BOOST_CHECK( *int_entity.find_property<int>( "integer" ) == 0 );
+		}
+
+		// Run simulation.
+		{
+			System system;
+
+			auto& float_entity = system.create_entity();
+			auto& int_entity = system.create_entity();
+
+			float_entity.create_property<float>( "velocity", 100.0f );
+			int_entity.create_property<int>( "integer", 50 );
+
+			system.create_factory<FloatExecutor>();
+			system.create_factory<IntExecutor>();
+
+			system.run( sf::milliseconds( 1 ) );
+			system.run( sf::milliseconds( 2 ) );
+			system.run( sf::milliseconds( 3 ) );
+
+			BOOST_CHECK( *float_entity.find_property<float>( "velocity" ) == 6.0f );
+			BOOST_CHECK( *int_entity.find_property<int>( "integer" ) == 6 );
 		}
 	}
 }
