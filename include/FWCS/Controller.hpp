@@ -43,13 +43,12 @@ class Controller {
 		/** Get entity.
 		 * @return Entity.
 		 */
-		const Entity& get_entity() const;
+		Entity& get_entity();
 
-	protected:
 		/** Get entity.
 		 * @return Entity.
 		 */
-		Entity& get_entity();
+		const Entity& get_entity() const;
 
 	private:
 		Entity& m_entity;

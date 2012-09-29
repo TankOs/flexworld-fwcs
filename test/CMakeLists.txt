@@ -15,12 +15,13 @@ set(
 	${INC_DIR}/ExampleController.hpp
 	${SRC_DIR}/ExampleController.cpp
 	${SRC_DIR}/Test.cpp
-	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestControllerFactory.cpp
 	${SRC_DIR}/TestControllerRequirements.cpp
+	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestMath.cpp
 	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
+	${SRC_DIR}/TestVelocityController.cpp
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/../include )

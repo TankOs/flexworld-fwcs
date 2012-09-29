@@ -32,14 +32,16 @@ set(
 	SOURCES
 	${INC_DIR}/FWCS/BaseControllerFactory.hpp
 	${INC_DIR}/FWCS/Config.hpp
-	${INC_DIR}/FWCS/Entity.hpp
-	${INC_DIR}/FWCS/Entity.inl
-	${INC_DIR}/FWCS/EntityObserver.hpp
 	${INC_DIR}/FWCS/Controller.hpp
 	${INC_DIR}/FWCS/ControllerFactory.hpp
 	${INC_DIR}/FWCS/ControllerFactory.inl
 	${INC_DIR}/FWCS/ControllerRequirements.hpp
 	${INC_DIR}/FWCS/ControllerRequirements.inl
+	${INC_DIR}/FWCS/Controllers/Doc.hpp
+	${INC_DIR}/FWCS/Controllers/Velocity.hpp
+	${INC_DIR}/FWCS/Entity.hpp
+	${INC_DIR}/FWCS/Entity.inl
+	${INC_DIR}/FWCS/EntityObserver.hpp
 	${INC_DIR}/FWCS/Math.hpp
 	${INC_DIR}/FWCS/Math.inl
 	${INC_DIR}/FWCS/Property.hpp
@@ -48,10 +50,11 @@ set(
 	${INC_DIR}/FWCS/System.inl
 	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/BaseControllerFactory.cpp
-	${SRC_DIR}/FWCS/Entity.cpp
-	${SRC_DIR}/FWCS/EntityObserver.cpp
 	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/ControllerRequirements.cpp
+	${SRC_DIR}/FWCS/Controllers/Velocity.cpp
+	${SRC_DIR}/FWCS/Entity.cpp
+	${SRC_DIR}/FWCS/EntityObserver.cpp
 	${SRC_DIR}/FWCS/Math.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp
