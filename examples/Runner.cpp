@@ -1,11 +1,12 @@
 #include <FWCS/System.hpp>
+#include <FWCS/Controllers/Velocity.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
 #include <cstdint>
 
-static const sf::Time ANIMATION_INTERVAL = sf::milliseconds( 250 );
+static const sf::Time ANIMATION_INTERVAL = sf::milliseconds( 200 );
 
 int main() {
 	// Initialize graphics.
@@ -32,6 +33,13 @@ int main() {
 
 	// Setup FWCS.
 	cs::System system;
+	cs::Entity& player_entity = system.create_entity();
+
+	player_entity.create_property<sf::Vector3f>( "acceleration", sf::Vector3f( 25.0f, 0.0f, 0.0f ) );
+	player_entity.create_property<sf::Vector3f>( "velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+	player_entity.create_property<float>( "max_velocity", 70.0f );
+
+	system.create_factory<cs::ctrl::Velocity>();
 
 	// Enter loop.
 	sf::Event event;
@@ -52,7 +60,15 @@ int main() {
 		}
 
 		sf::Time timeslice = frametimer.restart();
+
+		// Run the system.
 		system.run( timeslice );
+
+		// Apply FWCS entity's position to SFML sprite.
+		player.move(
+			player_entity.find_property<sf::Vector3f>( "velocity" )->x * timeslice.asSeconds(),
+			player_entity.find_property<sf::Vector3f>( "velocity" )->z * timeslice.asSeconds()
+		);
 
 		// Player animation.
 		anim_timer += timeslice;
