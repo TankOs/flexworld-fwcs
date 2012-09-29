@@ -9,11 +9,11 @@ namespace cs {
 
 class Entity;
 
-/** Executor requirements.
+/** Controller requirements.
  * Collection of requirements an entity must meet to be interesting for an
- * executor.
+ * controller.
  */
-class ExecutorRequirements {
+class ControllerRequirements {
 	public:
 		/** Property requirement.
 		 */
@@ -52,7 +52,7 @@ class ExecutorRequirements {
 		 * @return *this
 		 */
 		template <class T>
-		ExecutorRequirements& require_property( const std::string& name, bool require );
+		ControllerRequirements& require_property( const std::string& name, bool require );
 
 		/** Get property requirement.
 		 * Undefined behaviour if index is invalid.
@@ -74,4 +74,4 @@ class ExecutorRequirements {
 
 }
 
-#include "ExecutorRequirements.inl"
+#include "ControllerRequirements.inl"

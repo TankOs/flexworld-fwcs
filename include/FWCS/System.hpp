@@ -1,7 +1,7 @@
 #pragma once
 
-#include <FWCS/BaseExecutorFactory.hpp>
-#include <FWCS/ExecutorFactory.hpp>
+#include <FWCS/BaseControllerFactory.hpp>
+#include <FWCS/ControllerFactory.hpp>
 #include <FWCS/Entity.hpp>
 #include <FWCS/Types.hpp>
 
@@ -17,14 +17,14 @@ class Time;
 namespace cs {
 
 /** System.
- * The System class is a manager and router for entities and executors.
+ * The System class is a manager and router for entities and controllers.
  *
  * Entities being added to the system are automatically linked to all matching
- * executors previously added to the system. Adding executor factories at any
+ * controllers previously added to the system. Adding controller factories at any
  * time is also possible, also modifying entity properties after they have been
  * added.
  *
- * Running the system processes all executors.
+ * Running the system processes all controllers.
  *
  * Pointers/references to entities are valid until the proper entity is
  * destroyed.
@@ -39,8 +39,8 @@ class System : public EntityObserver {
 		 */
 		~System();
 
-		/** Get number of executor factories.
-		 * @return Number of executor factories.
+		/** Get number of controller factories.
+		 * @return Number of controller factories.
 		 */
 		std::size_t get_num_factories() const;
 
@@ -50,15 +50,15 @@ class System : public EntityObserver {
 		std::size_t get_num_entities() const;
 
 		/** Create factory.
-		 * Undefined behaviour if a factory for the same executor type has already
+		 * Undefined behaviour if a factory for the same controller type has already
 		 * been created.
-		 * @tparam T Executor type.
+		 * @tparam T Controller type.
 		 */
 		template <class T>
 		void create_factory();
 
 		/** Check if a specific factory exists.
-		 * @tparam T Executor type.
+		 * @tparam T Controller type.
 		 * @return true if factory exists.
 		 */
 		template <class T>
@@ -92,15 +92,15 @@ class System : public EntityObserver {
 	private:
 		void on_property_create( const std::string& id, cs::Entity& entity );
 
-		void create_factory_executors( BaseExecutorFactory& factory );
+		void create_factory_controllers( BaseControllerFactory& factory );
 
 		typedef std::pair<
 			std::unique_ptr<Entity>,
-			std::vector<std::unique_ptr<Executor>>
-		> EntityExecutorsPair;
+			std::vector<std::unique_ptr<Controller>>
+		> EntityControllersPair;
 
-		std::vector<std::unique_ptr<BaseExecutorFactory>> m_factories;
-		std::vector<EntityExecutorsPair> m_entities;
+		std::vector<std::unique_ptr<BaseControllerFactory>> m_factories;
+		std::vector<EntityControllersPair> m_entities;
 
 		EntityID m_next_entity_id;
 };

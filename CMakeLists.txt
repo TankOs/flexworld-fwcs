@@ -30,16 +30,16 @@ set( INC_DIR "include" )
 
 set(
 	SOURCES
-	${INC_DIR}/FWCS/BaseExecutorFactory.hpp
+	${INC_DIR}/FWCS/BaseControllerFactory.hpp
 	${INC_DIR}/FWCS/Config.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
-	${INC_DIR}/FWCS/Executor.hpp
-	${INC_DIR}/FWCS/ExecutorFactory.hpp
-	${INC_DIR}/FWCS/ExecutorFactory.inl
-	${INC_DIR}/FWCS/ExecutorRequirements.hpp
-	${INC_DIR}/FWCS/ExecutorRequirements.inl
+	${INC_DIR}/FWCS/Controller.hpp
+	${INC_DIR}/FWCS/ControllerFactory.hpp
+	${INC_DIR}/FWCS/ControllerFactory.inl
+	${INC_DIR}/FWCS/ControllerRequirements.hpp
+	${INC_DIR}/FWCS/ControllerRequirements.inl
 	${INC_DIR}/FWCS/Math.hpp
 	${INC_DIR}/FWCS/Math.inl
 	${INC_DIR}/FWCS/Property.hpp
@@ -47,11 +47,11 @@ set(
 	${INC_DIR}/FWCS/System.hpp
 	${INC_DIR}/FWCS/System.inl
 	${INC_DIR}/FWCS/Types.hpp
-	${SRC_DIR}/FWCS/BaseExecutorFactory.cpp
+	${SRC_DIR}/FWCS/BaseControllerFactory.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/EntityObserver.cpp
-	${SRC_DIR}/FWCS/Executor.cpp
-	${SRC_DIR}/FWCS/ExecutorRequirements.cpp
+	${SRC_DIR}/FWCS/Controller.cpp
+	${SRC_DIR}/FWCS/ControllerRequirements.cpp
 	${SRC_DIR}/FWCS/Math.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp

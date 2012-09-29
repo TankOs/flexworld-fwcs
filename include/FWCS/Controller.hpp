@@ -10,30 +10,30 @@ class Time;
 
 namespace cs {
 
-/** Executor abstract baseclass.
- * The executor implements logic for entities. Each executor should be designed
+/** Controller abstract baseclass.
+ * The controller implements logic for entities. Each controller should be designed
  * to have one single task and only work on entities that meet specific
  * requirements, like a set of properties.
  *
- * An executor is created by the System class for every entity that is being
- * considered "interesting". That also means that executors should normally not
+ * An controller is created by the System class for every entity that is being
+ * considered "interesting". That also means that controllers should normally not
  * be heavy in memory-usage, as a lot of them could be created.
  *
- * On the other hand every executor should be designed to operate fast. For
+ * On the other hand every controller should be designed to operate fast. For
  * example looking up properties in the execute() implementation should be
  * avoided. Instead pointers to the properties can be cached in member
  * variables.
  */
-class Executor {
+class Controller {
 	public:
 		/** Ctor.
 		 * @param entity Entity (referenced).
 		 */
-		Executor( Entity& entity );
+		Controller( Entity& entity );
 
 		/** Dtor.
 		 */
-		virtual ~Executor();
+		virtual ~Controller();
 
 		/** Execute.
 		 * @param sim_time Simulation time.

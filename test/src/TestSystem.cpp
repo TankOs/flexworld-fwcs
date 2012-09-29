@@ -1,20 +1,20 @@
 #include <FWCS/System.hpp>
 #include <FWCS/Entity.hpp>
-#include <FWCS/Executor.hpp>
-#include <FWCS/ExecutorRequirements.hpp>
+#include <FWCS/Controller.hpp>
+#include <FWCS/ControllerRequirements.hpp>
 
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
 
-class DummyExecutor : public cs::Executor {
+class DummyController : public cs::Controller {
 	public:
-		DummyExecutor( cs::Entity& entity ) :
-			cs::Executor( entity )
+		DummyController( cs::Entity& entity ) :
+			cs::Controller( entity )
 		{
 		}
 
-		static const cs::ExecutorRequirements& get_requirements() {
-			static cs::ExecutorRequirements req;
+		static const cs::ControllerRequirements& get_requirements() {
+			static cs::ControllerRequirements req;
 			return req;
 		}
 
@@ -22,21 +22,21 @@ class DummyExecutor : public cs::Executor {
 		}
 };
 
-class FloatExecutor : public cs::Executor {
+class FloatController : public cs::Controller {
 	public:
-		FloatExecutor( cs::Entity& entity ) :
-			cs::Executor( entity ),
+		FloatController( cs::Entity& entity ) :
+			cs::Controller( entity ),
 			velocity( get_entity().find_property<float>( "velocity" ) )
 		{
 			BOOST_REQUIRE( velocity != nullptr );
 			*velocity = 0.0f;
 		}
 
-		~FloatExecutor() {
+		~FloatController() {
 		}
 
-		static const cs::ExecutorRequirements& get_requirements() {
-			static cs::ExecutorRequirements req = cs::ExecutorRequirements().require_property<float>(
+		static const cs::ControllerRequirements& get_requirements() {
+			static cs::ControllerRequirements req = cs::ControllerRequirements().require_property<float>(
 				"velocity", true
 			);
 
@@ -50,21 +50,21 @@ class FloatExecutor : public cs::Executor {
 		float* velocity;
 };
 
-class IntExecutor : public cs::Executor {
+class IntController : public cs::Controller {
 	public:
-		IntExecutor( cs::Entity& entity ) :
-			cs::Executor( entity ),
+		IntController( cs::Entity& entity ) :
+			cs::Controller( entity ),
 			integer( get_entity().find_property<int>( "integer" ) )
 		{
 			BOOST_REQUIRE( integer != nullptr );
 			*integer = 0;
 		}
 
-		~IntExecutor() {
+		~IntController() {
 		}
 
-		static const cs::ExecutorRequirements& get_requirements() {
-			static cs::ExecutorRequirements req = cs::ExecutorRequirements().require_property<int>(
+		static const cs::ControllerRequirements& get_requirements() {
+			static cs::ControllerRequirements req = cs::ControllerRequirements().require_property<int>(
 				"integer", true
 			);
 
@@ -94,18 +94,18 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		System system;
 
 		BOOST_CHECK( system.get_num_factories() == 0 );
-		BOOST_CHECK( system.has_factory<FloatExecutor>() == false );
-		BOOST_CHECK( system.has_factory<DummyExecutor>() == false );
+		BOOST_CHECK( system.has_factory<FloatController>() == false );
+		BOOST_CHECK( system.has_factory<DummyController>() == false );
 
-		system.create_factory<FloatExecutor>();
+		system.create_factory<FloatController>();
 		BOOST_CHECK( system.get_num_factories() == 1 );
-		BOOST_CHECK( system.has_factory<FloatExecutor>() == true );
-		BOOST_CHECK( system.has_factory<DummyExecutor>() == false );
+		BOOST_CHECK( system.has_factory<FloatController>() == true );
+		BOOST_CHECK( system.has_factory<DummyController>() == false );
 
-		system.create_factory<DummyExecutor>();
+		system.create_factory<DummyController>();
 		BOOST_CHECK( system.get_num_factories() == 2 );
-		BOOST_CHECK( system.has_factory<FloatExecutor>() == true );
-		BOOST_CHECK( system.has_factory<DummyExecutor>() == true );
+		BOOST_CHECK( system.has_factory<FloatController>() == true );
+		BOOST_CHECK( system.has_factory<DummyController>() == true );
 	}
 
 	// Add entities. 
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		}
 	}
 
-	// Create executors and run simulation.
+	// Create controllers and run simulation.
 	{
 		// Create entities, then factory.
 		{
@@ -216,8 +216,8 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			float_entity.create_property<float>( "velocity" ) = 100.0f;
 			int_entity.create_property<int>( "integer" ) = 50;
 
-			system.create_factory<FloatExecutor>();
-			system.create_factory<IntExecutor>();
+			system.create_factory<FloatController>();
+			system.create_factory<IntController>();
 
 			BOOST_CHECK( *float_entity.find_property<float>( "velocity" ) == 0.0f );
 			BOOST_CHECK( *int_entity.find_property<int>( "integer" ) == 0 );
@@ -227,8 +227,8 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 		{
 			System system;
 
-			system.create_factory<FloatExecutor>();
-			system.create_factory<IntExecutor>();
+			system.create_factory<FloatController>();
+			system.create_factory<IntController>();
 
 			auto& float_entity = system.create_entity();
 			auto& int_entity = system.create_entity();
@@ -250,8 +250,8 @@ BOOST_AUTO_TEST_CASE( TestSystem ) {
 			float_entity.create_property<float>( "velocity", 100.0f );
 			int_entity.create_property<int>( "integer", 50 );
 
-			system.create_factory<FloatExecutor>();
-			system.create_factory<IntExecutor>();
+			system.create_factory<FloatController>();
+			system.create_factory<IntController>();
 
 			system.run( sf::milliseconds( 1 ) );
 			system.run( sf::milliseconds( 2 ) );

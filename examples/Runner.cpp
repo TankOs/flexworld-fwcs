@@ -1,35 +1,28 @@
-#include <FWCS/Controllers/Gravity.hpp>
-#include <FWCS/Controllers/ForceReset.hpp>
-#include <FWCS/Controllers/MovementForceTransform.hpp>
-#include <FWCS/Controllers/Acceleration.hpp>
-#include <FWCS/Controllers/Movement.hpp>
-#include <FWCS/Controllers/PositionLimit.hpp>
-#include <FWCS/Controllers/Drag.hpp>
-#include <FWCS/Controllers/Jump.hpp>
-#include <FWCS/Controllers/Walk.hpp>
-#include <FWCS/Controllers/Friction.hpp>
 #include <FWCS/System.hpp>
-#include <FWCS/Entity.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
+#include <cstdint>
 
-static const float SCALE_FACTOR = 50.0f; // X pixels = 1 meter.
+static const sf::Time ANIMATION_INTERVAL = sf::milliseconds( 250 );
 
 int main() {
 	// Initialize graphics.
-	sf::RenderWindow render_window( sf::VideoMode( 1024, 768 ), "FWCS Runner Example" );
-
-	// Visible object.
-	sf::RectangleShape earth_shape( sf::Vector2f( 0.5f * SCALE_FACTOR, 1.75f * SCALE_FACTOR ) );
-	sf::RectangleShape mars_shape( sf::Vector2f( 0.5f * SCALE_FACTOR, 1.75f * SCALE_FACTOR ) );
-
-	earth_shape.setFillColor( sf::Color::White );
-	mars_shape.setFillColor( sf::Color::Yellow );
+	sf::RenderWindow render_window( sf::VideoMode( 1024, 768 ), "FWCS Runner Example", sf::Style::Titlebar );
 
 	// Framerate limit.
 	render_window.setFramerateLimit( 60 );
+
+	// Resources.
+	sf::Texture walk_textures[2];
+
+	walk_textures[0].loadFromFile( "data/avt3_fr1.png" );
+	walk_textures[1].loadFromFile( "data/avt3_fr2.png" );
+
+	// Character.
+	sf::Sprite player{ walk_textures[0] };
+	uint8_t walk_frame = 0;
 
 	// HUD.
 	sf::Font font;
@@ -40,61 +33,10 @@ int main() {
 	// Setup FWCS.
 	cs::System system;
 
-	system.create_controller<cs::ctrl::ForceReset>();
-	system.create_controller<cs::ctrl::Gravity>();
-	system.create_controller<cs::ctrl::Jump>();
-	system.create_controller<cs::ctrl::Walk>();
-	system.create_controller<cs::ctrl::Friction>();
-	system.create_controller<cs::ctrl::Drag>();
-	system.create_controller<cs::ctrl::MovementForceTransform>();
-	system.create_controller<cs::ctrl::Acceleration>();
-	system.create_controller<cs::ctrl::Movement>();
-	system.create_controller<cs::ctrl::PositionLimit>();
-
-	cs::Entity& earth_entity = system.create_entity();
-
-	earth_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 1.0f, 10.0f, 0.0f ) );
-	earth_entity.create_property<sf::Vector3f>( "velocity" );
-	earth_entity.create_property<sf::Vector3f>( "acceleration" );
-	earth_entity.create_property<sf::Vector3f>( "force" );
-	earth_entity.create_property<sf::Vector3f>( "lower_position_limit", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-	earth_entity.create_property<sf::Vector3f>( "upper_position_limit", sf::Vector3f( static_cast<float>( render_window.getSize().x ), 999999.0f, 0.0f ) );
-	earth_entity.create_property<sf::Vector3f>( "jump_vector", sf::Vector3f( 0.0f, 1.0f, 0.0f ) );
-	earth_entity.create_property<sf::Vector3f>( "forward_vector", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
-	earth_entity.create_property<sf::Vector3f>( "up_vector", sf::Vector3f( 0.0f, 1.0f, 0.0f ) );
-	earth_entity.create_property<sf::Vector2f>( "walk_control_vector", sf::Vector2f( 0.0f, 0.0f ) );
-	earth_entity.create_property<float>( "jump_force", 4000.0f );
-	earth_entity.create_property<float>( "walk_force", 500.0f );
-	earth_entity.create_property<float>( "max_walk_velocity", 2.0f );
-	earth_entity.create_property<float>( "drag_area", 1.75f * 0.5f );
-	earth_entity.create_property<float>( "air_density", 1.275f );
-	earth_entity.create_property<float>( "resistance_coeff", 0.78f );
-	earth_entity.create_property<float>( "mass", 87.0f );
-	earth_entity.create_property<float>( "gravity", -9.80665f );
-	earth_entity.create_property<float>( "static_friction_coeff", 0.47f );
-	earth_entity.create_property<float>( "sliding_friction_coeff", 0.27f );
-	earth_entity.create_property<bool>( "jump_active", false );
-	earth_entity.create_property<bool>( "on_ground", true );
-
-	cs::Entity& mars_entity = system.create_entity();
-
-	mars_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 10.0f, 10.0f, 0.0f ) );
-	mars_entity.create_property<sf::Vector3f>( "velocity" );
-	mars_entity.create_property<sf::Vector3f>( "acceleration" );
-	mars_entity.create_property<sf::Vector3f>( "force" );
-	mars_entity.create_property<sf::Vector3f>( "lower_position_limit", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-	mars_entity.create_property<sf::Vector3f>( "upper_position_limit", sf::Vector3f( static_cast<float>( render_window.getSize().x ), 999999.0f, 0.0f ) );
-	mars_entity.create_property<sf::Vector3f>( "jump_vector", sf::Vector3f( 0.0f, 1.0f, 0.0f ) );
-	mars_entity.create_property<float>( "jump_force", 3200.0f );
-	mars_entity.create_property<float>( "mass", 50.0f );
-	mars_entity.create_property<float>( "gravity", -3.71f );
-	mars_entity.create_property<bool>( "jump_active", false );
-
 	// Enter loop.
 	sf::Event event;
 	sf::Clock frametimer;
-	sf::Time sim_time;
-	sf::Vector2f walk_control_vector( 0.0f, 0.0f );
+	sf::Time anim_timer;
 
 	while( render_window.isOpen() ) {
 		// Read events.
@@ -106,106 +48,25 @@ int main() {
 				if( event.key.code == sf::Keyboard::Escape ) {
 					render_window.close();
 				}
-				else if( event.key.code == sf::Keyboard::Space ) {
-					// Jump only when standing.
-					if( earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().y == 0.0f ) {
-						earth_entity.find_property<bool>( "jump_active" )->set_value( true );
-						earth_entity.find_property<bool>( "on_ground" )->set_value( false );
-					}
-
-					if( mars_entity.find_property<sf::Vector3f>( "velocity" )->get_value().y == 0.0f ) {
-						mars_entity.find_property<bool>( "jump_active" )->set_value( true );
-					}
-				}
 			}
 		}
 
-		// Update walk control vector.
-		walk_control_vector.y =
-			(sf::Keyboard::isKeyPressed( sf::Keyboard::D ) ? 1.0f : 0.0f) +
-			(sf::Keyboard::isKeyPressed( sf::Keyboard::A ) ? -1.0f : 0.0f)
-		;
-
-		earth_entity.find_property<sf::Vector2f>( "walk_control_vector" )->set_value( walk_control_vector );
-
 		sf::Time timeslice = frametimer.restart();
-
-		sim_time += timeslice;
 		system.run( timeslice );
 
-		// Check if entity is on ground and update property accordingly.
-		if( earth_entity.find_property<sf::Vector3f>( "position" )->get_value().y == 0.0f ) {
-			earth_entity.find_property<bool>( "on_ground" )->set_value( true );
+		// Player animation.
+		anim_timer += timeslice;
+
+		while( anim_timer >= ANIMATION_INTERVAL ) {
+			walk_frame = static_cast<uint8_t>( (walk_frame + 1) % 2 );
+
+			anim_timer -= ANIMATION_INTERVAL;
 		}
-		else {
-			earth_entity.find_property<bool>( "on_ground" )->set_value( false );
-		}
 
-		// Apply FWCS's entity positions to SFML shapes. Apply a factor for scaling.
-		earth_shape.setPosition(
-			earth_entity.find_property<sf::Vector3f>( "position" )->get_value().x * SCALE_FACTOR,
-			(
-				static_cast<float>( render_window.getSize().y ) -
-				(
-				 earth_entity.find_property<sf::Vector3f>( "position" )->get_value().y * SCALE_FACTOR
-				) -
-				earth_shape.getGlobalBounds().height
-			)
-		);
-
-		mars_shape.setPosition(
-			mars_entity.find_property<sf::Vector3f>( "position" )->get_value().x * SCALE_FACTOR,
-			(
-				static_cast<float>( render_window.getSize().y ) -
-				(
-				 mars_entity.find_property<sf::Vector3f>( "position" )->get_value().y * SCALE_FACTOR
-				) -
-				mars_shape.getGlobalBounds().height
-			)
-		);
-
-		// Rebuild HUD text.
-		{
-			std::stringstream sstr;
-
-			sstr
-				<< "Left: Earth | Right: Mars\n"
-				<< "Press SPACE to jump, A/D to move.\n\n"
-				<< std::fixed
-				<< std::showpos
-				<< "Force:          "
-				<< " " << earth_entity.find_property<sf::Vector3f>( "force" )->get_value().x
-				<< ", " << earth_entity.find_property<sf::Vector3f>( "force" )->get_value().y
-				<< ", " << earth_entity.find_property<sf::Vector3f>( "force" )->get_value().z
-				<< " N\n"
-				<< "Acceleration:   "
-				<< " " << earth_entity.find_property<sf::Vector3f>( "acceleration" )->get_value().x
-				<< ", " << earth_entity.find_property<sf::Vector3f>( "acceleration" )->get_value().y
-				<< " m/s^2\n"
-				<< "Velocity:       "
-				<< " " << earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().x
-				<< ", " << earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().y
-				<< " m/s"
-				<< " (" << earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().x / 1000.0f * 60.0f * 60.0f
-				<< ", " << earth_entity.find_property<sf::Vector3f>( "velocity" )->get_value().y / 1000.0f * 60.0f * 60.0f
-				<< " km/h)\n"
-				<< "Position:       "
-				<< " " << earth_entity.find_property<sf::Vector3f>( "position" )->get_value().x
-				<< ", " << earth_entity.find_property<sf::Vector3f>( "position" )->get_value().y
-				<< " m\n"
-				<< "Simulation time:"
-				<< " " << sim_time.asSeconds()
-				<< " s\n"
-			;
-
-			hud_text.setString( sstr.str() );
-		}
+		player.setTexture( walk_textures[walk_frame] );
 
 		render_window.clear( sf::Color( 12, 34, 56 ) );
-		render_window.draw( earth_shape );
-		render_window.draw( mars_shape );
-		render_window.draw( hud_text );
-
+		render_window.draw( player );
 		render_window.display();
 	}
 

@@ -1,15 +1,15 @@
-#include <FWCS/ExecutorRequirements.hpp>
+#include <FWCS/ControllerRequirements.hpp>
 #include <FWCS/Entity.hpp>
 
 #include <cassert>
 
 namespace cs {
 
-std::size_t ExecutorRequirements::get_num_requirements() const {
+std::size_t ControllerRequirements::get_num_requirements() const {
 	return m_property_requirements.size();
 }
 
-bool ExecutorRequirements::test( const Entity& entity ) const {
+bool ControllerRequirements::test( const Entity& entity ) const {
 	// Test property requirements.
 	for( const auto& prop_req : m_property_requirements ) {
 		if( entity.has_property( prop_req.name, prop_req.type ) != prop_req.required ) {
@@ -22,7 +22,7 @@ bool ExecutorRequirements::test( const Entity& entity ) const {
 
 
 
-ExecutorRequirements::PropertyRequirement::PropertyRequirement(
+ControllerRequirements::PropertyRequirement::PropertyRequirement(
 	const std::string& name_,
 	const std::string& type_,
 	bool required_
@@ -33,12 +33,12 @@ ExecutorRequirements::PropertyRequirement::PropertyRequirement(
 {
 }
 
-const ExecutorRequirements::PropertyRequirement& ExecutorRequirements::get_property_requirement( std::size_t index ) const {
+const ControllerRequirements::PropertyRequirement& ControllerRequirements::get_property_requirement( std::size_t index ) const {
 	assert( index < m_property_requirements.size() );
 	return m_property_requirements[index];
 }
 
-bool ExecutorRequirements::PropertyRequirement::operator==( const PropertyRequirement& other ) const {
+bool ControllerRequirements::PropertyRequirement::operator==( const PropertyRequirement& other ) const {
 	return
 		name == other.name &&
 		type == other.type &&
