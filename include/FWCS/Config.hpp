@@ -23,3 +23,8 @@
 	#pragma warning(disable : 4251) // Suppress a warning which is meaningless for us
 	#pragma warning(disable : 4503) // Suppress warnings about truncated names. Enable again if linker errors occur.
 #endif
+
+/** FlexWorld component system.
+ */
+namespace cs {
+}
