@@ -1,5 +1,6 @@
 #include <FWCS/System.hpp>
 #include <FWCS/Controllers/Velocity.hpp>
+#include <FWCS/Controllers/Position.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <sstream>
@@ -37,9 +38,11 @@ int main() {
 
 	player_entity.create_property<sf::Vector3f>( "acceleration", sf::Vector3f( 25.0f, 0.0f, 0.0f ) );
 	player_entity.create_property<sf::Vector3f>( "velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+	player_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	player_entity.create_property<float>( "max_velocity", 70.0f );
 
 	system.create_factory<cs::ctrl::Velocity>();
+	system.create_factory<cs::ctrl::Position>();
 
 	// Enter loop.
 	sf::Event event;
@@ -65,9 +68,9 @@ int main() {
 		system.run( timeslice );
 
 		// Apply FWCS entity's position to SFML sprite.
-		player.move(
-			player_entity.find_property<sf::Vector3f>( "velocity" )->x * timeslice.asSeconds(),
-			player_entity.find_property<sf::Vector3f>( "velocity" )->z * timeslice.asSeconds()
+		player.setPosition(
+			player_entity.find_property<sf::Vector3f>( "position" )->x,
+			player_entity.find_property<sf::Vector3f>( "position" )->z
 		);
 
 		// Player animation.

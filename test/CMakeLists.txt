@@ -19,6 +19,7 @@ set(
 	${SRC_DIR}/TestControllerRequirements.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestMath.cpp
+	${SRC_DIR}/TestPositionController.cpp
 	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
 	${SRC_DIR}/TestVelocityController.cpp
