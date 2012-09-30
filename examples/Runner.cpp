@@ -38,7 +38,7 @@ int main() {
 
 	player_entity.create_property<sf::Vector3f>( "acceleration", sf::Vector3f( 25.0f, 0.0f, 0.0f ) );
 	player_entity.create_property<sf::Vector3f>( "velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-	player_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+	const auto& player_position = player_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	player_entity.create_property<float>( "max_velocity", 70.0f );
 
 	system.create_factory<cs::ctrl::Accelerate>();
@@ -69,8 +69,8 @@ int main() {
 
 		// Apply FWCS entity's position to SFML sprite.
 		player.setPosition(
-			player_entity.find_property<sf::Vector3f>( "position" )->x,
-			player_entity.find_property<sf::Vector3f>( "position" )->z
+			player_position.x,
+			player_position.z
 		);
 
 		// Player animation.
