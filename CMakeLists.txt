@@ -37,9 +37,9 @@ set(
 	${INC_DIR}/FWCS/ControllerFactory.inl
 	${INC_DIR}/FWCS/ControllerRequirements.hpp
 	${INC_DIR}/FWCS/ControllerRequirements.inl
+	${INC_DIR}/FWCS/Controllers/Accelerate.hpp
 	${INC_DIR}/FWCS/Controllers/Doc.hpp
-	${INC_DIR}/FWCS/Controllers/Position.hpp
-	${INC_DIR}/FWCS/Controllers/Velocity.hpp
+	${INC_DIR}/FWCS/Controllers/Move.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
@@ -53,8 +53,8 @@ set(
 	${SRC_DIR}/FWCS/BaseControllerFactory.cpp
 	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/ControllerRequirements.cpp
-	${SRC_DIR}/FWCS/Controllers/Position.cpp
-	${SRC_DIR}/FWCS/Controllers/Velocity.cpp
+	${SRC_DIR}/FWCS/Controllers/Accelerate.cpp
+	${SRC_DIR}/FWCS/Controllers/Move.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/EntityObserver.cpp
 	${SRC_DIR}/FWCS/Math.cpp

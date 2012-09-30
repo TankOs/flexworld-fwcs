@@ -1,4 +1,4 @@
-#include <FWCS/Controllers/Position.hpp>
+#include <FWCS/Controllers/Move.hpp>
 #include <FWCS/Entity.hpp>
 #include <FWCS/ControllerRequirements.hpp>
 
@@ -8,7 +8,7 @@
 #include <cmath>
 
 using namespace cs;
-using ctrl::Position;
+using ctrl::Move;
 
 static const float TOLERANCE = 0.0001f;
 
@@ -22,11 +22,11 @@ Entity create_correct_position_entity() {
 }
 
 
-BOOST_AUTO_TEST_CASE( TestPositionController ) {
+BOOST_AUTO_TEST_CASE( TestMoveController ) {
 	// Initial state.
 	{
 		Entity ent = create_correct_position_entity();
-		Position controller{ ent };
+		Move controller{ ent };
 
 		BOOST_CHECK( &controller.get_entity() == &ent );
 	}
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE( TestPositionController ) {
 	// Requirements.
 	{
 		Entity ent;
-		const auto& req = Position::get_requirements();
+		const auto& req = Move::get_requirements();
 
 		BOOST_REQUIRE( req.get_num_requirements() == 2 );
 		BOOST_CHECK( req.get_property_requirement( 0 ) == ControllerRequirements::PropertyRequirement( "position", typeid( sf::Vector3f ).name(), true ) );
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE( TestPositionController ) {
 		static const sf::Vector3f VELOCITY = sf::Vector3f( 1.0f, 10.0f, 100.0f );
 
 		Entity ent = create_correct_position_entity();
-		Position controller{ ent };
+		Move controller{ ent };
 
 		auto* position = ent.find_property<sf::Vector3f>( "position" );
 		auto* velocity = ent.find_property<sf::Vector3f>( "velocity" );

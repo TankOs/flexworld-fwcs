@@ -1,4 +1,4 @@
-#include <FWCS/Controllers/Velocity.hpp>
+#include <FWCS/Controllers/Accelerate.hpp>
 #include <FWCS/ControllerRequirements.hpp>
 #include <FWCS/Entity.hpp>
 #include <FWCS/Math.hpp>
@@ -9,7 +9,7 @@
 #include <cmath>
 
 using namespace cs;
-using cs::ctrl::Velocity;
+using cs::ctrl::Accelerate;
 
 static const float TOLERANCE = 0.0001f;
 
@@ -22,18 +22,18 @@ Entity create_correct_entity() {
 	return std::move( ent );
 }
 
-BOOST_AUTO_TEST_CASE( TestVelocityController ) {
+BOOST_AUTO_TEST_CASE( TestAccelerateController ) {
 	// Initial state.
 	{
 		Entity ent = create_correct_entity();
-		Velocity controller{ ent };
+		Accelerate controller{ ent };
 
 		BOOST_CHECK( &controller.get_entity() == &ent );
 	}
 
 	// Requirements.
 	{
-		const auto& req = Velocity::get_requirements();
+		const auto& req = Accelerate::get_requirements();
 
 		BOOST_REQUIRE( req.get_num_requirements() == 2 );
 		BOOST_CHECK( req.get_property_requirement( 0 ) == ControllerRequirements::PropertyRequirement( "velocity", typeid( sf::Vector3f ).name(), true ) );
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE( TestVelocityController ) {
 		static const sf::Vector3f VELOCITY = sf::Vector3f( 25.0f, 250.0f, 2500.0f );
 
 		Entity ent = create_correct_entity();
-		Velocity controller{ ent };
+		Accelerate controller{ ent };
 
 		sf::Vector3f* velocity = ent.find_property<sf::Vector3f>( "velocity" );
 		sf::Vector3f* acceleration = ent.find_property<sf::Vector3f>( "acceleration" );
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE( TestVelocityController ) {
 		Entity ent = create_correct_entity();
 		ent.create_property( "max_velocity", MAX_VELOCITY );
 
-		Velocity controller{ ent };
+		Accelerate controller{ ent };
 
 		sf::Vector3f* velocity = ent.find_property<sf::Vector3f>( "velocity" );
 		sf::Vector3f* acceleration = ent.find_property<sf::Vector3f>( "acceleration" );

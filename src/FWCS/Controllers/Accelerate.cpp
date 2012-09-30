@@ -1,4 +1,4 @@
-#include <FWCS/Controllers/Velocity.hpp>
+#include <FWCS/Controllers/Accelerate.hpp>
 #include <FWCS/ControllerRequirements.hpp>
 #include <FWCS/Entity.hpp>
 #include <FWCS/Math.hpp>
@@ -9,7 +9,7 @@
 namespace cs {
 namespace ctrl {
 
-const ControllerRequirements& Velocity::get_requirements() {
+const ControllerRequirements& Accelerate::get_requirements() {
 	static const ControllerRequirements req = ControllerRequirements(
 		).require_property<sf::Vector3f>(
 			"velocity", true
@@ -21,7 +21,7 @@ const ControllerRequirements& Velocity::get_requirements() {
 	return req;
 }
 
-Velocity::Velocity( Entity& entity ) :
+Accelerate::Accelerate( Entity& entity ) :
 	Controller( entity ),
 	m_velocity{ entity.find_property<sf::Vector3f>( "velocity" ) },
 	m_acceleration{ entity.find_property<sf::Vector3f>( "acceleration" ) },
@@ -31,7 +31,7 @@ Velocity::Velocity( Entity& entity ) :
 	assert( m_acceleration != nullptr );
 }
 
-void Velocity::execute( const sf::Time& sim_time ) {
+void Accelerate::execute( const sf::Time& sim_time ) {
 	float seconds = sim_time.asSeconds();
 
 	m_velocity->x += m_acceleration->x * seconds;

@@ -11,14 +11,14 @@ class ControllerRequirements;
 namespace cs {
 namespace ctrl {
 
-/** Position controller.
- * Updates an entity's position by adding the current velocity.
+/** Move controller.
+ * Update an entity's position by adding the current velocity to the position.
  *
  * Required properties:
- *   * position (sf::Vector3f, in/out): Position in m.
+ *   * position (sf::Vector3f, in/out): Move in m.
  *   * velocity (sf::Vector3f, in): Velocity in m/s.
  */
-class Position : public Controller {
+class Move : public Controller {
 	public:
 		/** Get requirements.
 		 * @return Requirements.
@@ -28,7 +28,7 @@ class Position : public Controller {
 		/** Ctor.
 		 * @param entity Entity.
 		 */
-		Position( Entity& entity );
+		Move( Entity& entity );
 
 		void execute( const sf::Time& sim_time );
 

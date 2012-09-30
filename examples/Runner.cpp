@@ -1,6 +1,6 @@
 #include <FWCS/System.hpp>
-#include <FWCS/Controllers/Velocity.hpp>
-#include <FWCS/Controllers/Position.hpp>
+#include <FWCS/Controllers/Accelerate.hpp>
+#include <FWCS/Controllers/Move.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <sstream>
@@ -41,8 +41,8 @@ int main() {
 	player_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	player_entity.create_property<float>( "max_velocity", 70.0f );
 
-	system.create_factory<cs::ctrl::Velocity>();
-	system.create_factory<cs::ctrl::Position>();
+	system.create_factory<cs::ctrl::Accelerate>();
+	system.create_factory<cs::ctrl::Move>();
 
 	// Enter loop.
 	sf::Event event;
