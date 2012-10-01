@@ -88,8 +88,7 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 			auto* acceleration = ent.find_property<sf::Vector3f>( "acceleration" );
 			auto* velocity = ent.find_property<sf::Vector3f>( "velocity" );
 
-			// Apply full acceleration (target velocity is higher than acceleration
-			// can achieve in one step).
+			// Accelerate.
 			{
 				*walk_acceleration = 5.0f;
 				*walk_max_velocity = 10.0f;
@@ -99,7 +98,26 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 				*acceleration = sf::Vector3f( 0.0f, 0.0f, 0.0f );
 				*velocity = sf::Vector3f( 0.0f, 0.0f, 0.0f );
 
-				controller.execute( sf::milliseconds( 345834 ) );
+				// Keep in mind we are simulating for 5 seconds here!
+				controller.execute( sf::milliseconds( 5000 ) );
+
+				BOOST_CHECK( std::abs( acceleration->x - 2.0f ) <= TOLERANCE );
+				BOOST_CHECK( acceleration->y == 0.0f );
+				BOOST_CHECK( acceleration->z == 0.0f );
+				BOOST_CHECK( *velocity == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+			}
+
+			// Accelerate, half forward command.
+			{
+				*walk_acceleration = 100.0f;
+				*walk_max_velocity = 10.0f;
+				*walk_forward_control = 0.5f;
+				*walk_strafe_control = 0.0f;
+				*forward = sf::Vector3f( 1.0f, 0.0f, 0.0f );
+				*acceleration = sf::Vector3f( 0.0f, 0.0f, 0.0f );
+				*velocity = sf::Vector3f( 0.0f, 0.0f, 0.0f );
+
+				controller.execute( sf::milliseconds( 1000 ) );
 
 				BOOST_CHECK( std::abs( acceleration->x - 5.0f ) <= TOLERANCE );
 				BOOST_CHECK( acceleration->y == 0.0f );
@@ -107,28 +125,27 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 				BOOST_CHECK( *velocity == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 			}
 
-			// Apply acceleration to match velocity in next step (target velocity is
-			// lower than maximum acceleration can achieve in one step).
+			// Accelerate, half strafe command.
 			{
-				*walk_acceleration = 20.0f;
+				*walk_acceleration = 100.0f;
 				*walk_max_velocity = 10.0f;
-				*walk_forward_control = 1.0f;
-				*walk_strafe_control = 0.0f;
+				*walk_forward_control = 0.0f;
+				*walk_strafe_control = 0.5f;
 				*forward = sf::Vector3f( 1.0f, 0.0f, 0.0f );
 				*acceleration = sf::Vector3f( 0.0f, 0.0f, 0.0f );
 				*velocity = sf::Vector3f( 0.0f, 0.0f, 0.0f );
 
-				controller.execute( sf::milliseconds( 345834 ) );
+				controller.execute( sf::milliseconds( 1000 ) );
 
-				BOOST_CHECK( std::abs( acceleration->x - 10.0f ) <= TOLERANCE );
+				BOOST_CHECK( std::abs( acceleration->x ) <= TOLERANCE );
 				BOOST_CHECK( acceleration->y == 0.0f );
-				BOOST_CHECK( acceleration->z == 0.0f );
+				BOOST_CHECK( std::abs( acceleration->z - 5.0f ) <= TOLERANCE );
 				BOOST_CHECK( *velocity == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 			}
 
-			// Slowdown with maximum acceleration.
+			// Slowdown.
 			{
-				*walk_acceleration = 5.0f;
+				*walk_acceleration = 20.0f;
 				*walk_max_velocity = 10.0f;
 				*walk_forward_control = 0.0f;
 				*walk_strafe_control = 0.0f;
@@ -136,30 +153,12 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 				*acceleration = sf::Vector3f( 0.0f, 0.0f, 0.0f );
 				*velocity = sf::Vector3f( 10.0f, 0.0f, 0.0f );
 
-				controller.execute( sf::milliseconds( 345834 ) );
+				controller.execute( sf::milliseconds( 500 ) );
 
-				BOOST_CHECK( std::abs( acceleration->x + 5.0f ) <= TOLERANCE );
+				BOOST_CHECK( std::abs( acceleration->x + 20.0f ) <= TOLERANCE );
 				BOOST_CHECK( acceleration->y == 0.0f );
 				BOOST_CHECK( acceleration->z == 0.0f );
 				BOOST_CHECK( *velocity == sf::Vector3f( 10.0f, 0.0f, 0.0f ) );
-			}
-
-			// Slowdown with only a part of acceleration needed.
-			{
-				*walk_acceleration = 5.0f;
-				*walk_max_velocity = 10.0f;
-				*walk_forward_control = 0.0f;
-				*walk_strafe_control = 0.0f;
-				*forward = sf::Vector3f( 1.0f, 0.0f, 0.0f );
-				*acceleration = sf::Vector3f( 0.0f, 0.0f, 0.0f );
-				*velocity = sf::Vector3f( 3.0f, 0.0f, 0.0f );
-
-				controller.execute( sf::milliseconds( 345834 ) );
-
-				BOOST_CHECK( std::abs( acceleration->x + 3.0f ) <= TOLERANCE );
-				BOOST_CHECK( acceleration->y == 0.0f );
-				BOOST_CHECK( acceleration->z == 0.0f );
-				BOOST_CHECK( *velocity == sf::Vector3f( 3.0f, 0.0f, 0.0f ) );
 			}
 
 			// Strafe.
@@ -172,7 +171,7 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 				*acceleration = sf::Vector3f( 0.0f, 0.0f, 0.0f );
 				*velocity = sf::Vector3f( 0.0f, 0.0f, 0.0f );
 
-				controller.execute( sf::milliseconds( 345834 ) );
+				controller.execute( sf::milliseconds( 2000 ) );
 
 				BOOST_CHECK( std::abs( acceleration->x ) <= TOLERANCE );
 				BOOST_CHECK( std::abs( acceleration->y ) <= TOLERANCE );

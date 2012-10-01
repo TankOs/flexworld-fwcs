@@ -87,7 +87,9 @@ void Walk::execute( const sf::Time& sim_time ) {
 		walk_forward.x += (m_forward->x * std::cos( rad_90 ) - m_forward->z * std::sin( rad_90 )) * (*m_walk_strafe_control);
 		walk_forward.z += (m_forward->x * std::sin( rad_90 ) + m_forward->z * std::cos( rad_90 )) * (*m_walk_strafe_control);
 
-		normalize( walk_forward );
+		if( calc_length( walk_forward ) > 1.0f ) {
+			normalize( walk_forward );
+		}
 
 		// Target velocity is maximum possible velocity in the walk direction.
 		target_velocity.x = walk_forward.x * (*m_walk_max_velocity);
@@ -106,7 +108,7 @@ void Walk::execute( const sf::Time& sim_time ) {
 	// Calculate length of acceleration vector to know how much we have to
 	// accelerate to match the target velocity. This is of course limited by the
 	// controller's maximum acceleration.
-	float accel_diff = std::min( *m_walk_acceleration, calc_length( accel ) );
+	float accel_diff = std::min( *m_walk_acceleration, calc_length( accel ) / sim_time.asSeconds() );
 
 	if( accel_diff == 0.0f ) {
 		// No action required.
