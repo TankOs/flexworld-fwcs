@@ -21,6 +21,7 @@ set(
 	${SRC_DIR}/TestMoveController.cpp
 	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
+	${SRC_DIR}/TestWalkController.cpp
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/../include )
