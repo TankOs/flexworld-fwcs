@@ -1,7 +1,10 @@
 cmake_minimum_required( VERSION 2.8 )
 project( FWCS )
 
-find_package( SFML 2.0 COMPONENTS SYSTEM )
+set( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/extlibs/FWU/cmake" )
+
+find_package( FWU REQUIRED )
+find_package( SFML 2.0 REQUIRED COMPONENTS SYSTEM )
 
 set( FWCS_BUILD_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries." )
 set( FWCS_BUILD_TEST TRUE CACHE BOOL "Build test suite." )
@@ -40,12 +43,11 @@ set(
 	${INC_DIR}/FWCS/Controllers/Accelerate.hpp
 	${INC_DIR}/FWCS/Controllers/Doc.hpp
 	${INC_DIR}/FWCS/Controllers/Move.hpp
+	${INC_DIR}/FWCS/Controllers/Turn.hpp
 	${INC_DIR}/FWCS/Controllers/Walk.hpp
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
-	${INC_DIR}/FWCS/Math.hpp
-	${INC_DIR}/FWCS/Math.inl
 	${INC_DIR}/FWCS/Property.hpp
 	${INC_DIR}/FWCS/Property.inl
 	${INC_DIR}/FWCS/System.hpp
@@ -56,19 +58,21 @@ set(
 	${SRC_DIR}/FWCS/ControllerRequirements.cpp
 	${SRC_DIR}/FWCS/Controllers/Accelerate.cpp
 	${SRC_DIR}/FWCS/Controllers/Move.cpp
+	${SRC_DIR}/FWCS/Controllers/Turn.cpp
 	${SRC_DIR}/FWCS/Controllers/Walk.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/EntityObserver.cpp
-	${SRC_DIR}/FWCS/Math.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp
 )
 
 include_directories( ${INC_DIR} )
+include_directories( ${FWU_INCLUDE_DIR} )
 include_directories( ${SFML_INCLUDE_DIR} )
 
 add_library( fwcs ${LIB_TYPE} ${SOURCES} )
 
+target_link_libraries( fwcs ${FWU_LIBRARY} )
 target_link_libraries( fwcs ${SFML_GRAPHICS_LIBRARY} )
 target_link_libraries( fwcs ${SFML_WINDOW_LIBRARY} )
 target_link_libraries( fwcs ${SFML_SYSTEM_LIBRARY} )

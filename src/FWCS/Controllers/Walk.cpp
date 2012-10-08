@@ -1,8 +1,8 @@
 #include <FWCS/Controllers/Walk.hpp>
 #include <FWCS/ControllerRequirements.hpp>
 #include <FWCS/Entity.hpp>
-#include <FWCS/Math.hpp>
 
+#include <FWU/Math.hpp>
 #include <SFML/System/Time.hpp>
 #include <cmath>
 #include <cassert>
@@ -55,7 +55,7 @@ void Walk::execute( const sf::Time& sim_time ) {
 	assert( m_forward->x != 0.0f || m_forward->y != 0.0f || m_forward->z != 0.0f );
 	assert( *m_walk_forward_control >= -1.0f && *m_walk_forward_control <= 1.0f );
 	assert( *m_walk_strafe_control >= -1.0f && *m_walk_strafe_control <= 1.0f );
-	assert( calc_length( *m_forward ) <= 1.0f );
+	assert( util::calc_length( *m_forward ) <= 1.0f );
 
 	// Calculate target velocity vector.
 	sf::Vector3f target_velocity;
@@ -82,13 +82,13 @@ void Walk::execute( const sf::Time& sim_time ) {
 		);
 
 		// Add strafe component.
-		static const float rad_90 = 90.0f * PI / 180.0f;
+		static const float rad_90 = util::deg_to_rad( 90.0f );
 
 		walk_forward.x += (m_forward->x * std::cos( rad_90 ) - m_forward->z * std::sin( rad_90 )) * (*m_walk_strafe_control);
 		walk_forward.z += (m_forward->x * std::sin( rad_90 ) + m_forward->z * std::cos( rad_90 )) * (*m_walk_strafe_control);
 
-		if( calc_length( walk_forward ) > 1.0f ) {
-			normalize( walk_forward );
+		if( util::calc_length( walk_forward ) > 1.0f ) {
+			util::normalize( walk_forward );
 		}
 
 		// Target velocity is maximum possible velocity in the walk direction.
@@ -108,7 +108,7 @@ void Walk::execute( const sf::Time& sim_time ) {
 	// Calculate length of acceleration vector to know how much we have to
 	// accelerate to match the target velocity. This is of course limited by the
 	// controller's maximum acceleration.
-	float accel_diff = std::min( *m_walk_acceleration, calc_length( accel ) / sim_time.asSeconds() );
+	float accel_diff = std::min( *m_walk_acceleration, util::calc_length( accel ) / sim_time.asSeconds() );
 
 	if( accel_diff == 0.0f ) {
 		// No action required.
@@ -116,7 +116,7 @@ void Walk::execute( const sf::Time& sim_time ) {
 	}
 
 	// Calculate final acceleration vector.
-	normalize( accel );
+	util::normalize( accel );
 	accel.x *= accel_diff;
 	accel.y *= accel_diff;
 	accel.z *= accel_diff;

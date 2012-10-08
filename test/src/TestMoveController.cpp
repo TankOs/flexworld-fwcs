@@ -23,6 +23,8 @@ Entity create_correct_position_entity() {
 
 
 BOOST_AUTO_TEST_CASE( TestMoveController ) {
+	BOOST_MESSAGE( "Testing move controller..." );
+
 	// Initial state.
 	{
 		Entity ent = create_correct_position_entity();

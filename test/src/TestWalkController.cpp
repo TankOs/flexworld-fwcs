@@ -28,6 +28,8 @@ Entity create_correct_walk_entity() {
 }
 
 BOOST_AUTO_TEST_CASE( TestWalkController ) {
+	BOOST_MESSAGE( "Testing walk controller..." );
+
 	// Initial state.
 	{
 		Entity ent = create_correct_walk_entity();

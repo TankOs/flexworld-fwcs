@@ -17,10 +17,10 @@ set(
 	${SRC_DIR}/TestControllerFactory.cpp
 	${SRC_DIR}/TestControllerRequirements.cpp
 	${SRC_DIR}/TestEntity.cpp
-	${SRC_DIR}/TestMath.cpp
 	${SRC_DIR}/TestMoveController.cpp
 	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
+	${SRC_DIR}/TestTurnController.cpp
 	${SRC_DIR}/TestWalkController.cpp
 )
 
@@ -36,5 +36,6 @@ target_link_libraries( test fwcs )
 add_custom_command(
 	TARGET test
 	COMMAND test
+	ARGUMENTS "--log_level=message"
 	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 )

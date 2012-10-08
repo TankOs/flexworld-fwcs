@@ -1,0 +1,3 @@
+[submodule "extlibs/FWU"]
+	path = extlibs/FWU
+	url = gitolite@boxbox.org:fwu.git

@@ -1,8 +1,8 @@
 #include <FWCS/Controllers/Accelerate.hpp>
 #include <FWCS/ControllerRequirements.hpp>
 #include <FWCS/Entity.hpp>
-#include <FWCS/Math.hpp>
 
+#include <FWU/Math.hpp>
 #include <SFML/System/Time.hpp>
 #include <cassert>
 
@@ -39,16 +39,20 @@ void Accelerate::execute( const sf::Time& sim_time ) {
 	m_velocity->z += m_acceleration->z * seconds;
 
 	if( m_max_velocity != nullptr ) {
-		float abs_velocity = calc_length( *m_velocity );
+		float abs_velocity = util::calc_length( *m_velocity );
 
 		if( abs_velocity > *m_max_velocity ) {
-			normalize( *m_velocity );
+			util::normalize( *m_velocity );
 
 			m_velocity->x *= *m_max_velocity;
 			m_velocity->y *= *m_max_velocity;
 			m_velocity->z *= *m_max_velocity;
 		}
 	}
+
+	m_acceleration->x = 0.0f;
+	m_acceleration->y = 0.0f;
+	m_acceleration->z = 0.0f;
 }
 
 }

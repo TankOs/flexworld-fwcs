@@ -15,9 +15,11 @@ namespace ctrl {
  * The accelerate controller updates an entity's velocity by applying
  * acceleration. A maximum velocity can be set.
  *
+ * After updating the velocity, the acceleration is reset to 0.
+ *
  * Required properties:
- *   * velocity (sf::Vector3f, in+out): Accelerate in m/s.
- *   * acceleration (sf::Vector3f, in): Acceleration.
+ *   * velocity (sf::Vector3f, in/out): Accelerate in m/s.
+ *   * acceleration (sf::Vector3f, in/out): Acceleration.
  *
  * Optional properties:
  *   * max_velocity (float, in): Maximum velocity in m/s.
@@ -39,7 +41,7 @@ class Accelerate : public Controller {
 	private:
 		sf::Vector3f* m_velocity;
 		sf::Vector3f* m_acceleration;
-		float* m_max_velocity;
+		const float* m_max_velocity;
 };
 
 }

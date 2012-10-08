@@ -1,8 +1,8 @@
 #include <FWCS/Controllers/Accelerate.hpp>
 #include <FWCS/ControllerRequirements.hpp>
 #include <FWCS/Entity.hpp>
-#include <FWCS/Math.hpp>
 
+#include <FWU/Math.hpp>
 #include <SFML/System/Vector3.hpp>
 #include <SFML/System/Time.hpp>
 #include <boost/test/unit_test.hpp>
@@ -23,6 +23,8 @@ Entity create_correct_entity() {
 }
 
 BOOST_AUTO_TEST_CASE( TestAccelerateController ) {
+	BOOST_MESSAGE( "Testing accelerate controller..." );
+
 	// Initial state.
 	{
 		Entity ent = create_correct_entity();
@@ -56,7 +58,7 @@ BOOST_AUTO_TEST_CASE( TestAccelerateController ) {
 
 		controller.execute( sf::milliseconds( 2500 ) );
 
-		BOOST_CHECK( *acceleration == ACCELERATION );
+		BOOST_CHECK( *acceleration == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 		BOOST_CHECK( std::abs( velocity->x - VELOCITY.x ) <= TOLERANCE );
 		BOOST_CHECK( std::abs( velocity->y - VELOCITY.y ) <= TOLERANCE );
 		BOOST_CHECK( std::abs( velocity->z - VELOCITY.z ) <= TOLERANCE );
@@ -68,7 +70,7 @@ BOOST_AUTO_TEST_CASE( TestAccelerateController ) {
 		static const sf::Vector3f ACCELERATION = sf::Vector3f( 10.0f, 100.0f, 1000.0f );
 
 		sf::Vector3f VELOCITY = ACCELERATION;
-		normalize( VELOCITY );
+		util::normalize( VELOCITY );
 		VELOCITY.x *= MAX_VELOCITY;
 		VELOCITY.y *= MAX_VELOCITY;
 		VELOCITY.z *= MAX_VELOCITY;
@@ -88,7 +90,7 @@ BOOST_AUTO_TEST_CASE( TestAccelerateController ) {
 
 		controller.execute( sf::milliseconds( 2500 ) );
 
-		BOOST_CHECK( *acceleration == ACCELERATION );
+		BOOST_CHECK( *acceleration == sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 		BOOST_CHECK( std::abs( velocity->x - VELOCITY.x ) <= TOLERANCE );
 		BOOST_CHECK( std::abs( velocity->y - VELOCITY.y ) <= TOLERANCE );
 		BOOST_CHECK( std::abs( velocity->z - VELOCITY.z ) <= TOLERANCE );

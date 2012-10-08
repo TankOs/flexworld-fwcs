@@ -28,6 +28,8 @@ class DummyController : public cs::Controller {
 };
 
 BOOST_AUTO_TEST_CASE( TestControllerFactory ) {
+	BOOST_MESSAGE( "Testing controller factory..." );
+
 	using namespace cs;
 
 	// Initial state.

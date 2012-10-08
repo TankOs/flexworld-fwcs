@@ -2,8 +2,8 @@
 #include <FWCS/Controllers/Accelerate.hpp>
 #include <FWCS/Controllers/Move.hpp>
 #include <FWCS/Controllers/Walk.hpp>
-#include <FWCS/Math.hpp>
 
+#include <FWU/Math.hpp>
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
@@ -38,7 +38,7 @@ int main() {
 	cs::System system;
 	cs::Entity& player_entity = system.create_entity();
 
-	auto& acceleration = player_entity.create_property<sf::Vector3f>( "acceleration", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+	player_entity.create_property<sf::Vector3f>( "acceleration", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	const auto& velocity = player_entity.create_property<sf::Vector3f>( "velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	const auto& player_position = player_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	player_entity.create_property<sf::Vector3f>( "forward", sf::Vector3f( 0.0f, 0.0f, -1.0f ) );
@@ -75,9 +75,6 @@ int main() {
 		forward_control = (sf::Keyboard::isKeyPressed( sf::Keyboard::W ) ? multiplier : 0.0f) + (sf::Keyboard::isKeyPressed( sf::Keyboard::S ) ? -multiplier : 0.0f);
 		strafe_control = (sf::Keyboard::isKeyPressed( sf::Keyboard::A ) ? -multiplier * 0.6f : 0.0f) + (sf::Keyboard::isKeyPressed( sf::Keyboard::D ) ? multiplier * 0.6f : 0.0f);
 
-		// FIXME
-		acceleration = sf::Vector3f( 0.0f, 0.0f, 0.0f );
-
 		sf::Time timeslice = frametimer.restart();
 
 		// Run the system.
@@ -93,7 +90,7 @@ int main() {
 		anim_timer += timeslice;
 
 		while( anim_timer >= ANIMATION_INTERVAL ) {
-			if( cs::calc_length( velocity ) > 0 ) {
+			if( util::calc_length( velocity ) > 0 ) {
 				walk_frame = static_cast<uint8_t>( (walk_frame + 1) % 2 );
 			}
 

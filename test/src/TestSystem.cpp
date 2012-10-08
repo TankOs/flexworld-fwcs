@@ -79,6 +79,8 @@ class IntController : public cs::Controller {
 };
 
 BOOST_AUTO_TEST_CASE( TestSystem ) {
+	BOOST_MESSAGE( "Testing system..." );
+
 	using namespace cs;
 
 	// Initial state.

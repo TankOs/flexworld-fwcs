@@ -26,6 +26,8 @@ class ExampleEntityObserver : public cs::EntityObserver {
 };
 
 BOOST_AUTO_TEST_CASE( TestEntity ) {
+	BOOST_MESSAGE( "Testing entity..." );
+
 	using namespace cs;
 
 	// Initial state.

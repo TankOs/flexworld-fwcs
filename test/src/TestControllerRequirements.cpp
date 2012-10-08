@@ -4,6 +4,8 @@
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE( TestControllerRequirements ) {
+	BOOST_MESSAGE( "Testing controller requirements..." );
+
 	using namespace cs;
 
 	// Initial state.
