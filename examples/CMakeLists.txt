@@ -9,6 +9,7 @@ macro( build_example target sources )
 	add_executable( ${target} ${sources} )
 
 	target_link_libraries( ${target} fwcs )
+	target_link_libraries( ${target} ${FWU_LIBRARY} )
 	target_link_libraries( ${target} ${SFML_GRAPHICS_LIBRARY} )
 	target_link_libraries( ${target} ${SFML_WINDOW_LIBRARY} )
 	target_link_libraries( ${target} ${SFML_SYSTEM_LIBRARY} )

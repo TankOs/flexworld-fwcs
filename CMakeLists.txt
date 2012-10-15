@@ -72,11 +72,6 @@ include_directories( ${SFML_INCLUDE_DIR} )
 
 add_library( fwcs ${LIB_TYPE} ${SOURCES} )
 
-target_link_libraries( fwcs ${FWU_LIBRARY} )
-target_link_libraries( fwcs ${SFML_GRAPHICS_LIBRARY} )
-target_link_libraries( fwcs ${SFML_WINDOW_LIBRARY} )
-target_link_libraries( fwcs ${SFML_SYSTEM_LIBRARY} )
-
 if( NOT FWCS_SKIP_INSTALL )
 	install(
 		TARGETS fwcs

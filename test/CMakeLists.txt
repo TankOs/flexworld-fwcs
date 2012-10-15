@@ -29,6 +29,8 @@ include_directories( ${Boost_INCLUDE_DIRS} )
 
 add_executable( test ${SOURCES} )
 
+target_link_libraries( test ${FWU_LIBRARY} )
+target_link_libraries( test ${SFML_SYSTEM_LIBRARY} )
 target_link_libraries( test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} )
 target_link_libraries( test ${Boost_THREAD_LIBRARY} )
 target_link_libraries( test fwcs )

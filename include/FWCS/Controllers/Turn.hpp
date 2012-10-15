@@ -20,9 +20,9 @@ namespace ctrl {
  * to zero.
  *
  * Required properties:
- *   * turn_acceleration (sf::Vector3f, in/out): Turn acceleration in degrees.
- *   * turn_velocity (sf::Vector3f, in/out): Turn velocity in degrees.
- *   * rotation (sf::Vector3f, in/out): Rotation in degrees.
+ *   * turn_acceleration (sf::Vector3f, in/out): Turn acceleration, in radians per axis.
+ *   * turn_velocity (sf::Vector3f, in/out): Turn velocity, in radians per axis.
+ *   * forward (sf::Vector3f, in/out): Forward vector, normalized.
  */
 class Turn : public Controller {
 	public:
@@ -41,7 +41,6 @@ class Turn : public Controller {
 	private:
 		sf::Vector3f* m_turn_acceleration;
 		sf::Vector3f* m_turn_velocity;
-		sf::Vector3f* m_rotation;
 		sf::Vector3f* m_forward;
 };
 
