@@ -123,14 +123,14 @@ BOOST_AUTO_TEST_CASE( TestTurnController ) {
 			forward = FORWARD;
 
 			Turn controller{ ent };
-			controller.execute( sf::seconds( 1.0f ) );
+			controller.execute( sf::seconds( 2.0f ) );
 
 			BOOST_CHECK( std::abs( turn_velocity.x - VELOCITY.x ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( turn_velocity.y - VELOCITY.y ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( turn_velocity.z - VELOCITY.z ) <= TOLERANCE );
-			BOOST_CHECK( std::abs( forward.x - 0.0f ) <= TOLERANCE );
+			BOOST_CHECK( std::abs( forward.x - -1.0f ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( forward.y - 0.0f ) <= TOLERANCE );
-			BOOST_CHECK( std::abs( forward.z - -1.0f ) <= TOLERANCE );
+			BOOST_CHECK( std::abs( forward.z - 0.0f ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( util::calc_length( forward ) - 1.0f ) <= TOLERANCE );
 		}
 
@@ -150,13 +150,13 @@ BOOST_AUTO_TEST_CASE( TestTurnController ) {
 			forward = FORWARD;
 
 			Turn controller{ ent };
-			controller.execute( sf::seconds( 1.0f ) );
+			controller.execute( sf::seconds( 2.0f ) );
 
 			BOOST_CHECK( std::abs( turn_velocity.x - VELOCITY.x ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( turn_velocity.y - VELOCITY.y ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( turn_velocity.z - VELOCITY.z ) <= TOLERANCE );
-			BOOST_CHECK( std::abs( forward.x - -1.0f ) <= TOLERANCE );
-			BOOST_CHECK( std::abs( forward.y - 0.0f ) <= TOLERANCE );
+			BOOST_CHECK( std::abs( forward.x - 0.0f ) <= TOLERANCE );
+			BOOST_CHECK( std::abs( forward.y - -1.0f ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( forward.z - 0.0f ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( util::calc_length( forward ) - 1.0f ) <= TOLERANCE );
 		}
@@ -177,14 +177,14 @@ BOOST_AUTO_TEST_CASE( TestTurnController ) {
 			forward = FORWARD;
 
 			Turn controller{ ent };
-			controller.execute( sf::seconds( 1.0f ) );
+			controller.execute( sf::seconds( 2.0f ) );
 
 			BOOST_CHECK( std::abs( turn_velocity.x - VELOCITY.x ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( turn_velocity.y - VELOCITY.y ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( turn_velocity.z - VELOCITY.z ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( forward.x - 0.0f ) <= TOLERANCE );
-			BOOST_CHECK( std::abs( forward.y - -1.0f ) <= TOLERANCE );
-			BOOST_CHECK( std::abs( forward.z - 0.0f ) <= TOLERANCE );
+			BOOST_CHECK( std::abs( forward.y - 0.0f ) <= TOLERANCE );
+			BOOST_CHECK( std::abs( forward.z - -1.0f ) <= TOLERANCE );
 			BOOST_CHECK( std::abs( util::calc_length( forward ) - 1.0f ) <= TOLERANCE );
 		}
 	}

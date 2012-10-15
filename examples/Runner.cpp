@@ -2,6 +2,7 @@
 #include <FWCS/Controllers/Accelerate.hpp>
 #include <FWCS/Controllers/Move.hpp>
 #include <FWCS/Controllers/Walk.hpp>
+#include <FWCS/Controllers/Turn.hpp>
 
 #include <FWU/Math.hpp>
 #include <SFML/Graphics.hpp>
@@ -15,24 +16,35 @@ int main() {
 	// Initialize graphics.
 	sf::RenderWindow render_window( sf::VideoMode( 1024, 768 ), "FWCS Runner Example", sf::Style::Titlebar );
 
-	// Framerate limit.
+	// Window settings.
 	render_window.setFramerateLimit( 60 );
+
+	render_window.setMouseCursorVisible( false );
 
 	// Resources.
 	sf::Texture walk_textures[2];
+	sf::Texture crosshair_texture;
 
 	walk_textures[0].loadFromFile( "data/avt3_fr1.png" );
 	walk_textures[1].loadFromFile( "data/avt3_fr2.png" );
+	crosshair_texture.loadFromFile( "data/crosshair.png" );
 
 	// Character.
 	sf::Sprite player{ walk_textures[0] };
 	uint8_t walk_frame = 0;
 
+	player.setOrigin(
+		player.getGlobalBounds().width / 2.0f,
+		player.getGlobalBounds().height / 2.0f
+	);
+
 	// HUD.
 	sf::Font font;
-	font.loadFromFile( "data/DejaVuSansMono.ttf" );
-
 	sf::Text hud_text( "", font, 18 );
+	sf::Sprite crosshair_sprite{ crosshair_texture };
+
+	font.loadFromFile( "data/DejaVuSansMono.ttf" );
+	crosshair_sprite.setOrigin( 15.0f, 15.0f );
 
 	// Setup FWCS.
 	cs::System system;
@@ -40,14 +52,21 @@ int main() {
 
 	player_entity.create_property<sf::Vector3f>( "acceleration", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	const auto& velocity = player_entity.create_property<sf::Vector3f>( "velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-	const auto& player_position = player_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-	player_entity.create_property<sf::Vector3f>( "forward", sf::Vector3f( 0.0f, 0.0f, -1.0f ) );
+	auto& player_position = player_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+	const auto& forward = player_entity.create_property<sf::Vector3f>( "forward", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 	player_entity.create_property<float>( "max_velocity", 70.0f );
 	player_entity.create_property<float>( "walk_max_velocity", 80.0f );
 	player_entity.create_property<float>( "walk_acceleration", 200.0f );
 	auto& forward_control = player_entity.create_property<float>( "walk_forward_control", 0.0f );
 	auto& strafe_control = player_entity.create_property<float>( "walk_strafe_control", 0.0f );
 
+	auto& turn_velocity = player_entity.create_property<sf::Vector3f>( "turn_velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+	player_entity.create_property<sf::Vector3f>( "turn_acceleration", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
+
+	player_position.x = static_cast<float>( render_window.getSize().x ) / 2.0f;
+	player_position.z = static_cast<float>( render_window.getSize().y ) / 2.0f;
+
+	system.create_factory<cs::ctrl::Turn>();
 	system.create_factory<cs::ctrl::Walk>();
 	system.create_factory<cs::ctrl::Accelerate>();
 	system.create_factory<cs::ctrl::Move>();
@@ -56,6 +75,9 @@ int main() {
 	sf::Event event;
 	sf::Clock frametimer;
 	sf::Time anim_timer;
+
+	// XXX
+	turn_velocity.y = util::deg_to_rad( 30.0f );
 
 	while( render_window.isOpen() ) {
 		// Read events.
@@ -86,6 +108,10 @@ int main() {
 			player_position.z
 		);
 
+		// Apply rotation.
+		float angle = util::rad_to_deg( std::atan2( forward.z, forward.x ) - std::atan2( 0.0f, 1.0f ) );
+		player.setRotation( angle + 90.0f );
+
 		// Player animation (only if walking).
 		anim_timer += timeslice;
 
@@ -99,8 +125,15 @@ int main() {
 
 		player.setTexture( walk_textures[walk_frame] );
 
+		// Update HUD.
+		crosshair_sprite.setPosition(
+			static_cast<float>( sf::Mouse::getPosition( render_window ).x ),
+			static_cast<float>( sf::Mouse::getPosition( render_window ).y )
+		);
+
 		render_window.clear( sf::Color( 12, 34, 56 ) );
 		render_window.draw( player );
+		render_window.draw( crosshair_sprite );
 		render_window.display();
 	}
 

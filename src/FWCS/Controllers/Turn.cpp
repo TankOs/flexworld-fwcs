@@ -51,9 +51,9 @@ void Turn::execute( const sf::Time& sim_time ) {
 
 	// Make quaternion.
 	util::FloatQuaternion quat =
-		util::FloatQuaternion::from_angle_axis( m_turn_velocity->x, sf::Vector3f( 1.0f, 0.0f, 0.0f ) ) *
-		util::FloatQuaternion::from_angle_axis( m_turn_velocity->y, sf::Vector3f( 0.0f, 1.0f, 0.0f ) ) *
-		util::FloatQuaternion::from_angle_axis( m_turn_velocity->z, sf::Vector3f( 0.0f, 0.0f, 1.0f ) )
+		util::FloatQuaternion::from_angle_axis( m_turn_velocity->x * sim_seconds, sf::Vector3f( 1.0f, 0.0f, 0.0f ) ) *
+		util::FloatQuaternion::from_angle_axis( m_turn_velocity->y * sim_seconds, sf::Vector3f( 0.0f, 1.0f, 0.0f ) ) *
+		util::FloatQuaternion::from_angle_axis( m_turn_velocity->z * sim_seconds, sf::Vector3f( 0.0f, 0.0f, 1.0f ) )
 	;
 
 	// Rotate vector.

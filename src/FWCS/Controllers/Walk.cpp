@@ -55,7 +55,7 @@ void Walk::execute( const sf::Time& sim_time ) {
 	assert( m_forward->x != 0.0f || m_forward->y != 0.0f || m_forward->z != 0.0f );
 	assert( *m_walk_forward_control >= -1.0f && *m_walk_forward_control <= 1.0f );
 	assert( *m_walk_strafe_control >= -1.0f && *m_walk_strafe_control <= 1.0f );
-	assert( util::calc_length( *m_forward ) <= 1.0f );
+	assert( std::abs( util::calc_length( *m_forward ) - 1.0f ) <= 0.001f );
 
 	// Calculate target velocity vector.
 	sf::Vector3f target_velocity;
