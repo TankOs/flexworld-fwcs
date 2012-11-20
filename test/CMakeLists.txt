@@ -19,6 +19,7 @@ set(
 	${SRC_DIR}/TestMoveController.cpp
 	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
+	${SRC_DIR}/TestTurnController.cpp
 	${SRC_DIR}/TestWalkController.cpp
 )
 
