@@ -30,8 +30,7 @@ namespace ctrl {
  *   * walk_forward_control (float, in): Forward control, 0..1.
  *   * walk_strafe_control (float, in): Strafe control, 0..1.
  *   * forward (sf::Vector3f, in): Walk direction.
- *   * acceleration (sf::Vector3f, in/out): Acceleration.
- *   * velocity (sf::Vector3f, in): Velocity.
+ *   * velocity (sf::Vector3f, in/out): Velocity.
  */
 class Walk : public Controller {
 	public:
@@ -49,8 +48,7 @@ class Walk : public Controller {
 
 	private:
 		const sf::Vector3f* m_forward;
-		sf::Vector3f* m_acceleration;
-		const sf::Vector3f* m_velocity;
+		sf::Vector3f* m_velocity;
 
 		const float* m_walk_acceleration;
 		const float* m_walk_max_velocity;

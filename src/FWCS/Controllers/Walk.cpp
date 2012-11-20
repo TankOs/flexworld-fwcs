@@ -24,8 +24,6 @@ const ControllerRequirements& Walk::get_requirements() {
 	).require_property<sf::Vector3f>(
 		"forward", true
 	).require_property<sf::Vector3f>(
-		"acceleration", true
-	).require_property<sf::Vector3f>(
 		"velocity", true
 	);
 
@@ -35,7 +33,6 @@ const ControllerRequirements& Walk::get_requirements() {
 Walk::Walk( Entity& entity ) :
 	Controller( entity ),
 	m_forward{ entity.find_property<sf::Vector3f>( "forward" ) },
-	m_acceleration{ entity.find_property<sf::Vector3f>( "acceleration" ) },
 	m_velocity{ entity.find_property<sf::Vector3f>( "velocity" ) },
 	m_walk_acceleration{ entity.find_property<float>( "walk_acceleration" ) },
 	m_walk_max_velocity{ entity.find_property<float>( "walk_max_velocity" ) },
@@ -43,7 +40,6 @@ Walk::Walk( Entity& entity ) :
 	m_walk_strafe_control{ entity.find_property<float>( "walk_strafe_control" ) }
 {
 	assert( m_forward != nullptr );
-	assert( m_acceleration != nullptr );
 	assert( m_velocity != nullptr );
 	assert( m_walk_acceleration != nullptr );
 	assert( m_walk_max_velocity != nullptr );
@@ -56,6 +52,9 @@ void Walk::execute( const sf::Time& sim_time ) {
 	assert( *m_walk_forward_control >= -1.0f && *m_walk_forward_control <= 1.0f );
 	assert( *m_walk_strafe_control >= -1.0f && *m_walk_strafe_control <= 1.0f );
 	assert( std::abs( util::calc_length( *m_forward ) - 1.0f ) <= 0.001f );
+
+	float sim_seconds = sim_time.asSeconds();
+	assert( sim_seconds > 0.0f );
 
 	// Calculate target velocity vector.
 	sf::Vector3f target_velocity;
@@ -97,8 +96,8 @@ void Walk::execute( const sf::Time& sim_time ) {
 		target_velocity.z = walk_forward.z * (*m_walk_max_velocity);
 	}
 
-	// Calculate acceleration vector (direction and value needed as acceleration
-	// to get to the target velocity).
+	// Calculate acceleration vector (direction and acceleration needed to get to
+	// the target velocity).
 	sf::Vector3f accel = sf::Vector3f(
 		target_velocity.x - m_velocity->x,
 		target_velocity.y - m_velocity->y,
@@ -108,7 +107,7 @@ void Walk::execute( const sf::Time& sim_time ) {
 	// Calculate length of acceleration vector to know how much we have to
 	// accelerate to match the target velocity. This is of course limited by the
 	// controller's maximum acceleration.
-	float accel_diff = std::min( *m_walk_acceleration, util::calc_length( accel ) / sim_time.asSeconds() );
+	float accel_diff = std::min( *m_walk_acceleration, util::calc_length( accel ) / sim_seconds );
 
 	if( accel_diff == 0.0f ) {
 		// No action required.
@@ -122,9 +121,9 @@ void Walk::execute( const sf::Time& sim_time ) {
 	accel.z *= accel_diff;
 
 	// Accelerate! (We can't accelerate further than the controller's maximum acceleration.)
-	m_acceleration->x = std::min( m_acceleration->x + accel.x, accel.x );
-	m_acceleration->y = std::min( m_acceleration->y + accel.y, accel.y );
-	m_acceleration->z = std::min( m_acceleration->z + accel.z, accel.z );
+	m_velocity->x += accel.x * sim_seconds;
+	m_velocity->y += accel.y * sim_seconds;
+	m_velocity->z += accel.z * sim_seconds;
 }
 
 }

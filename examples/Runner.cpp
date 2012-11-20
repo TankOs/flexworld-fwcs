@@ -1,8 +1,6 @@
 #include <FWCS/System.hpp>
-#include <FWCS/Controllers/Accelerate.hpp>
 #include <FWCS/Controllers/Move.hpp>
 #include <FWCS/Controllers/Walk.hpp>
-#include <FWCS/Controllers/Turn.hpp>
 
 #include <FWU/Math.hpp>
 #include <SFML/Graphics.hpp>
@@ -50,7 +48,6 @@ int main() {
 	cs::System system;
 	cs::Entity& player_entity = system.create_entity();
 
-	player_entity.create_property<sf::Vector3f>( "acceleration", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	const auto& velocity = player_entity.create_property<sf::Vector3f>( "velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	auto& player_position = player_entity.create_property<sf::Vector3f>( "position", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	const auto& forward = player_entity.create_property<sf::Vector3f>( "forward", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
@@ -60,24 +57,16 @@ int main() {
 	auto& forward_control = player_entity.create_property<float>( "walk_forward_control", 0.0f );
 	auto& strafe_control = player_entity.create_property<float>( "walk_strafe_control", 0.0f );
 
-	auto& turn_velocity = player_entity.create_property<sf::Vector3f>( "turn_velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-	player_entity.create_property<sf::Vector3f>( "turn_acceleration", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-
 	player_position.x = static_cast<float>( render_window.getSize().x ) / 2.0f;
 	player_position.z = static_cast<float>( render_window.getSize().y ) / 2.0f;
 
-	system.create_factory<cs::ctrl::Turn>();
 	system.create_factory<cs::ctrl::Walk>();
-	system.create_factory<cs::ctrl::Accelerate>();
 	system.create_factory<cs::ctrl::Move>();
 
 	// Enter loop.
 	sf::Event event;
 	sf::Clock frametimer;
 	sf::Time anim_timer;
-
-	// XXX
-	turn_velocity.y = util::deg_to_rad( 30.0f );
 
 	while( render_window.isOpen() ) {
 		// Read events.

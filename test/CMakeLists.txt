@@ -13,27 +13,26 @@ set( INC_DIR "src" )
 set(
 	SOURCES
 	${SRC_DIR}/Test.cpp
-	${SRC_DIR}/TestAccelerateController.cpp
 	${SRC_DIR}/TestControllerFactory.cpp
 	${SRC_DIR}/TestControllerRequirements.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestMoveController.cpp
 	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp
-	${SRC_DIR}/TestTurnController.cpp
 	${SRC_DIR}/TestWalkController.cpp
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/../include )
+include_directories( ${FWU_INCLUDE_DIR} )
 include_directories( ${Boost_INCLUDE_DIRS} )
 
 add_executable( test ${SOURCES} )
 
+target_link_libraries( test fwcs )
 target_link_libraries( test ${FWU_LIBRARY} )
 target_link_libraries( test ${SFML_SYSTEM_LIBRARY} )
 target_link_libraries( test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} )
 target_link_libraries( test ${Boost_THREAD_LIBRARY} )
-target_link_libraries( test fwcs )
 
 add_custom_command(
 	TARGET test
