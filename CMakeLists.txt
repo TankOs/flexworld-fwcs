@@ -51,6 +51,7 @@ set(
 	${INC_DIR}/FWCS/Property.inl
 	${INC_DIR}/FWCS/System.hpp
 	${INC_DIR}/FWCS/System.inl
+	${INC_DIR}/FWCS/TopDownTurnConstraint.hpp
 	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/BaseControllerFactory.cpp
 	${SRC_DIR}/FWCS/Controller.cpp
@@ -62,6 +63,7 @@ set(
 	${SRC_DIR}/FWCS/EntityObserver.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp
+	${SRC_DIR}/FWCS/TopDownTurnConstraint.cpp
 )
 
 include_directories( ${INC_DIR} )
