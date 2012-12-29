@@ -15,10 +15,10 @@ namespace ctrl {
  * Simulates walking/strafing of a human.
  *
  * At first a maximum acceleration must be set. The direction of walking is
- * determined by the forward property. The maximum velocity this controller can
- * accelerate to is stored in walk_max_velocity. The entity can either be
- * commanded forward/backward using walk_forward_control or sidewards using
- * walk_strafe_control.
+ * determined by the forward_vector property. The maximum velocity this
+ * controller can accelerate to is stored in walk_max_velocity. The entity can
+ * either be commanded forward/backward using walk_forward_control or sidewards
+ * using walk_strafe_control.
  *
  * If both walk_forward_control and walk_strafe_control are zero, the
  * controller will try to slowdown the velocity to zero by applying maximum
@@ -29,7 +29,7 @@ namespace ctrl {
  *   * walk_max_velocity (float, in): Maximum walk velocity.
  *   * walk_forward_control (float, in): Forward control, 0..1.
  *   * walk_strafe_control (float, in): Strafe control, 0..1.
- *   * forward (sf::Vector3f, in): Walk direction.
+ *   * forward_vector (sf::Vector3f, in): Walk direction.
  *   * velocity (sf::Vector3f, in/out): Velocity.
  */
 class Walk : public Controller {
@@ -47,7 +47,7 @@ class Walk : public Controller {
 		void execute( const sf::Time& sim_time );
 
 	private:
-		const sf::Vector3f* m_forward;
+		const sf::Vector3f* m_forward_vector;
 		sf::Vector3f* m_velocity;
 
 		const float* m_walk_acceleration;

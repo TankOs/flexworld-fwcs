@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( TestTurnController ) {
 	{
 		static const sf::Time SIM_TIME{ sf::milliseconds( 34738 ) };
 		static const sf::Vector3f ANGULAR_VELOCITY{ 2.0f, 4.0f, 6.0f };
-		static const util::FloatQuaternion ROTATION{
+		static util::FloatQuaternion ROTATION{
 			ANGULAR_VELOCITY.x * SIM_TIME.asSeconds(),
 			sf::Vector3f(
 				ANGULAR_VELOCITY.y * SIM_TIME.asSeconds(),
@@ -74,6 +74,8 @@ BOOST_AUTO_TEST_CASE( TestTurnController ) {
 				ANGULAR_VELOCITY.x * ANGULAR_VELOCITY.y * ANGULAR_VELOCITY.z * SIM_TIME.asSeconds()
 			)
 		};
+
+		ROTATION.normalize();
 
 		Entity ent = create_correct_turn_entity();
 		Turn controller{ ent };
@@ -91,5 +93,45 @@ BOOST_AUTO_TEST_CASE( TestTurnController ) {
 		BOOST_CHECK( std::abs( rotation->get_y() - ROTATION.get_y() ) <= TOLERANCE );
 		BOOST_CHECK( std::abs( rotation->get_z() - ROTATION.get_z() ) <= TOLERANCE );
 		BOOST_CHECK( *angular_velocity == ANGULAR_VELOCITY );
+	}
+
+	// Execute and check updated forward vector.
+	{
+		static const sf::Time SIM_TIME{ sf::milliseconds( 1000 ) };
+		static const sf::Vector3f ANGULAR_VELOCITY{ 0.0f, 180.0f, 0.0f };
+		static util::FloatQuaternion ROTATION{
+			ANGULAR_VELOCITY.x * SIM_TIME.asSeconds(),
+			sf::Vector3f(
+				ANGULAR_VELOCITY.y * SIM_TIME.asSeconds(),
+				ANGULAR_VELOCITY.z * SIM_TIME.asSeconds(),
+				ANGULAR_VELOCITY.x * ANGULAR_VELOCITY.y * ANGULAR_VELOCITY.z * SIM_TIME.asSeconds()
+			)
+		};
+		static sf::Vector3f FORWARD_VECTOR = ROTATION * sf::Vector3f{ 1.0f, 0.0f, 0.0f };
+
+		util::normalize( FORWARD_VECTOR );
+		ROTATION.normalize();
+
+		Entity ent = create_correct_turn_entity();
+		ent.create_property<sf::Vector3f>( "forward_vector", sf::Vector3f{ 0.0f, 0.0f, 0.0f } );
+		Turn controller{ ent };
+
+		auto* rotation = ent.find_property<util::FloatQuaternion>( "rotation" );
+		auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
+		auto* forward_vector = ent.find_property<sf::Vector3f>( "forward_vector" );
+
+		*rotation = util::FloatQuaternion{};
+		*angular_velocity = ANGULAR_VELOCITY;
+
+		controller.execute( SIM_TIME );
+
+		BOOST_CHECK( std::abs( rotation->get_w() - ROTATION.get_w() ) <= TOLERANCE );
+		BOOST_CHECK( std::abs( rotation->get_x() - ROTATION.get_x() ) <= TOLERANCE );
+		BOOST_CHECK( std::abs( rotation->get_y() - ROTATION.get_y() ) <= TOLERANCE );
+		BOOST_CHECK( std::abs( rotation->get_z() - ROTATION.get_z() ) <= TOLERANCE );
+		BOOST_CHECK( *angular_velocity == ANGULAR_VELOCITY );
+		BOOST_CHECK( std::abs( forward_vector->x - FORWARD_VECTOR.x ) <= TOLERANCE );
+		BOOST_CHECK( std::abs( forward_vector->y - FORWARD_VECTOR.y ) <= TOLERANCE );
+		BOOST_CHECK( std::abs( forward_vector->z - FORWARD_VECTOR.z ) <= TOLERANCE );
 	}
 }

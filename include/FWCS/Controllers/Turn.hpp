@@ -19,13 +19,19 @@ namespace ctrl {
  * specify the turn constraint, which in turn specifies how the angular
  * velocity is added to the rotation.
  *
+ * After the rotation is updated, the quaternion is automatically normalized.
+ *
  * The controller accepts all constraints that are derived from
  * Turn::Constraint.
+ *
+ * If the entity has the optional property "forward_vector", this controller
+ * will update it accordingly to the rotation.
  *
  * Properties:
  *   * rotation (util::FloatQuaternion, in/out): Rotation.
  *   * angular_velocity (sf::Vector3f, in): Angular velocity, in radians.
  *   * turn_constraint (Turn::Constraint*, in): Turn constraint.
+ *   * forward_vector (sf::Vector3f, out, optional): Forward vector in direction of rotation.
  */
 class Turn : public Controller {
 	public:
@@ -63,6 +69,7 @@ class Turn : public Controller {
 		util::FloatQuaternion* m_rotation;
 		const sf::Vector3f* m_angular_velocity;
 		Constraint** m_turn_constraint;
+		sf::Vector3f* m_forward_vector;
 };
 
 }

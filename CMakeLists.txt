@@ -41,6 +41,7 @@ set(
 	${INC_DIR}/FWCS/ControllerRequirements.hpp
 	${INC_DIR}/FWCS/ControllerRequirements.inl
 	${INC_DIR}/FWCS/Controllers/Doc.hpp
+	${INC_DIR}/FWCS/Controllers/LookAt.hpp
 	${INC_DIR}/FWCS/Controllers/Move.hpp
 	${INC_DIR}/FWCS/Controllers/Turn.hpp
 	${INC_DIR}/FWCS/Controllers/Walk.hpp
@@ -56,6 +57,7 @@ set(
 	${SRC_DIR}/FWCS/BaseControllerFactory.cpp
 	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/ControllerRequirements.cpp
+	${SRC_DIR}/FWCS/Controllers/LookAt.cpp
 	${SRC_DIR}/FWCS/Controllers/Move.cpp
 	${SRC_DIR}/FWCS/Controllers/Turn.cpp
 	${SRC_DIR}/FWCS/Controllers/Walk.cpp

@@ -21,7 +21,7 @@ Entity create_correct_walk_entity() {
 	ent.create_property<float>( "walk_max_velocity", 0.0f );
 
 	ent.create_property<sf::Vector3f>( "velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-	ent.create_property<sf::Vector3f>( "forward", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
+	ent.create_property<sf::Vector3f>( "forward_vector", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 
 	return std::move( ent );
 }
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 		BOOST_CHECK( req.get_property_requirement( 1 ) == ControllerRequirements::PropertyRequirement( "walk_max_velocity", typeid( float ).name(), true ) );
 		BOOST_CHECK( req.get_property_requirement( 2 ) == ControllerRequirements::PropertyRequirement( "walk_forward_control", typeid( float ).name(), true ) );
 		BOOST_CHECK( req.get_property_requirement( 3 ) == ControllerRequirements::PropertyRequirement( "walk_strafe_control", typeid( float ).name(), true ) );
-		BOOST_CHECK( req.get_property_requirement( 4 ) == ControllerRequirements::PropertyRequirement( "forward", typeid( sf::Vector3f ).name(), true ) );
+		BOOST_CHECK( req.get_property_requirement( 4 ) == ControllerRequirements::PropertyRequirement( "forward_vector", typeid( sf::Vector3f ).name(), true ) );
 		BOOST_CHECK( req.get_property_requirement( 5 ) == ControllerRequirements::PropertyRequirement( "velocity", typeid( sf::Vector3f ).name(), true ) );
 	}
 
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE( TestWalkController ) {
 			auto* walk_strafe_control = ent.find_property<float>( "walk_strafe_control" );
 			auto* walk_acceleration = ent.find_property<float>( "walk_acceleration" );
 			auto* walk_max_velocity = ent.find_property<float>( "walk_max_velocity" );
-			auto* forward = ent.find_property<sf::Vector3f>( "forward" );
+			auto* forward = ent.find_property<sf::Vector3f>( "forward_vector" );
 			auto* velocity = ent.find_property<sf::Vector3f>( "velocity" );
 
 			// Accelerate.
