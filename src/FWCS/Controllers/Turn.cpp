@@ -42,9 +42,6 @@ void Turn::execute( const sf::Time& sim_time ) {
 		util::normalize( *m_forward_vector );
 	}
 
-	std::cout << "********************************************************************************" << std::endl;
-	std::cout << "TURNED" << std::endl;
-	std::cout << "********************************************************************************" << std::endl;
 }
 
 Turn::Constraint::~Constraint() {

@@ -54,25 +54,9 @@ LookAt::LookAt( Entity& entity ) :
 void LookAt::execute( const sf::Time& sim_time ) {
 	float sim_seconds = sim_time.asSeconds();
 
-	std::cout << "--------------------------------------------------" << std::endl;
-
 	// Calculate look at forward unit vector.
 	sf::Vector3f look_at_vector = *m_look_at_position - *m_position;
 	util::normalize( look_at_vector );
-
-	std::cout << "Forward vector: "
-		<< m_forward_vector->x << " "
-		<< m_forward_vector->y << " "
-		<< m_forward_vector->z << " "
-		<< std::endl
-	;
-
-	std::cout << "Look at vector: "
-		<< look_at_vector.x << " "
-		<< look_at_vector.y << " "
-		<< look_at_vector.z << " "
-		<< std::endl
-	;
 
 	// If vectors are equal, there's nothing to do.
 	if( *m_forward_vector == look_at_vector ) {
@@ -93,26 +77,11 @@ void LookAt::execute( const sf::Time& sim_time ) {
 
 	util::normalize( rot_axis );
 
-	std::cout << "Rotation axis: "
-		<< rot_axis.x << " "
-		<< rot_axis.y << " "
-		<< rot_axis.z << " "
-		<< std::endl
-	;
-
 	// Calculate angle.
 	float angle = std::acos( util::dot_product( *m_forward_vector, look_at_vector ) );
-	std::cout << "Angle off: " << util::rad_to_deg( angle ) << std::endl;
 
 	// Convert to Euler angles.
 	sf::Vector3f euler_angles = util::angle_axis_to_euler( angle, rot_axis );
-
-	std::cout << "Angles: "
-		<< util::rad_to_deg( euler_angles.x ) << " "
-		<< util::rad_to_deg( euler_angles.y ) << " "
-		<< util::rad_to_deg( euler_angles.z ) << " "
-		<< std::endl
-	;
 
 	// Calculate target angular velocity vector.
 	sf::Vector3f target_velocity{
@@ -130,35 +99,13 @@ void LookAt::execute( const sf::Time& sim_time ) {
 		return;
 	}
 
-	std::cout << "Target velocity: "
-		<< util::rad_to_deg( target_velocity.x ) << " "
-		<< util::rad_to_deg( target_velocity.y ) << " "
-		<< util::rad_to_deg( target_velocity.z ) << " "
-		<< std::endl
-	;
-
 	// Calculate acceleration.
 	sf::Vector3f acceleration = target_velocity;
 
 	util::normalize( acceleration );
 	acceleration *= std::min( util::length( target_velocity ), *m_look_at_acceleration );
 
-	std::cout << "Acceleration: "
-		<< util::rad_to_deg( acceleration.x ) << " "
-		<< util::rad_to_deg( acceleration.y ) << " "
-		<< util::rad_to_deg( acceleration.z ) << " "
-		<< std::endl
-	;
-
 	*m_angular_velocity += acceleration * sim_seconds;
-
-	std::cout << "Angular velocity: "
-		<< util::rad_to_deg( m_angular_velocity->x ) << " "
-		<< util::rad_to_deg( m_angular_velocity->y ) << " "
-		<< util::rad_to_deg( m_angular_velocity->z ) << " "
-		<< std::endl
-	;
-
 }
 
 }
