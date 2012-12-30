@@ -17,6 +17,7 @@ set(
 	${SRC_DIR}/TestControllerRequirements.cpp
 	${SRC_DIR}/TestEntity.cpp
 	${SRC_DIR}/TestLookAtController.cpp
+	${SRC_DIR}/TestMouselookController.cpp
 	${SRC_DIR}/TestMoveController.cpp
 	${SRC_DIR}/TestProperty.cpp
 	${SRC_DIR}/TestSystem.cpp

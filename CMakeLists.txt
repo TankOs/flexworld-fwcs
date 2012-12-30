@@ -20,7 +20,7 @@ endif()
 
 if( CMAKE_COMPILER_IS_GNUCXX )
 	if( NOT CMAKE_CXX_FLAGS )
-		set( CMAKE_CXX_FLAGS "-std=c++0x -Wall -Wextra -Wshadow -Wconversion -pedantic" CACHE STRING "C++ compiler flags." FORCE )
+		set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -Wshadow -Wconversion -pedantic" CACHE STRING "C++ compiler flags." FORCE )
 	endif()
 endif()
 
@@ -42,6 +42,7 @@ set(
 	${INC_DIR}/FWCS/ControllerRequirements.inl
 	${INC_DIR}/FWCS/Controllers/Doc.hpp
 	${INC_DIR}/FWCS/Controllers/LookAt.hpp
+	${INC_DIR}/FWCS/Controllers/Mouselook.hpp
 	${INC_DIR}/FWCS/Controllers/Move.hpp
 	${INC_DIR}/FWCS/Controllers/Turn.hpp
 	${INC_DIR}/FWCS/Controllers/Walk.hpp
@@ -58,6 +59,7 @@ set(
 	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/ControllerRequirements.cpp
 	${SRC_DIR}/FWCS/Controllers/LookAt.cpp
+	${SRC_DIR}/FWCS/Controllers/Mouselook.cpp
 	${SRC_DIR}/FWCS/Controllers/Move.cpp
 	${SRC_DIR}/FWCS/Controllers/Turn.cpp
 	${SRC_DIR}/FWCS/Controllers/Walk.cpp
@@ -73,6 +75,14 @@ include_directories( ${FWU_INCLUDE_DIR} )
 include_directories( ${SFML_INCLUDE_DIR} )
 
 add_library( fwcs ${LIB_TYPE} ${SOURCES} )
+
+if( FWCS_BUILD_SHARED_LIBS )
+	set_target_properties( fwcs PROPERTIES DEBUG_POSTFIX -d )
+else()
+	set_target_properties( fwcs PROPERTIES DEBUG_POSTFIX -s-d )
+	set_target_properties( fwcs PROPERTIES RELEASE_POSTFIX -s )
+	set_target_properties( fwcs PROPERTIES MINSIZEREL_POSTFIX -s )
+endif()
 
 if( NOT FWCS_SKIP_INSTALL )
 	install(
