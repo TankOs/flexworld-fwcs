@@ -16,6 +16,7 @@ set(
 	${SRC_DIR}/TestControllerFactory.cpp
 	${SRC_DIR}/TestControllerRequirements.cpp
 	${SRC_DIR}/TestEntity.cpp
+	${SRC_DIR}/TestFirstPersonTurnConstraint.cpp
 	${SRC_DIR}/TestLookAtController.cpp
 	${SRC_DIR}/TestMouselookController.cpp
 	${SRC_DIR}/TestMoveController.cpp

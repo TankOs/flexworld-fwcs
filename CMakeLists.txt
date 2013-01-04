@@ -49,6 +49,7 @@ set(
 	${INC_DIR}/FWCS/Entity.hpp
 	${INC_DIR}/FWCS/Entity.inl
 	${INC_DIR}/FWCS/EntityObserver.hpp
+	${INC_DIR}/FWCS/FirstPersonTurnConstraint.hpp
 	${INC_DIR}/FWCS/Property.hpp
 	${INC_DIR}/FWCS/Property.inl
 	${INC_DIR}/FWCS/System.hpp
@@ -65,6 +66,7 @@ set(
 	${SRC_DIR}/FWCS/Controllers/Walk.cpp
 	${SRC_DIR}/FWCS/Entity.cpp
 	${SRC_DIR}/FWCS/EntityObserver.cpp
+	${SRC_DIR}/FWCS/FirstPersonTurnConstraint.cpp
 	${SRC_DIR}/FWCS/Property.cpp
 	${SRC_DIR}/FWCS/System.cpp
 	${SRC_DIR}/FWCS/TopDownTurnConstraint.cpp

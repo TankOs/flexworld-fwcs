@@ -1,7 +1,7 @@
 #include <FWCS/System.hpp>
 #include <FWCS/Controllers/Mouselook.hpp>
 #include <FWCS/Controllers/Turn.hpp>
-#include <FWCS/TopDownTurnConstraint.hpp>
+#include <FWCS/FirstPersonTurnConstraint.hpp>
 
 #include <SFML/OpenGL.hpp>
 #include <FWU/Math.hpp>
@@ -26,7 +26,7 @@ int main() {
 
 	// Setup FWCS.
 	cs::System system;
-	cs::TopDownTurnConstraint turn_constraint;
+	cs::FirstPersonTurnConstraint turn_constraint;
 	auto& entity = system.create_entity();
 
 	const auto& rotation = entity.create_property( "rotation", util::FloatQuaternion() );
