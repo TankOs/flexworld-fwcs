@@ -101,13 +101,6 @@ int main() {
 			static_cast<float>( sf::Mouse::getPosition( render_window ).y )
 		};
 
-		std::cout << "LOOK AT "
-			<< look_at_position.x << " "
-			<< look_at_position.y << " "
-			<< look_at_position.z << " "
-			<< std::endl
-		;
-
 		// Update walk control values.
 		float multiplier = (sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) ? 1.0f : 0.4f);
 		forward_control = (sf::Keyboard::isKeyPressed( sf::Keyboard::W ) ? multiplier : 0.0f) + (sf::Keyboard::isKeyPressed( sf::Keyboard::S ) ? -multiplier : 0.0f);
