@@ -10,15 +10,20 @@ namespace cs {
 namespace ctrl {
 
 /** Mouselook controller.
- * The mouselook controller transforms delta input values to angular velocity.
- * If the delta values are zero, the angular velocity will be changed towards
- * zero, too.
+ * The mouselook controller reads the control value and commands acceleration
+ * to reach the maximum velocity limited by the control value.
  *
- * After executing, the delta values will be reset to zero.
+ * The controller differentiates between acceleration and deceleration, per
+ * axis.
+ *
+ * The maximum length of the control vector is 1. If it's greater, it'll be
+ * normalized. If not, the original value is kept.
  *
  * Properties:
- *   * mlook_delta (sf::Vector2f, in/out): Delta values, clamped from -1.0 to 1.0.
- *   * mlook_angular_acceleration (float, in): Angular acceleration, in radians/s².
+ *   * mouselook_control (sf::Vector2f, in/out): Control (mapping: x->y axis, y->x axis).
+ *   * max_mouselook_angular_velocity (float, in): Maximum angular velocity, in radians/s.
+ *   * mouselook_angular_acceleration (float, in): Angular acceleration, in radians/s².
+ *   * mouselook_angular_deceleration (float, in): Angular deceleration, in radians/s² (optional, defaults to mouselook_angular_acceleration).
  *   * angular_velocity (sf::Vector3f, in/out): Angular velocity, in radians/s.
  */
 class Mouselook : public Controller {
@@ -39,8 +44,10 @@ class Mouselook : public Controller {
 		void execute( const sf::Time& sim_time );
 
 	private:
-		sf::Vector2f* m_mlook_delta;
-		const float* m_mlook_angular_acceleration;
+		sf::Vector2f* m_mouselook_control;
+		const float* m_max_mouselook_angular_velocity;
+		const float* m_mouselook_angular_acceleration;
+		const float* m_mouselook_angular_deceleration;
 		sf::Vector3f* m_angular_velocity;
 };
 

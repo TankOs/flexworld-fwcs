@@ -21,6 +21,7 @@ macro( build_example target sources )
 endmacro()
 
 build_example( runner Runner.cpp )
+build_example( mouselook Mouselook.cpp )
 
 install(
 	DIRECTORY data

@@ -1,6 +1,7 @@
 #include <FWCS/Controllers/Mouselook.hpp>
 #include <FWCS/Entity.hpp>
 
+#include <FWU/Math.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/Vector3.hpp>
 #include <SFML/System/Time.hpp>
@@ -11,9 +12,11 @@ using cs::ctrl::Mouselook;
 cs::Entity create_correct_mouselook_entity() {
 	cs::Entity ent;
 
-	ent.create_property<sf::Vector2f>( "mlook_delta", sf::Vector2f{ 0.0f, 0.0f } );
-	ent.create_property<float>( "mlook_angular_acceleration", 0.0f );
-	ent.create_property<sf::Vector3f>( "angular_velocity", sf::Vector3f{ 0.0f, 0.0f, 0.0f } );
+	ent.create_property( "mouselook_control", sf::Vector2f{ 0.0f, 0.0f } );
+	ent.create_property( "max_mouselook_angular_velocity", 0.0f );
+	ent.create_property( "mouselook_angular_acceleration", 0.0f );
+	ent.create_property( "mouselook_angular_deceleration", 0.0f );
+	ent.create_property( "angular_velocity", sf::Vector3f{ 0.0f, 0.0f, 0.0f } );
 
 	return std::move( ent );
 }
@@ -25,10 +28,12 @@ BOOST_AUTO_TEST_CASE( TestMouselookController ) {
 	{
 		const auto req = Mouselook::get_requirements();
 
-		BOOST_REQUIRE( req.get_num_requirements() == 3 );
-		BOOST_REQUIRE( req.get_property_requirement( 0 ) == cs::ControllerRequirements::PropertyRequirement( "mlook_delta", typeid( sf::Vector2f ).name(), true ) );
-		BOOST_REQUIRE( req.get_property_requirement( 1 ) == cs::ControllerRequirements::PropertyRequirement( "mlook_angular_acceleration", typeid( float ).name(), true ) );
-		BOOST_REQUIRE( req.get_property_requirement( 2 ) == cs::ControllerRequirements::PropertyRequirement( "angular_velocity", typeid( sf::Vector3f ).name(), true ) );
+		BOOST_REQUIRE( req.get_num_requirements() == 5 );
+		BOOST_REQUIRE( req.get_property_requirement( 0 ) == cs::ControllerRequirements::PropertyRequirement( "mouselook_control", typeid( sf::Vector2f ).name(), true ) );
+		BOOST_REQUIRE( req.get_property_requirement( 1 ) == cs::ControllerRequirements::PropertyRequirement( "max_mouselook_angular_velocity", typeid( float ).name(), true ) );
+		BOOST_REQUIRE( req.get_property_requirement( 2 ) == cs::ControllerRequirements::PropertyRequirement( "mouselook_angular_acceleration", typeid( float ).name(), true ) );
+		BOOST_REQUIRE( req.get_property_requirement( 3 ) == cs::ControllerRequirements::PropertyRequirement( "mouselook_angular_deceleration", typeid( float ).name(), true ) );
+		BOOST_REQUIRE( req.get_property_requirement( 4 ) == cs::ControllerRequirements::PropertyRequirement( "angular_velocity", typeid( sf::Vector3f ).name(), true ) );
 	}
 
 	// Initial state.
@@ -41,18 +46,20 @@ BOOST_AUTO_TEST_CASE( TestMouselookController ) {
 
 	// Execute.
 	{
-		cs::Entity ent{ create_correct_mouselook_entity() };
-		Mouselook controller{ ent };
-
-		auto* mlook_delta = ent.find_property<sf::Vector2f>( "mlook_delta" );
-		auto* mlook_angular_acceleration = ent.find_property<float>( "mlook_angular_acceleration" );
-		auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
-
-		// No delta, no change.
+		// No velocity, no control -> no change.
 		{
-			*mlook_angular_acceleration = 12345.67f;
+			cs::Entity ent{ create_correct_mouselook_entity() };
+			Mouselook controller{ ent };
 
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			auto* mouselook_control = ent.find_property<sf::Vector2f>( "mouselook_control" );
+			auto* max_mouselook_angular_velocity = ent.find_property<float>( "max_mouselook_angular_velocity" );
+			auto* mouselook_angular_acceleration = ent.find_property<float>( "mouselook_angular_acceleration" );
+			auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
+
+			*max_mouselook_angular_velocity = 2354345.2345f;
+			*mouselook_angular_acceleration = 12345.67f;
+
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
 			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
 
 			controller.execute( sf::milliseconds( 1234945 ) );
@@ -60,79 +67,326 @@ BOOST_AUTO_TEST_CASE( TestMouselookController ) {
 			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
 		}
 
-		// Delta reset.
+		// Controller normalizes control vector.
 		{
-			*mlook_delta = sf::Vector2f{ 12.0f, 34.0f };
+			cs::Entity ent{ create_correct_mouselook_entity() };
+			Mouselook controller{ ent };
 
-			controller.execute( sf::milliseconds( 1234945 ) );
+			auto* mouselook_control = ent.find_property<sf::Vector2f>( "mouselook_control" );
 
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			sf::Vector2f control{ 123.0f, 456.0f };
+			*mouselook_control = control;
+
+			controller.execute( sf::milliseconds( 321123 ) );
+
+			util::normalize( control );
+			BOOST_CHECK( *mouselook_control == control );
 		}
 
-		// Accelerate.
+		// Control x, pure acceleration.
 		{
-			*mlook_delta = sf::Vector2f{ 1.0f, 0.5f };
-			*mlook_angular_acceleration = 50.0f;
-			*angular_velocity = sf::Vector3f{ 0.0f, 0.0f, 0.0f };
+			cs::Entity ent{ create_correct_mouselook_entity() };
+			Mouselook controller{ ent };
 
-			controller.execute( sf::milliseconds( 500 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 12.5f, 25.0f, 0.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			auto* mouselook_control = ent.find_property<sf::Vector2f>( "mouselook_control" );
+			auto* max_mouselook_angular_velocity = ent.find_property<float>( "max_mouselook_angular_velocity" );
+			auto* mouselook_angular_acceleration = ent.find_property<float>( "mouselook_angular_acceleration" );
+			auto* mouselook_angular_deceleration = ent.find_property<float>( "mouselook_angular_deceleration" );
+			auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
+
+			*max_mouselook_angular_velocity = 20.0f;
+			*mouselook_angular_acceleration = 10.0f;
+			*mouselook_angular_deceleration = 20.0f;
+
+			*angular_velocity = sf::Vector3f{ 0.0f, 0.0f, 0.0f };
+			*mouselook_control = sf::Vector2f{ 1.0f, 0.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 10.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 20.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 20.0f, 0.0f }) );
+
+			*angular_velocity = sf::Vector3f{ 0.0f, 0.0f, 0.0f };
+			*mouselook_control = sf::Vector2f{ -1.0f, 0.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ -1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, -10.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ -1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, -20.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ -1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, -20.0f, 0.0f }) );
 		}
 
-		// Accelerate, clamp deltas.
+		// Control y, pure acceleration.
 		{
-			*mlook_delta = sf::Vector2f{ 500.0f, 1000.0f };
-			*mlook_angular_acceleration = 10.0f;
+			cs::Entity ent{ create_correct_mouselook_entity() };
+			Mouselook controller{ ent };
+
+			auto* mouselook_control = ent.find_property<sf::Vector2f>( "mouselook_control" );
+			auto* max_mouselook_angular_velocity = ent.find_property<float>( "max_mouselook_angular_velocity" );
+			auto* mouselook_angular_acceleration = ent.find_property<float>( "mouselook_angular_acceleration" );
+			auto* mouselook_angular_deceleration = ent.find_property<float>( "mouselook_angular_deceleration" );
+			auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
+
+			*max_mouselook_angular_velocity = 20.0f;
+			*mouselook_angular_acceleration = 10.0f;
+			*mouselook_angular_deceleration = 20.0f;
+
 			*angular_velocity = sf::Vector3f{ 0.0f, 0.0f, 0.0f };
+			*mouselook_control = sf::Vector2f{ 0.0f, 1.0f };
 
 			controller.execute( sf::milliseconds( 1000 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 10.0f, 10.0f, 0.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
-
-			// Negative delta.
-			*mlook_delta = sf::Vector2f{ -500.0f, -1000.0f };
-			*mlook_angular_acceleration = 10.0f;
-			*angular_velocity = sf::Vector3f{ 0.0f, 0.0f, 0.0f };
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 10.0f, 0.0f, 0.0f }) );
 
 			controller.execute( sf::milliseconds( 1000 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -10.0f, -10.0f, 0.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 20.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 20.0f, 0.0f, 0.0f }) );
+
+			*angular_velocity = sf::Vector3f{ 0.0f, 0.0f, 0.0f };
+			*mouselook_control = sf::Vector2f{ 0.0f, -1.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, -1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -10.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, -1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -20.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, -1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -20.0f, 0.0f, 0.0f }) );
 		}
 
-		// Brake.
+		// Control x, pure deceleration.
 		{
-			*mlook_delta = sf::Vector2f{ 0.0f, 0.0f };
-			*mlook_angular_acceleration = 10.0f;
-			*angular_velocity = sf::Vector3f{ 20.0f, 20.0f, 20.0f };
+			cs::Entity ent{ create_correct_mouselook_entity() };
+			Mouselook controller{ ent };
+
+			auto* mouselook_control = ent.find_property<sf::Vector2f>( "mouselook_control" );
+			auto* max_mouselook_angular_velocity = ent.find_property<float>( "max_mouselook_angular_velocity" );
+			auto* mouselook_angular_acceleration = ent.find_property<float>( "mouselook_angular_acceleration" );
+			auto* mouselook_angular_deceleration = ent.find_property<float>( "mouselook_angular_deceleration" );
+			auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
+
+			*max_mouselook_angular_velocity = 20.0f;
+			*mouselook_angular_acceleration = 10.0f;
+			*mouselook_angular_deceleration = 20.0f;
+			*mouselook_control = sf::Vector2f{ 0.0f, 0.0f };
+
+			*angular_velocity = sf::Vector3f{ 0.0f, 40.0f, 0.0f };
 
 			controller.execute( sf::milliseconds( 1000 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 10.0f, 10.0f, 20.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 20.0f, 0.0f }) );
 
 			controller.execute( sf::milliseconds( 1000 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 20.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
 
 			controller.execute( sf::milliseconds( 1000 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 20.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
 
-			*mlook_delta = sf::Vector2f{ 0.0f, 0.0f };
-			*mlook_angular_acceleration = 10.0f;
-			*angular_velocity = sf::Vector3f{ -20.0f, -20.0f, 20.0f };
+			*angular_velocity = sf::Vector3f{ 0.0f, -40.0f, 0.0f };
 
 			controller.execute( sf::milliseconds( 1000 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -10.0f, -10.0f, 20.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, -20.0f, 0.0f }) );
 
 			controller.execute( sf::milliseconds( 1000 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 20.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
 
 			controller.execute( sf::milliseconds( 1000 ) );
-			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 20.0f }) );
-			BOOST_CHECK( *mlook_delta == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+		}
+
+		// Control y, pure deceleration.
+		{
+			cs::Entity ent{ create_correct_mouselook_entity() };
+			Mouselook controller{ ent };
+
+			auto* mouselook_control = ent.find_property<sf::Vector2f>( "mouselook_control" );
+			auto* max_mouselook_angular_velocity = ent.find_property<float>( "max_mouselook_angular_velocity" );
+			auto* mouselook_angular_acceleration = ent.find_property<float>( "mouselook_angular_acceleration" );
+			auto* mouselook_angular_deceleration = ent.find_property<float>( "mouselook_angular_deceleration" );
+			auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
+
+			*max_mouselook_angular_velocity = 20.0f;
+			*mouselook_angular_acceleration = 10.0f;
+			*mouselook_angular_deceleration = 20.0f;
+			*mouselook_control = sf::Vector2f{ 0.0f, 0.0f };
+
+			*angular_velocity = sf::Vector3f{ 40.0f, 0.0f, 0.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 20.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+
+			*angular_velocity = sf::Vector3f{ -40.0f, 0.0f, 0.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -20.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+		}
+
+		// Control x, deceleration and acceleration.
+		{
+			cs::Entity ent{ create_correct_mouselook_entity() };
+			Mouselook controller{ ent };
+
+			auto* mouselook_control = ent.find_property<sf::Vector2f>( "mouselook_control" );
+			auto* max_mouselook_angular_velocity = ent.find_property<float>( "max_mouselook_angular_velocity" );
+			auto* mouselook_angular_acceleration = ent.find_property<float>( "mouselook_angular_acceleration" );
+			auto* mouselook_angular_deceleration = ent.find_property<float>( "mouselook_angular_deceleration" );
+			auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
+
+			*max_mouselook_angular_velocity = 20.0f;
+			*mouselook_angular_acceleration = 10.0f;
+			*mouselook_angular_deceleration = 20.0f;
+
+			*mouselook_control = sf::Vector2f{ 1.0f, 0.0f };
+			*angular_velocity = sf::Vector3f{ 0.0f, -40.0f, 0.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, -20.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 10.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 20.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 20.0f, 0.0f }) );
+
+			*mouselook_control = sf::Vector2f{ -1.0f, 0.0f };
+			*angular_velocity = sf::Vector3f{ 0.0f, 40.0f, 0.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ -1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 20.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ -1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ -1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, -10.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ -1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, -20.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ -1.0f, 0.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, -20.0f, 0.0f }) );
+		}
+
+		// Control y, deceleration and acceleration.
+		{
+			cs::Entity ent{ create_correct_mouselook_entity() };
+			Mouselook controller{ ent };
+
+			auto* mouselook_control = ent.find_property<sf::Vector2f>( "mouselook_control" );
+			auto* max_mouselook_angular_velocity = ent.find_property<float>( "max_mouselook_angular_velocity" );
+			auto* mouselook_angular_acceleration = ent.find_property<float>( "mouselook_angular_acceleration" );
+			auto* mouselook_angular_deceleration = ent.find_property<float>( "mouselook_angular_deceleration" );
+			auto* angular_velocity = ent.find_property<sf::Vector3f>( "angular_velocity" );
+
+			*max_mouselook_angular_velocity = 20.0f;
+			*mouselook_angular_acceleration = 10.0f;
+			*mouselook_angular_deceleration = 20.0f;
+
+			*mouselook_control = sf::Vector2f{ 0.0f, 1.0f };
+			*angular_velocity = sf::Vector3f{ -40.0f, 0.0f, 0.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -20.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 10.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 20.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, 1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 20.0f, 0.0f, 0.0f }) );
+
+			*mouselook_control = sf::Vector2f{ 0.0f, -1.0f };
+			*angular_velocity = sf::Vector3f{ 40.0f, 0.0f, 0.0f };
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, -1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 20.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, -1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ 0.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, -1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -10.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, -1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -20.0f, 0.0f, 0.0f }) );
+
+			controller.execute( sf::milliseconds( 1000 ) );
+			BOOST_CHECK( *mouselook_control == (sf::Vector2f{ 0.0f, -1.0f }) );
+			BOOST_CHECK( *angular_velocity == (sf::Vector3f{ -20.0f, 0.0f, 0.0f }) );
 		}
 	}
 }
