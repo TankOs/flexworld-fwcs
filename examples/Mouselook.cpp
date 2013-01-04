@@ -9,6 +9,8 @@
 #include <cstdint>
 #include <iostream>
 
+static const float MOUSELOOK_ZONE_FACTOR = 0.4f;
+
 int main() {
 	// Initialize graphics.
 	sf::RenderWindow render_window( sf::VideoMode( 1024, 768 ), "FWCS Mouselook Example", sf::Style::Titlebar );
@@ -20,8 +22,7 @@ int main() {
 
 	// Window settings.
 	render_window.setFramerateLimit( 60 );
-
-	render_window.setMouseCursorVisible( true );
+	render_window.setMouseCursorVisible( false );
 
 	// Setup FWCS.
 	cs::System system;
@@ -33,9 +34,9 @@ int main() {
 
 	entity.create_property( "forward_vector", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 	entity.create_property( "angular_velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
-	entity.create_property( "max_mouselook_angular_velocity", util::deg_to_rad( 100.0f ) );
-	entity.create_property( "mouselook_angular_acceleration", util::deg_to_rad( 200.0f ) );
-	entity.create_property( "mouselook_angular_deceleration", util::deg_to_rad( 250.0f ) );
+	entity.create_property( "max_mouselook_angular_velocity", util::deg_to_rad( 200.0f ) );
+	entity.create_property( "mouselook_angular_acceleration", util::deg_to_rad( 400.0f ) );
+	entity.create_property( "mouselook_angular_deceleration", util::deg_to_rad( 800.0f ) );
 	entity.create_property<cs::ctrl::Turn::Constraint*>( "turn_constraint", &turn_constraint );
 
 	system.create_factory<cs::ctrl::Mouselook>();
@@ -61,8 +62,8 @@ int main() {
 		// Process mouse delta.
 		sf::Vector2i mouse_position{ sf::Mouse::getPosition( render_window ) };
 
-		mouselook_control.x = static_cast<float>( mouse_position.x - WINDOW_CENTER.x ) / static_cast<float>( WINDOW_CENTER.x );
-		mouselook_control.y = static_cast<float>( mouse_position.y - WINDOW_CENTER.y ) / static_cast<float>( WINDOW_CENTER.y );
+		mouselook_control.x = static_cast<float>( mouse_position.x - WINDOW_CENTER.x ) / (static_cast<float>( WINDOW_CENTER.x ) * MOUSELOOK_ZONE_FACTOR);
+		mouselook_control.y = static_cast<float>( mouse_position.y - WINDOW_CENTER.y ) / (static_cast<float>( WINDOW_CENTER.y ) * MOUSELOOK_ZONE_FACTOR);
 
 		// Reset mouse.
 		sf::Mouse::setPosition( WINDOW_CENTER, render_window );
