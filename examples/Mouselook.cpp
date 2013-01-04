@@ -32,7 +32,6 @@ int main() {
 	const auto& rotation = entity.create_property( "rotation", util::FloatQuaternion() );
 	auto& mouselook_control = entity.create_property( "mouselook_control", sf::Vector2f{ 0.0f, 0.0f } );
 
-	entity.create_property( "forward_vector", sf::Vector3f( 1.0f, 0.0f, 0.0f ) );
 	entity.create_property( "angular_velocity", sf::Vector3f( 0.0f, 0.0f, 0.0f ) );
 	entity.create_property( "max_mouselook_angular_velocity", util::deg_to_rad( 200.0f ) );
 	entity.create_property( "mouselook_angular_acceleration", util::deg_to_rad( 400.0f ) );
@@ -87,10 +86,14 @@ int main() {
 		glRotatef( util::rad_to_deg( angle ), axis.x, axis.y, axis.z );
 
 		glBegin( GL_TRIANGLES );
-		glColor3f( 1.0f, 1.0f, 1.0f );
 
+		glColor3f( 1.0f, 0.0f, 0.0f );
 		glVertex3f( 0.0f, 0.0f, 0.0f );
+
+		glColor3f( 0.0f, 1.0f, 0.0f );
 		glVertex3f( 1.0f, 0.0f, 0.0f );
+
+		glColor3f( 0.0f, 0.0f, 1.0f );
 		glVertex3f( 0.0f, 1.0f, 0.0f );
 
 		glEnd();
