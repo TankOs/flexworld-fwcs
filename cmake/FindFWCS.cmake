@@ -33,7 +33,7 @@ find_path(
 
 find_library(
 	FWCS_LIBRARY_RELEASE
-	FWCS${FWCS_SUFFIX}
+	fwcs${FWCS_SUFFIX}
 	PATH_SUFFIXES
 		lib
 		lib64
