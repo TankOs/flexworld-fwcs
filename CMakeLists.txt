@@ -93,6 +93,11 @@ if( NOT FWCS_SKIP_INSTALL )
 		LIBRARY DESTINATION lib COMPONENT bin
 		ARCHIVE DESTINATION lib COMPONENT dev
 	)
+
+	install(
+		DIRECTORY include/FWCS
+		DESTINATION include
+	)
 endif()
 
 if( FWCS_BUILD_TEST )
