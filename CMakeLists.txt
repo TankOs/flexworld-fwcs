@@ -78,6 +78,11 @@ include_directories( ${SFML_INCLUDE_DIR} )
 
 add_library( fwcs ${LIB_TYPE} ${SOURCES} )
 
+if( WIN32 )
+	target_link_libraries( fwcs ${FWU_LIBRARY} )
+	target_link_libraries( fwcs ${SFML_SYSTEM_LIBRARY} )
+endif()
+
 if( FWCS_BUILD_SHARED_LIBS )
 	set_target_properties( fwcs PROPERTIES DEBUG_POSTFIX -d )
 else()
