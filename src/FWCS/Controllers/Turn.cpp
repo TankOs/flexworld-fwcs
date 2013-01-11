@@ -42,7 +42,7 @@ void Turn::execute( const sf::Time& sim_time ) {
 	m_rotation->normalize();
 
 	if( m_forward_vector != nullptr ) {
-		static const sf::Vector3f DEFAULT_FORWARD_VECTOR{ 1.0f, 0.0f, 0.0f };
+		static const sf::Vector3f DEFAULT_FORWARD_VECTOR{ 0.0f, 0.0f, -1.0f };
 		*m_forward_vector = *m_rotation * DEFAULT_FORWARD_VECTOR;
 		util::normalize( *m_forward_vector );
 	}

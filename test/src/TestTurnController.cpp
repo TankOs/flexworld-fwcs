@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE( TestTurnController ) {
 				ANGULAR_VELOCITY.x * ANGULAR_VELOCITY.y * ANGULAR_VELOCITY.z * SIM_TIME.asSeconds()
 			)
 		};
-		static sf::Vector3f FORWARD_VECTOR = ROTATION * sf::Vector3f{ 1.0f, 0.0f, 0.0f };
+		static sf::Vector3f FORWARD_VECTOR = ROTATION * sf::Vector3f{ 0.0f, 0.0f, -1.0f };
 
 		util::normalize( FORWARD_VECTOR );
 		ROTATION.normalize();
