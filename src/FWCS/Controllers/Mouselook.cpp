@@ -58,8 +58,8 @@ void Mouselook::execute( const sf::Time& sim_time ) {
 	// Calculate velocity difference, i.e. velocity that we need to accelerate
 	// to.
 	sf::Vector2f target_velocity{
-		(m_mouselook_control->y * *m_max_mouselook_angular_velocity) - m_angular_velocity->x,
-		(m_mouselook_control->x * *m_max_mouselook_angular_velocity) - m_angular_velocity->y,
+		(-m_mouselook_control->y * *m_max_mouselook_angular_velocity) - m_angular_velocity->x,
+		(-m_mouselook_control->x * *m_max_mouselook_angular_velocity) - m_angular_velocity->y,
 	};
 
 	// Choose to accelerate or decelerate.
