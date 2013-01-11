@@ -1,6 +1,7 @@
 #include <FWCS/Controllers/Turn.hpp>
 #include <FWCS/ControllerRequirements.hpp>
 #include <FWCS/Entity.hpp>
+
 #include <iostream>
 
 namespace cs {
@@ -29,6 +30,10 @@ Turn::Turn( Entity& entity ) :
 	assert( m_rotation != nullptr );
 	assert( m_angular_velocity != nullptr );
 	assert( m_turn_constraint != nullptr );
+
+#ifndef NDEBUG
+	std::cout << "Turn controller attached to entity #" << entity.get_id() << std::endl;
+#endif
 }
 
 void Turn::execute( const sf::Time& sim_time ) {

@@ -3,6 +3,7 @@
 
 #include <FWU/Math.hpp>
 #include <SFML/System/Time.hpp>
+#include <iostream>
 #include <cassert>
 #include <cmath>
 
@@ -38,6 +39,10 @@ Mouselook::Mouselook( Entity& entity ) :
 	assert( m_mouselook_control != nullptr );
 	assert( m_mouselook_angular_acceleration != nullptr );
 	assert( m_angular_velocity != nullptr );
+
+#ifndef NDEBUG
+	std::cout << "Mouselook controller attached to entity #" << entity.get_id() << std::endl;
+#endif
 }
 
 void Mouselook::execute( const sf::Time& sim_time ) {

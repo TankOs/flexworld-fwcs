@@ -3,6 +3,7 @@
 #include <FWCS/Entity.hpp>
 
 #include <SFML/System/Time.hpp>
+#include <iostream>
 
 namespace cs {
 namespace ctrl {
@@ -25,6 +26,10 @@ Move::Move( Entity& entity ) :
 {
 	assert( m_position != nullptr );
 	assert( m_velocity != nullptr );
+
+#ifndef NDEBUG
+	std::cout << "Move controller attached to entity #" << entity.get_id() << std::endl;
+#endif
 }
 
 void Move::execute( const sf::Time& sim_time ) {
