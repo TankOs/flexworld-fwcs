@@ -13,6 +13,7 @@ set( INC_DIR "src" )
 set(
 	SOURCES
 	${SRC_DIR}/Test.cpp
+	${SRC_DIR}/TestCollisionTester.cpp
 	${SRC_DIR}/TestControllerFactory.cpp
 	${SRC_DIR}/TestControllerRequirements.cpp
 	${SRC_DIR}/TestEntity.cpp

@@ -49,10 +49,6 @@ LookAt::LookAt( Entity& entity ) :
 	assert( m_look_at_position != nullptr );
 	assert( m_look_at_acceleration != nullptr );
 	assert( m_max_look_at_velocity != nullptr );
-
-#ifndef NDEBUG
-	std::cout << "LookAt controller attached to entity #" << entity.get_id() << std::endl;
-#endif
 }
 
 void LookAt::execute( const sf::Time& sim_time ) {

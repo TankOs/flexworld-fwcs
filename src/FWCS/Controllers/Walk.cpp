@@ -45,10 +45,6 @@ Walk::Walk( Entity& entity ) :
 	assert( m_walk_max_velocity != nullptr );
 	assert( m_walk_forward_control != nullptr );
 	assert( m_walk_strafe_control != nullptr );
-
-#ifndef NDEBUG
-	std::cout << "Walk controller attached to entity #" << entity.get_id() << std::endl;
-#endif
 }
 
 void Walk::execute( const sf::Time& sim_time ) {

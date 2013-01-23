@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 2.8 )
 project( FWCS )
 
-set( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/extlibs/FWU/cmake" )
+set( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake/;${PROJECT_SOURCE_DIR}/extlibs/FWU/cmake" )
 
 find_package( FWU REQUIRED )
 find_package( SFML 2.0 REQUIRED COMPONENTS SYSTEM )
@@ -34,6 +34,7 @@ set( INC_DIR "include" )
 set(
 	SOURCES
 	${INC_DIR}/FWCS/BaseControllerFactory.hpp
+	${INC_DIR}/FWCS/CollisionTester.hpp
 	${INC_DIR}/FWCS/Config.hpp
 	${INC_DIR}/FWCS/Controller.hpp
 	${INC_DIR}/FWCS/ControllerFactory.hpp
@@ -57,6 +58,7 @@ set(
 	${INC_DIR}/FWCS/TopDownTurnConstraint.hpp
 	${INC_DIR}/FWCS/Types.hpp
 	${SRC_DIR}/FWCS/BaseControllerFactory.cpp
+	${SRC_DIR}/FWCS/CollisionTester.cpp
 	${SRC_DIR}/FWCS/Controller.cpp
 	${SRC_DIR}/FWCS/ControllerRequirements.cpp
 	${SRC_DIR}/FWCS/Controllers/LookAt.cpp
