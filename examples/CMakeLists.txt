@@ -1,6 +1,7 @@
 cmake_minimum_required( VERSION 2.8 )
 
 find_package( SFML 2.0 REQUIRED GRAPHICS WINDOW SYSTEM )
+find_package( OpenGL REQUIRED )
 
 macro( build_example target sources )
 	include_directories( ${PROJECT_SOURCE_DIR}/../include/ )
