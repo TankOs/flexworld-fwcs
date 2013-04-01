@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 2.8 )
 project( FWCS-test )
 
-find_package( Boost 1.46 REQUIRED thread unit_test_framework )
+find_package( Boost 1.46 REQUIRED unit_test_framework )
 
 if( NOT Boost_USE_STATIC_LIBS )
 	add_definitions( -DBOOST_TEST_DYN_LINK )
