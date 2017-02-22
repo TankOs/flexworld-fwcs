@@ -1,3 +1,3 @@
 [submodule "extlibs/FWU"]
 	path = extlibs/FWU
-	url = gitolite@boxbox.org:fwu.git
+	url = https://github.com/TankOs/flexworld-fwu.git
